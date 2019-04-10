@@ -113,7 +113,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 		}
 
 	}*/
-	shape.SetAsBox(CollisionRectangle.width, CollisionRectangle.height);
+	shape.SetAsBox(CollisionRectangle.width / 2, CollisionRectangle.height / 2);
 	
 
 	b2FixtureDef TriggerFixtureP;
@@ -123,7 +123,9 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	TriggerFixtureP.isSensor = false;
 
 	this->Body->SetBullet(true);
-
+	b2MassData md;
+	md.mass = 100;
+	this->Body->SetMassData(&md);
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);
 }

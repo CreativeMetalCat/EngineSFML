@@ -23,7 +23,7 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	b2BodyDef defP;
 	defP.type = b2BodyType::b2_staticBody;
-	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
+	defP.position.Set(Location.x - Size.x , Location.y + Size.y/2 );
 
 	this->Body = world.CreateBody(&defP);
 
@@ -38,8 +38,8 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	}*/
 
-	shape.SetAsBox(CollisionRectangle.width, CollisionRectangle.height);
-
+	shape.SetAsBox(CollisionRectangle.width/2 , CollisionRectangle.height/2);
+	
 	b2Filter filter;
 	filter.categoryBits = 0x1;
 
@@ -50,6 +50,7 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 	TriggerFixtureP.filter = filter;
 
 	TriggerFixtureP.isSensor = false;
+
 
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);
