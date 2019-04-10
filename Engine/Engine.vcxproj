@@ -173,6 +173,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="ContactListener.h" />
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="SolidBlock.h" />
     <ClInclude Include="TestPlayer.h" />
     <ClInclude Include="Game.h" />

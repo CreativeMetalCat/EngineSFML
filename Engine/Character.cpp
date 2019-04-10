@@ -8,7 +8,7 @@ void Character::MoveX(float value)
 
 	float vel = (value*this->GetMaxVelocity().x) - this->GetLinearVelocity().x;
 	float impulse = this->GetBody()->GetMass()*vel;
-	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(impulse, 0), true);
+	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(impulse*10, 0), true);
 }
 
 void Character::MoveY(float value)
@@ -120,8 +120,8 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.shape = &shape;
 	TriggerFixtureP.isSensor = false;
-	TriggerFixtureP.friction = 0.1f;
-	TriggerFixtureP.restitution = 0.0001f;
+	TriggerFixtureP.friction = 0.0f;
+	
 
 	//this->Body->SetBullet(true);
 	

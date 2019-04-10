@@ -470,7 +470,7 @@ void Game::Update(sf::Time dt)
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
-	world.Step(1 / dt.asSeconds(), 20,20);
+	world.Step(1 / dt.asSeconds(), 12,10);
 
 	
 
@@ -484,7 +484,6 @@ void Game::Update(sf::Time dt)
 void Game::Init()
 {
 	this->window.setFramerateLimit(60.f);
-	world.Step(0, 0, 0);
 	contactListener.path = path;
 	
 
@@ -515,9 +514,9 @@ void Game::Init()
 	dev64_64.setPoint(2, { 64,64 });
 	dev64_64.setPoint(3, { 0,64 });
 
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 1; i++)
 	{
-		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i *64, 500), path);
+		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(1280, 64), sf::Vector2f(i *1280, 500), path);
 		sd->Init(path);
 		sd->InitPhysBody(path, this->world);
 
@@ -547,7 +546,7 @@ void Game::Run()
 
 
 
-Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f, 3.f))
+Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f, 1.f))
 {
 	world.SetContactListener(&contactListener);
 }
