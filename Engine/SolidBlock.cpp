@@ -23,7 +23,8 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	b2BodyDef defP;
 	defP.type = b2BodyType::b2_staticBody;
-	defP.position.Set(Location.x - Size.x/2 , Location.y + Size.y/2 );
+	defP.position.Set(Location.x + Size.x/2 , Location.y + Size.y/2 );
+	defP.fixedRotation = true;
 
 	this->Body = world.CreateBody(&defP);
 
@@ -48,6 +49,8 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 	TriggerFixtureP.shape = &shape;
 	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.filter = filter;
+	TriggerFixtureP.friction = 0.1f;
+	TriggerFixtureP.restitution = 0.0001f;
 
 	TriggerFixtureP.isSensor = false;
 

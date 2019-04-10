@@ -95,6 +95,29 @@ void CActor::OnBeginCollision(CActor* otherActor, b2Fixture * fixtureA, b2Fixtur
 			.beginClass<b2Fixture>("b2Fixture")
 			.endClass();
 
+		//Register Vector2 in lua
+		getGlobalNamespace(L)
+			.beginClass<sf::Vector2f>("Vector2")
+			//add x,y and some functions possibly
+			.addData<float>("x", &sf::Vector2<float>::x)
+			.addData<float>("y", &sf::Vector2<float>::y)
+			.addConstructor<void(*) (void)>()
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<b2Vec2>("b2Vector")
+			.addData<float>("x", &b2Vec2::x)
+			.addData<float>("y", &b2Vec2::y)
+			.addConstructor<void(*) (void)>()
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<b2Body>("b2Body")
+			.addFunction("GetLinearVelocity", &b2Body::GetLinearVelocity)
+			.addFunction("GetMass", &b2Body::GetMass)
+			.addFunction("ApplyImpulse", &b2Body::ApplyLinearImpulseToCenter)
+			.endClass();
+
 		LuaRef LUAOnBeginCollision = getGlobal(L, "OnBeginCollision");
 		if (LUAOnBeginCollision.isFunction())
 		{

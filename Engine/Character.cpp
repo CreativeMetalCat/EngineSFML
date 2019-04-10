@@ -121,11 +121,10 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	TriggerFixtureP.shape = &shape;
 	TriggerFixtureP.isSensor = false;
 	TriggerFixtureP.friction = 0.1f;
+	TriggerFixtureP.restitution = 0.0001f;
 
 	//this->Body->SetBullet(true);
-	b2MassData md;
-	md.mass = 100;
-	this->Body->SetMassData(&md);
+	
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);
 }

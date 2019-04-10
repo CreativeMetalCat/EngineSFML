@@ -82,27 +82,66 @@ void Game::Render()
 					sf::PrimitiveType::LineStrip,
 					static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count
 				);
-
-
-				for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
+				
+				//set point of shape
+				if (SceneActors.at(i)->As<CSolidBlock*>())
 				{
-					//set point of shape
+					for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
+					{
 
-					va[j] = sf::Vertex
+						va[j] = sf::Vertex
+						(
+							{
+								//{...} is used as constructor of sf::Vector<float>
+								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
+								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2 //y of point
+							},
+							sf::Color::Red
+						);
+
+
+					}
+
+					va.append
+					(sf::Vertex
 					(
 						{
 							//{...} is used as constructor of sf::Vector<float>
-							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x,//x of point
-							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
+							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
+							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2//y of point
 						},
 						sf::Color::Red
+					)
 					);
-
-
-
 				}
 
+				else
+				{
+					for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
+					{
+						va[j] = sf::Vertex
+						(
+							{
+								//{...} is used as constructor of sf::Vector<float>
+								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x ,//x of point
+								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
+							},
+							sf::Color::Red
+						);
+					}
 
+					va.append
+					(sf::Vertex
+					(
+						{
+							//{...} is used as constructor of sf::Vector<float>
+							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x,//x of point
+							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y //y of point
+						},
+						sf::Color::Red
+					)
+					);
+				}
 
 
 				window.draw(va);
@@ -431,7 +470,7 @@ void Game::Update(sf::Time dt)
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
-	world.Step(1 / dt.asSeconds(), 5, 5);
+	world.Step(1 / dt.asSeconds(), 20,20);
 
 	
 
@@ -476,7 +515,7 @@ void Game::Init()
 	dev64_64.setPoint(2, { 64,64 });
 	dev64_64.setPoint(3, { 0,64 });
 
-	for (int i = 0; i < 17; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i *64, 500), path);
 		sd->Init(path);
@@ -508,7 +547,7 @@ void Game::Run()
 
 
 
-Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f, 9.8f))
+Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f, 3.f))
 {
 	world.SetContactListener(&contactListener);
 }
