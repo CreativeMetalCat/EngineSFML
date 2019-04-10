@@ -23,7 +23,7 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	b2BodyDef defP;
 	defP.type = b2BodyType::b2_staticBody;
-	defP.position.Set(Location.x - Size.x , Location.y + Size.y/2 );
+	defP.position.Set(Location.x - Size.x/2 , Location.y + Size.y/2 );
 
 	this->Body = world.CreateBody(&defP);
 

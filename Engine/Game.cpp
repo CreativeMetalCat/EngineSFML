@@ -476,9 +476,9 @@ void Game::Init()
 	dev64_64.setPoint(2, { 64,64 });
 	dev64_64.setPoint(3, { 0,64 });
 
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 17; i++)
 	{
-		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(128, 64), sf::Vector2f(i *200, 500), path);
+		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i *64, 500), path);
 		sd->Init(path);
 		sd->InitPhysBody(path, this->world);
 
