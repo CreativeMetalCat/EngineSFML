@@ -64,7 +64,7 @@ void Game::Render()
 				SceneActors.at(i)->Draw(this->window);
 				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
-				lightShape->_shape = SceneActors.at(i)->As<CSolidBlock*>()->CollisionShape;
+				lightShape->_shape = SceneActors.at(i)->As<CSolidBlock*>()->ShadowShape;
 
 				lightShape->_renderLightOverShape = true;
 				lightShape->_shape.setPosition(SceneActors.at(i)->GetActorLocation());
@@ -112,6 +112,7 @@ void Game::Render()
 
 	sf::ConvexShape shape1;
 
+	
 	shape1.setPointCount(4);
 	shape1.setPoint(0, sf::Vector2f(0, 0));
 	shape1.setPoint(1, sf::Vector2f(80, 0));

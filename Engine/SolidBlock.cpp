@@ -28,7 +28,7 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 	this->Body = world.CreateBody(&defP);
 
 	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
+	/*if (CollisionShape.getPointCount() > 0)
 	{
 		shape.m_count = CollisionShape.getPointCount();
 		for (int i = 0; i < CollisionShape.getPointCount(); i++)
@@ -36,13 +36,18 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
 		}
 
-	}
+	}*/
 
+	shape.SetAsBox(CollisionRectangle.width, CollisionRectangle.height);
+
+	b2Filter filter;
+	filter.categoryBits = 0x1;
 
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.shape = &shape;
 	TriggerFixtureP.density = 1.f;
+	TriggerFixtureP.filter = filter;
 
 	TriggerFixtureP.isSensor = false;
 
@@ -55,10 +60,13 @@ void CSolidBlock::Draw(sf::RenderWindow & window)
 	window.draw(sprite);
 }
 
-CSolidBlock::CSolidBlock(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path ):CActor(Location,path),Size(Size),CollisionShape(CollisionShape)
+CSolidBlock::CSolidBlock(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path ):CActor(Location,path),Size(Size), ShadowShape(CollisionShape)
 {
 	this->sprite = sf::Sprite(texture);
 	//this->sprite.setScale(scale);
+
+	CollisionRectangle.width = Size.x;
+	CollisionRectangle.height = Size.y;
 }
 
 

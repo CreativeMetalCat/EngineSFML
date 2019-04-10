@@ -90,29 +90,7 @@ void Character::MoveY(float value)
 void Character::Init(std::string path)
 {
 	
-	b2BodyDef defP;
-	defP.type = b2BodyType::b2_dynamicBody;
-	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
-
-	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
-	{
-		shape.m_count = CollisionShape.getPointCount();
-		for (int i = 0; i < CollisionShape.getPointCount(); i++)
-		{
-			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
-		}
-		
-	}
 	
-
-	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
-	TriggerFixtureP.shape = &shape;
-
-
-	this->Body->CreateFixture(&TriggerFixtureP);
-	this->Body->SetUserData(this);
 	
 }
 
@@ -126,7 +104,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	this->Body = world.CreateBody(&defP);
 
 	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
+	/*if (CollisionShape.getPointCount() > 0)
 	{
 		shape.m_count = CollisionShape.getPointCount();
 		for (int i = 0; i < CollisionShape.getPointCount(); i++)
@@ -134,8 +112,9 @@ void Character::InitPhysBody(std::string path, b2World & world)
 			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
 		}
 
-	}
-
+	}*/
+	shape.SetAsBox(CollisionRectangle.width, CollisionRectangle.height);
+	
 
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
@@ -193,12 +172,15 @@ void Character::Update(sf::Time dt)
 	this->Location.y = Body->GetPosition().y;
 }
 
-Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size,sf::Vector2f Location, std::string path):CActor(Location,path),Size(Size),CollisionShape(CollisionShape)
+Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size,sf::Vector2f Location, std::string path):CActor(Location,path),Size(Size),ShadowShape(CollisionShape)
 {
 	if (CollisionShape.getPointCount() > 8)
 	{
 		std::cout << "Waring: Characters collision point count is greater than limit of the physics engine. This can result in unexpected behaviour" << std::endl;
 	}
+
+	CollisionRectangle.width = Size.x;
+	CollisionRectangle.height = Size.y;
 }
 
 

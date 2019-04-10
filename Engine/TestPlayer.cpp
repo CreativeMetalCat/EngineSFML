@@ -40,10 +40,11 @@ void CTestPlayer::InitPhysBody(std::string path, b2World & world)
 	defP.type = b2BodyType::b2_dynamicBody;
 	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
 
+
 	this->Body = world.CreateBody(&defP);
 
 	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
+	/*if (CollisionShape.getPointCount() > 0)
 	{
 		shape.m_count = CollisionShape.getPointCount();
 		for (int i = 0; i < CollisionShape.getPointCount(); i++)
@@ -51,13 +52,17 @@ void CTestPlayer::InitPhysBody(std::string path, b2World & world)
 			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
 		}
 
-	}
+	}*/
+	shape.SetAsBox(CollisionRectangle.width, CollisionRectangle.height);
 
 
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.shape = &shape;
+	TriggerFixtureP.density = 1.f;
+	TriggerFixtureP.isSensor = false;
 
+	this->Body->SetBullet(true);
 
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);
