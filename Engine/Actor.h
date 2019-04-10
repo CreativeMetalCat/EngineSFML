@@ -95,11 +95,11 @@ public:
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnBeginCollision(std::shared_ptr<CObject> otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnBeginCollision(CActor* otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnEndCollision(std::shared_ptr<CActor> otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnEndCollision(CActor* otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
 
 	CActor(sf::Vector2f Location, std::string path="./../");
 	~CActor();

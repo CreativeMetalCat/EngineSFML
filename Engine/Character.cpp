@@ -121,6 +121,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	b2BodyDef defP;
 	defP.type = b2BodyType::b2_dynamicBody;
 	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
+	
 
 	this->Body = world.CreateBody(&defP);
 
@@ -139,7 +140,10 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.shape = &shape;
+	TriggerFixtureP.density = 1.f;
+	TriggerFixtureP.isSensor = false;
 
+	this->Body->SetBullet(true);
 
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);

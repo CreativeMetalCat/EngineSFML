@@ -42,7 +42,9 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.shape = &shape;
+	TriggerFixtureP.density = 1.f;
 
+	TriggerFixtureP.isSensor = false;
 
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);

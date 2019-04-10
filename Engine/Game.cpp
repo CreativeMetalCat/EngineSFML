@@ -430,16 +430,22 @@ void Game::Update(sf::Time dt)
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
-	world.Step(1 / 60.f, 5, 5);
+	world.Step(1 / dt.asSeconds(), 5, 5);
+
+	
 
 	SceneActors.at(1)->Update(dt);
+
+	
+
+	
 }
 
 void Game::Init()
 {
 	this->window.setFramerateLimit(60.f);
 	world.Step(0, 0, 0);
-
+	contactListener.path = path;
 	
 
 	std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0),path, "Wooden_Crate");
