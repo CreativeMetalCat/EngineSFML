@@ -83,29 +83,28 @@ void Game::Render()
 					static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count
 				);
 
+
 				for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
 				{
 					//set point of shape
 
-					va.append
+					va[j] = sf::Vertex
 					(
-						sf::Vertex
-						(
-							{
-								//{...} is used as constructor of sf::Vector<float>
-								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x,//x of point
-								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
-							},
-							sf::Color::Red
-						)
+						{
+							//{...} is used as constructor of sf::Vector<float>
+							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x,//x of point
+							static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
+						},
+						sf::Color::Red
 					);
+
 
 
 				}
 
 
 
-				
+
 				window.draw(va);
 			}
 		}
