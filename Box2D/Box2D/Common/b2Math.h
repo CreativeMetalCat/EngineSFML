@@ -119,7 +119,7 @@ struct b2Vec2
 		return b2Vec2(-y, x);
 	}
 
-	float32 x, y;
+	float x, y;
 };
 
 /// A 2D column vector with 3 elements.

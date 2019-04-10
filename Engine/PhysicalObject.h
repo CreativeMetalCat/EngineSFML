@@ -2,9 +2,9 @@
 #include "Actor.h"
 #include "PhysicalMaterial.h"
 
-//Basic object that simulates physics
-//Unlike all other Actor's children it is supossed to have functionality to play sounds on hit etc.
-class PhysicalObject : public Actor
+//Basic CObject that simulates physics
+//Unlike all other CActor's children it is supossed to have functionality to play sounds on hit etc.
+class PhysicalObject : public CActor
 {
 	std::string MaterialName = "";
 
@@ -27,7 +27,7 @@ public:
 
 	void Init(std::string path)override;
 
-	PhysicalObject(sf::Vector2f position, std::string MaterialName = "");
+	PhysicalObject(sf::Vector2f position, std::string path, std::string MaterialName = "");
 	~PhysicalObject();
 };
 

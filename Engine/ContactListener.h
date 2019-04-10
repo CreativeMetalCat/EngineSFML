@@ -20,8 +20,8 @@ public:
 		void* bodyUserDataB = contact->GetFixtureB()->GetBody()->GetUserData();
 		if (bodyUserDataA&&bodyUserDataB)
 		{
-			static_cast<Actor*>(bodyUserDataA)->OnBeginCollision(std::shared_ptr<Actor>(static_cast<Actor*>(bodyUserDataB)), contact->GetFixtureA(), contact->GetFixtureB(), path);
-			static_cast<Actor*>(bodyUserDataB)->OnBeginCollision(std::shared_ptr<Actor>(static_cast<Actor*>(bodyUserDataA)), contact->GetFixtureA(), contact->GetFixtureB(), path);
+			static_cast<CActor*>(bodyUserDataA)->OnBeginCollision(std::shared_ptr<CActor>(static_cast<CActor*>(bodyUserDataB)), contact->GetFixtureA(), contact->GetFixtureB(), path);
+			static_cast<CActor*>(bodyUserDataB)->OnBeginCollision(std::shared_ptr<CActor>(static_cast<CActor*>(bodyUserDataA)), contact->GetFixtureA(), contact->GetFixtureB(), path);
 		}
 	}
 	void EndContact(b2Contact*contact)
@@ -30,8 +30,8 @@ public:
 		void* bodyUserDataB = contact->GetFixtureB()->GetBody()->GetUserData();
 		if (bodyUserDataA&&bodyUserDataB)
 		{
-			static_cast<Actor*>(bodyUserDataA)->OnEndCollision(std::shared_ptr<Actor>(static_cast<Actor*>(bodyUserDataB)), contact->GetFixtureA(), contact->GetFixtureB(), path);
-			static_cast<Actor*>(bodyUserDataB)->OnEndCollision(std::shared_ptr<Actor>(static_cast<Actor*>(bodyUserDataA)), contact->GetFixtureA(), contact->GetFixtureB(), path);
+			static_cast<CActor*>(bodyUserDataA)->OnEndCollision(std::shared_ptr<CActor>(static_cast<CActor*>(bodyUserDataB)), contact->GetFixtureA(), contact->GetFixtureB(), path);
+			static_cast<CActor*>(bodyUserDataB)->OnEndCollision(std::shared_ptr<CActor>(static_cast<CActor*>(bodyUserDataA)), contact->GetFixtureA(), contact->GetFixtureB(), path);
 		}
 	}
 };

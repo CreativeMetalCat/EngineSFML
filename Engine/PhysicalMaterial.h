@@ -21,7 +21,7 @@ extern "C"
 
 #define CLASS_PHYSCIAL_MATERIAL 3
 
-class PhysicalMaterial :public Object
+class PhysicalMaterial :public CObject
 {
 
 
@@ -46,7 +46,7 @@ public:
 
 	// ID of class for Casting
 	//ID MUST be defined in the beggining of the file with class
-	//default is Object
+	//default is CObject
 	static const int ClassID = CLASS_PHYSCIAL_MATERIAL;
 
 
@@ -80,7 +80,7 @@ public:
 
 	virtual void Init(std::string PATH);
 
-	PhysicalMaterial(std::string name);
+	PhysicalMaterial(std::string name, std::string path);
 	~PhysicalMaterial();
 };
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "ContactListener.h"
-
-
+using namespace std;
+#include <include/lighting/LightSystem.h>
 
 
 //class that manages all of the operations in game
@@ -13,21 +13,23 @@ class Game
 	//Handles events
 	void ProccessEvents();
 
-	//Updates every object
+	//Updates every CObject
 	void Update(sf::Time dt);
 
 
 	std::string path;
 
-	std::vector<std::shared_ptr<Actor>>SceneActors;
+	std::vector<std::shared_ptr<CActor>>SceneActors;
 
 	b2World world;
 
 	ContactListener contactListener;
+
+	sf::Texture devOrange64_64;
 public:
 	//Init widnow etc.
 	void Init();
-
+	
 
 	void Run();
 

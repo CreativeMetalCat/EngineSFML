@@ -542,7 +542,7 @@ inline float32 b2Body::GetAngularVelocity() const
 	return m_angularVelocity;
 }
 
-inline float32 b2Body::GetMass() const
+inline float b2Body::GetMass() const
 {
 	return m_mass;
 }
