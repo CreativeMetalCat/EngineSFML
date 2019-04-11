@@ -76,89 +76,99 @@ void Game::Render()
 			if (SceneActors.at(i)->GetBody() != NULL)
 			{
 
-				try
-
-
+				for (b2Fixture*fix = this->SceneActors.at(i)->GetBody()->GetFixtureList(); fix != NULL; fix = fix->GetNext())
 				{
-					sf::VertexArray va = sf::VertexArray
-					(
-						sf::PrimitiveType::LineStrip,
-						static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count
-					);
-
-					//set point of shape
-					if (SceneActors.at(i)->As<CSolidBlock*>())
+					try
 					{
-						for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
-						{
 
-							va[j] = sf::Vertex
+						if (fix->GetShape()->GetType() == b2Shape::e_circle)
+						{
+							sf::CircleShape cs;
+							cs.setPosition(sf::Vector2f(SceneActors.at(i)->GetBody()->GetPosition().x, SceneActors.at(i)->GetBody()->GetPosition().y));
+							cs.setRadius(25);
+							cs.setFillColor(sf::Color::Red);
+							window.draw(cs);
+						}
+						else
+						{
+							sf::VertexArray va = sf::VertexArray
 							(
-								{
-									//{...} is used as constructor of sf::Vector<float>
-									static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
-									static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2 //y of point
-								},
-								sf::Color::Red
+								sf::PrimitiveType::LineStrip,
+								static_cast<b2PolygonShape*>(fix->GetShape())->m_count
 							);
 
-
-						}
-
-						va.append
-						(sf::Vertex
-						(
+							//set point of shape
+							if (SceneActors.at(i)->As<CSolidBlock*>())
 							{
-								//{...} is used as constructor of sf::Vector<float>
-								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
-								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2//y of point
-							},
-							sf::Color::Red
-						)
-						);
-					}
-
-					else
-					{
-						for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
-						{
-							va[j] = sf::Vertex
-							(
+								for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
 								{
-									//{...} is used as constructor of sf::Vector<float>
-									static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x ,//x of point
-									static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
-								},
-								sf::Color::Red
-							);
-						}
 
-						va.append
-						(sf::Vertex
-						(
+									va[j] = sf::Vertex
+									(
+										{
+											//{...} is used as constructor of sf::Vector<float>
+											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
+											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2 //y of point
+										},
+										sf::Color::Red
+									);
+
+
+								}
+
+								va.append
+								(sf::Vertex
+								(
+									{
+										//{...} is used as constructor of sf::Vector<float>
+										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
+										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2//y of point
+									},
+									sf::Color::Red
+								)
+								);
+							}
+
+							else
 							{
-								//{...} is used as constructor of sf::Vector<float>
-								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x,//x of point
-								static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y //y of point
-							},
-							sf::Color::Red
-						)
-						);
+								for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
+								{
+									va[j] = sf::Vertex
+									(
+										{
+											//{...} is used as constructor of sf::Vector<float>
+											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x ,//x of point
+											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
+										},
+										sf::Color::Red
+									);
+								}
+
+								va.append
+								(sf::Vertex
+								(
+									{
+										//{...} is used as constructor of sf::Vector<float>
+										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x,//x of point
+										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y //y of point
+									},
+									sf::Color::Red
+								)
+								);
+							}
+
+
+							window.draw(va);
+						}
 					}
 
 
-					window.draw(va);
-				}
-				
-
-				catch (std::exception e)
-				{
-					std::cout << e.what() << std::endl;
+					catch (std::exception e)
+					{
+						std::cout << e.what() << std::endl;
+					}
 				}
 			}
-
-			
-			
 		}
 	}
 
@@ -527,9 +537,9 @@ void Game::Init()
 	dev64_64.setPoint(2, { 64,64 });
 	dev64_64.setPoint(3, { 0,64 });
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 17; i++)
 	{
-		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(1280, 64), sf::Vector2f(i *1280, 500), path);
+		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i *64, 400), path);
 		sd->Init(path);
 		sd->InitPhysBody(path, this->world);
 
@@ -562,7 +572,6 @@ void Game::Run()
 
 Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f, 9.8f))
 {
-	
 	world.SetContactListener(&contactListener);
 }
 

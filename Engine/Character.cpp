@@ -14,7 +14,6 @@ void Character::MoveX(float value)
 
 void Character::Jump()
 {
-
 	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0, this->GetBody()->GetMass() * 500), true);
 }
 
@@ -110,7 +109,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 
 	this->Body = world.CreateBody(&defP);
 
-	b2PolygonShape shape;
+	
 
 	
 	
@@ -124,40 +123,43 @@ void Character::InitPhysBody(std::string path, b2World & world)
 		}
 
 	}*/
+	
+	
+	
+
+	
+	b2CircleShape smoothShape;
+	smoothShape.m_radius = 25;
+	smoothShape.m_p.Set(Location.x + Size.x / 2, Location.y + Size.y / 2 + 10);
+
+	
+
+	b2FixtureDef smoothFixture;
+	smoothFixture.density = 0.0f;
+	smoothFixture.shape = &smoothShape;
+	smoothFixture.isSensor = false;
+	smoothFixture.friction = 0.0f;
+
+	
+	
+	
+
+	b2PolygonShape shape;
 	shape.SetAsBox(CollisionRectangle.width / 2, CollisionRectangle.height / 2);
-	
-	
-
-	
-	b2EdgeShape smootingShape;
-	smootingShape.Set
-	(
-		b2Vec2(CollisionRectangle.left, CollisionRectangle.height + CollisionRectangle.top),
-		b2Vec2(CollisionRectangle.left+CollisionRectangle.width, CollisionRectangle.height + CollisionRectangle.top)
-	);
-	smootingShape.m_hasVertex0 = true;
-	smootingShape.m_hasVertex3 = true;
-
-	smootingShape.m_vertex0 = b2Vec2(CollisionRectangle.left - 3, CollisionRectangle.height + CollisionRectangle.top - 3);
-	smootingShape.m_vertex3 = b2Vec2(CollisionRectangle.left + CollisionRectangle.width + 3, CollisionRectangle.height + CollisionRectangle.top - 3);
-
-	
-	
-
 
 	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
+	TriggerFixtureP.density = 0.0f;
 	TriggerFixtureP.shape = &shape;
 	TriggerFixtureP.isSensor = false;
 	TriggerFixtureP.friction = 0.0f;
 	
-	
 
-	//this->Body->SetBullet(true);
+	this->Body->SetBullet(true);
 
 	
+	this->Body->CreateFixture(&smoothFixture);
 	this->Body->CreateFixture(&TriggerFixtureP);
-
+	
 	this->Body->SetUserData(this);
 	
 }
