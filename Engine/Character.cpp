@@ -1,6 +1,6 @@
 #include "Character.h"
 
-
+#include "DynamicBodyRaycastCallback.h"
 
 void Character::MoveX(float value)
 {
@@ -8,7 +8,14 @@ void Character::MoveX(float value)
 
 	float vel = (value*this->GetMaxVelocity().x) - this->GetLinearVelocity().x;
 	float impulse = this->GetBody()->GetMass()*vel;
-	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(impulse*10, 0), true);
+	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(impulse, 0), true);
+	
+}
+
+void Character::Jump()
+{
+
+	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0, this->GetBody()->GetMass() * 500), true);
 }
 
 void Character::MoveY(float value)
@@ -104,6 +111,10 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	this->Body = world.CreateBody(&defP);
 
 	b2PolygonShape shape;
+
+	
+	
+
 	/*if (CollisionShape.getPointCount() > 0)
 	{
 		shape.m_count = CollisionShape.getPointCount();
@@ -115,6 +126,24 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	}*/
 	shape.SetAsBox(CollisionRectangle.width / 2, CollisionRectangle.height / 2);
 	
+	
+
+	
+	b2EdgeShape smootingShape;
+	smootingShape.Set
+	(
+		b2Vec2(CollisionRectangle.left, CollisionRectangle.height + CollisionRectangle.top),
+		b2Vec2(CollisionRectangle.left+CollisionRectangle.width, CollisionRectangle.height + CollisionRectangle.top)
+	);
+	smootingShape.m_hasVertex0 = true;
+	smootingShape.m_hasVertex3 = true;
+
+	smootingShape.m_vertex0 = b2Vec2(CollisionRectangle.left - 3, CollisionRectangle.height + CollisionRectangle.top - 3);
+	smootingShape.m_vertex3 = b2Vec2(CollisionRectangle.left + CollisionRectangle.width + 3, CollisionRectangle.height + CollisionRectangle.top - 3);
+
+	
+	
+
 
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
@@ -122,11 +151,15 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	TriggerFixtureP.isSensor = false;
 	TriggerFixtureP.friction = 0.0f;
 	
+	
 
 	//this->Body->SetBullet(true);
+
 	
 	this->Body->CreateFixture(&TriggerFixtureP);
+
 	this->Body->SetUserData(this);
+	
 }
 
 void Character::RegisterClassLUA(lua_State *& L)
@@ -169,8 +202,12 @@ void Character::RegisterClassLUA(lua_State *& L)
 
 void Character::Update(sf::Time dt)
 {
-	this->Location.x = Body->GetPosition().x;
-	this->Location.y = Body->GetPosition().y;
+	if (Body != nullptr)
+	{
+
+		this->Location.x = Body->GetPosition().x;
+		this->Location.y = Body->GetPosition().y;
+	}
 }
 
 Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size,sf::Vector2f Location, std::string path):CActor(Location,path),Size(Size),ShadowShape(CollisionShape)

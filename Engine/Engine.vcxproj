@@ -160,6 +160,7 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="ContactListener.cpp" />
+    <ClCompile Include="DynamicBodyRaycastCallback.cpp" />
     <ClCompile Include="SolidBlock.cpp" />
     <ClCompile Include="TestPlayer.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="ContactListener.h" />
+    <ClInclude Include="DynamicBodyRaycastCallback.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="SolidBlock.h" />
     <ClInclude Include="TestPlayer.h" />

@@ -53,6 +53,8 @@ public:
 	}
 	inline void MoveX(float value);
 
+	void Jump();
+
 	DEPRECATED_ERROR inline void MoveY(float value);
 
 	virtual void Init(std::string path);
