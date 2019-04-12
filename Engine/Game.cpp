@@ -282,6 +282,7 @@ void Game::ProccessEvents()
 
 	while (window.pollEvent(event))
 	{
+		ImGui::SFML::ProcessEvent(event);
 		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyPressed)
 		{
 			using namespace luabridge;
@@ -495,7 +496,13 @@ void Game::ProccessEvents()
 				}
 			}
 		}
-		ImGui::SFML::ProcessEvent(event);
+		if (event.key.code == sf::Keyboard::Tilde&&event.type == sf::Event::EventType::KeyPressed)
+		{
+			this->ShowGravityUI = !this->ShowGravityUI;
+			
+		}
+		
+		
 	}
 }
 
@@ -513,29 +520,33 @@ void Game::Update(sf::Time dt)
 	
 	
 	ImGui::SFML::Update(window, dt);
+	if (ShowGravityUI) 
+	{
+		ImGui::Begin("Gravity Settings");
+
+		float gravX = world.GetGravity().x;
+		float gravY = world.GetGravity().y;
+		bool CCDEnabled = world.GetContinuousPhysics();
+
+		if (ImGui::DragFloat("Gravity X", &gravX))
+		{
+			world.Step(0, 0, 0);
+			world.SetGravity(b2Vec2(gravX, world.GetGravity().y));
+		}
+
+		if (ImGui::DragFloat("Gravity Y", &gravY))
+		{
+			world.Step(0, 0, 0);
+			world.SetGravity(b2Vec2(world.GetGravity().x, gravY));
+		}
+		if (ImGui::Checkbox("CCD Enabled", &CCDEnabled))
+		{
+			world.SetContinuousPhysics(CCDEnabled);
+		}
+
+		ImGui::End();
+	}
 	
-	ImGui::Begin("Sample window");
-
-	float gravX = world.GetGravity().x;
-	float gravY = world.GetGravity().y;
-
-	if (ImGui::DragFloat("Gravity X", &gravX))
-	{
-		world.Step(0, 0, 0);
-		world.SetGravity(b2Vec2(gravX, world.GetGravity().y));
-	}
-
-	if (ImGui::DragFloat("Gravity Y", &gravY))
-	{
-		world.Step(0, 0, 0);
-		world.SetGravity(b2Vec2(world.GetGravity().x, gravY));
-	}
-
-	if (ImGui::Button("Update window title")) {
-
-		window.setTitle("Hello");
-	}
-	ImGui::End();
 }
 
 void Game::Init()
