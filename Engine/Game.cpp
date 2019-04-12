@@ -4,6 +4,8 @@
 #include "SolidBlock.h"
 #include "TestPlayer.h"
 
+
+
 using namespace std;
 
 
@@ -258,9 +260,16 @@ void Game::Render()
 	window.setView(view);
 	window.draw(LSprite, lightRenderStates);
 	
-
 	
 
+
+
+	sf::Color bgColor;
+	float color[3] = { 0.f, 0.f, 0.f };
+
+	
+	
+	ImGui::SFML::Render(window);
 	window.display();
 
 	
@@ -269,6 +278,8 @@ void Game::Render()
 void Game::ProccessEvents()
 {
 	sf::Event event;
+	
+
 	while (window.pollEvent(event))
 	{
 		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyPressed)
@@ -484,7 +495,7 @@ void Game::ProccessEvents()
 				}
 			}
 		}
-		
+		ImGui::SFML::ProcessEvent(event);
 	}
 }
 
@@ -500,12 +511,38 @@ void Game::Update(sf::Time dt)
 	SceneActors.at(1)->Update(dt);
 
 	
-
 	
+	ImGui::SFML::Update(window, dt);
+	
+	ImGui::Begin("Sample window");
+
+	float gravX = world.GetGravity().x;
+	float gravY = world.GetGravity().y;
+
+	if (ImGui::DragFloat("Gravity X", &gravX))
+	{
+		world.Step(0, 0, 0);
+		world.SetGravity(b2Vec2(gravX, world.GetGravity().y));
+	}
+
+	if (ImGui::DragFloat("Gravity Y", &gravY))
+	{
+		world.Step(0, 0, 0);
+		world.SetGravity(b2Vec2(world.GetGravity().x, gravY));
+	}
+
+	if (ImGui::Button("Update window title")) {
+
+		window.setTitle("Hello");
+	}
+	ImGui::End();
 }
 
 void Game::Init()
 {
+	ImGui::CreateContext();
+	ImGui::SFML::Init(window);
+
 	this->window.setFramerateLimit(60.f);
 	contactListener.path = path;
 	
@@ -554,7 +591,7 @@ void Game::Init()
 void Game::Run()
 {
 	sf::Clock clock;
-
+	
 	while (window.isOpen())
 	{
 
@@ -566,12 +603,14 @@ void Game::Run()
 		Render();
 		
 	}
+	ImGui::DestroyContext();
 }
 
 
 
-Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f, 9.8f))
+Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f,9.8f))
 {
+	
 	world.SetContactListener(&contactListener);
 }
 
