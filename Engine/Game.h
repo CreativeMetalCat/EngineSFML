@@ -26,6 +26,8 @@ class Game
 	ContactListener contactListener;
 
 	sf::Texture devOrange64_64;
+
+	bool ShowGravityUI = false;
 public:
 	//Init widnow etc.
 	void Init();

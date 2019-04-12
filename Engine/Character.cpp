@@ -15,6 +15,7 @@ void Character::MoveX(float value)
 void Character::Jump()
 {
 	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0, this->GetBody()->GetMass() * 500), true);
+
 }
 
 void Character::MoveY(float value)
@@ -135,7 +136,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	
 
 	b2FixtureDef smoothFixture;
-	smoothFixture.density = 0.0f;
+	smoothFixture.density = 1.f;
 	smoothFixture.shape = &smoothShape;
 	smoothFixture.isSensor = false;
 	smoothFixture.friction = 0.0f;
@@ -148,7 +149,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	shape.SetAsBox(CollisionRectangle.width / 2, CollisionRectangle.height / 2);
 
 	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 0.0f;
+	TriggerFixtureP.density = 1.f;
 	TriggerFixtureP.shape = &shape;
 	TriggerFixtureP.isSensor = false;
 	TriggerFixtureP.friction = 0.0f;
@@ -209,6 +210,8 @@ void Character::Update(sf::Time dt)
 
 		this->Location.x = Body->GetPosition().x;
 		this->Location.y = Body->GetPosition().y;
+
+		std::cout<<this->GetBody()->GetLinearVelocity().y<<std::endl;
 	}
 }
 

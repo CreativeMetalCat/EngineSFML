@@ -2,6 +2,9 @@
 #include <iostream>
 #include <memory>
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 extern "C"
 {
 # include "lua.h"
