@@ -8,6 +8,7 @@
 
 #define CLASS_ACTOR 2
 
+#define FACTOR 20
 //Base of all objects that can be placed in the scene
 class CActor : public CObject
 {

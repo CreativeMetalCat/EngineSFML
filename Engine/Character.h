@@ -5,7 +5,7 @@
 class Character : public CActor
 {
 protected:
-	sf::Vector2f MaxVelocity = sf::Vector2f(500, 500);
+	sf::Vector2f MaxVelocity = sf::Vector2f(1, 50);
 
 	//LUA script file that will be used for movement
 	//it is not obligatory to use LUA script

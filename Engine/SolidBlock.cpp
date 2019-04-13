@@ -23,7 +23,7 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	b2BodyDef defP;
 	defP.type = b2BodyType::b2_staticBody;
-	defP.position.Set(Location.x + Size.x/2 , Location.y + Size.y/2 );
+	defP.position.Set((Location.x  + Size.x/2) / FACTOR, (Location.y + Size.y/2) / FACTOR);
 	defP.fixedRotation = true;
 
 	this->Body = world.CreateBody(&defP);
@@ -39,7 +39,7 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	}*/
 
-	shape.SetAsBox(CollisionRectangle.width/2 , CollisionRectangle.height/2);
+	shape.SetAsBox(CollisionRectangle.width/2 / FACTOR, CollisionRectangle.height/2 / FACTOR);
 	
 	b2Filter filter;
 	filter.categoryBits = 0x1;
@@ -56,6 +56,8 @@ void CSolidBlock::InitPhysBody(std::string path, b2World & world)
 
 	this->Body->CreateFixture(&TriggerFixtureP);
 	this->Body->SetUserData(this);
+
+	this->SetActorLocation(sf::Vector2f(this->Body->GetPosition().x*FACTOR, this->Body->GetPosition().y*FACTOR));
 }
 
 void CSolidBlock::Draw(sf::RenderWindow & window)

@@ -2,7 +2,7 @@
 #include "ContactListener.h"
 using namespace std;
 #include <include/lighting/LightSystem.h>
-
+#include <chipmunk.h>
 
 //class that manages all of the operations in game
 class Game
@@ -28,6 +28,8 @@ class Game
 	sf::Texture devOrange64_64;
 
 	bool ShowGravityUI = false;
+
+	bool m = false;
 public:
 	//Init widnow etc.
 	void Init();

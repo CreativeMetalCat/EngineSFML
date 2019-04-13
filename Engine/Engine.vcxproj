@@ -77,7 +77,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\bin\</OutDir>
-    <IncludePath>C:\Users\catgu\source\repos\imgui-1.69;$(SolutionDir)\Engine\ltbl;$(SolutionDir)\Engine\LuaBrigde;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\catgu\source\repos\Engine\Engine\chipmunkcpp\chipmunk;C:\Users\catgu\source\repos\imgui-1.69;$(SolutionDir)\Engine\ltbl;$(SolutionDir)\Engine\LuaBrigde;$(IncludePath)</IncludePath>
     <IntDir>$(Platform)\$(Configuration)\bin\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -107,14 +107,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\catgu\source\repos\imgui-1.69;$(SolutionDir)\Engine\tinyxml;$(SolutionDir)\Box2D;$(SolutionDir)\api\studio\inc;$(SolutionDir)\api\lowlevel\inc;$(SolutionDir)\Engine\SFML-2.5.1\include;$(SolutionDir)\Engine\LuaBridge;$(SolutionDir)\Engine\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\catgu\source\repos\Engine\Engine\chipmunkcpp\chipmunk\include\chipmunk;C:\Users\catgu\source\repos\Engine\Engine\chipmunkcpp;C:\Users\catgu\source\repos\imgui-1.69;$(SolutionDir)\Engine\tinyxml;$(SolutionDir)\Box2D;$(SolutionDir)\api\studio\inc;$(SolutionDir)\api\lowlevel\inc;$(SolutionDir)\Engine\SFML-2.5.1\include;$(SolutionDir)\Engine\LuaBridge;$(SolutionDir)\Engine\lua\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\catgu\source\repos\Engine\Engine\ltbl;$(SolutionDir)\Engine\lua;$(SolutionDir)\box2d;$(SolutionDir)\api\studio\lib;$(SolutionDir)\api\lowlevel\lib;$(SolutionDir)\Engine\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Box2D.lib;fmod64_vc.lib;fmodstudio64_vc.lib;sfml-main-d.lib;sfml-network-d.lib;sfml-audio-d.lib;opengl32.lib;LTBL2-d.lib;lua52.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\catgu\source\repos\Engine\Engine\chipmunkcpp;C:\Users\catgu\source\repos\Engine\Engine\ltbl;$(SolutionDir)\Engine\lua;$(SolutionDir)\box2d;$(SolutionDir)\api\studio\lib;$(SolutionDir)\api\lowlevel\lib;$(SolutionDir)\Engine\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Box2D.lib;fmod64_vc.lib;fmodstudio64_vc.lib;sfml-main-d.lib;sfml-network-d.lib;sfml-audio-d.lib;chipmunk.lib;opengl32.lib;LTBL2-d.lib;lua52.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -6,15 +6,20 @@ void Character::MoveX(float value)
 {
 	
 
-	float vel = (value*this->GetMaxVelocity().x) - this->GetLinearVelocity().x;
-	float impulse = this->GetBody()->GetMass()*vel;
-	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(impulse, 0), true);
-	
+	float vel = (value*this->GetMaxVelocity().x)/FACTOR - this->GetLinearVelocity().x;
+	float impulse = /*this->GetBody()->GetMass()**/vel;
+	this->Body->SetLinearVelocity(b2Vec2(value/50, this->Body->GetLinearVelocity().y));
+	std::cout << vel << std::endl;
 }
 
 void Character::Jump()
 {
-	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0, this->GetBody()->GetMass() * 500), true);
+	float vel = this->GetMaxVelocity().y - this->GetLinearVelocity().y;
+	float impulse = this->GetBody()->GetMass()*vel;
+	//this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0, -impulse * 5000), true);
+
+	this->Body->ApplyLinearImpulseToCenter(b2Vec2(0, -impulse),true);
+
 
 }
 
@@ -105,7 +110,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 {
 	b2BodyDef defP;
 	defP.type = b2BodyType::b2_dynamicBody;
-	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
+	defP.position.Set((Location.x  + Size.x / 2) / FACTOR, (Location.y+ Size.y / 2) / FACTOR);
 	
 
 	this->Body = world.CreateBody(&defP);
@@ -130,8 +135,8 @@ void Character::InitPhysBody(std::string path, b2World & world)
 
 	
 	b2CircleShape smoothShape;
-	smoothShape.m_radius = 25;
-	smoothShape.m_p.Set(Location.x + Size.x / 2, Location.y + Size.y / 2 + 10);
+	smoothShape.m_radius = 25 / 64;
+	smoothShape.m_p.Set((Location.x  + Size.x / 2)/ FACTOR, (Location.y  + Size.y / 2 + 10)/ FACTOR);
 
 	
 
@@ -146,7 +151,7 @@ void Character::InitPhysBody(std::string path, b2World & world)
 	
 
 	b2PolygonShape shape;
-	shape.SetAsBox(CollisionRectangle.width / 2, CollisionRectangle.height / 2);
+	shape.SetAsBox(CollisionRectangle.width/ FACTOR / 2, CollisionRectangle.height/ FACTOR / 2);
 
 	b2FixtureDef TriggerFixtureP;
 	TriggerFixtureP.density = 1.f;
@@ -208,10 +213,10 @@ void Character::Update(sf::Time dt)
 	if (Body != nullptr)
 	{
 
-		this->Location.x = Body->GetPosition().x;
-		this->Location.y = Body->GetPosition().y;
+		this->Location.x = Body->GetPosition().x*FACTOR;
+		this->Location.y = Body->GetPosition().y*FACTOR;
 
-		std::cout<<this->GetBody()->GetLinearVelocity().y<<std::endl;
+		
 	}
 }
 

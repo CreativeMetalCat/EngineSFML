@@ -20,16 +20,16 @@ void Game::Render()
 
 
 
-	unshadowShader.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/unshadowShader.vert", "C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/unshadowShader.frag");
-	lightOverShapeShader.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/lightOverShapeShader.vert", "C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/lightOverShapeShader.frag");
+	unshadowShader.loadFromFile(path + "ltbl/resources/unshadowShader.vert", path + "ltbl/resources/unshadowShader.frag");
+	lightOverShapeShader.loadFromFile(path + "ltbl/resources/lightOverShapeShader.vert", path + "ltbl/resources/lightOverShapeShader.frag");
 
 
 	sf::Texture penumbraTexture;
-	penumbraTexture.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/penumbraTexture.png");
+	penumbraTexture.loadFromFile(path+"ltbl/resources/penumbraTexture.png");
 	penumbraTexture.setSmooth(true);
 
 	sf::Texture pointLightTexture;
-	pointLightTexture.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/pointLightTexture.png");
+	pointLightTexture.loadFromFile(path + "ltbl/resources/pointLightTexture.png");
 	pointLightTexture.setSmooth(true);
 
 	ltbl::LightSystem ls;
@@ -87,7 +87,7 @@ void Game::Render()
 						{
 							sf::CircleShape cs;
 							cs.setPosition(sf::Vector2f(SceneActors.at(i)->GetBody()->GetPosition().x, SceneActors.at(i)->GetBody()->GetPosition().y));
-							cs.setRadius(25);
+							cs.setRadius(fix->GetShape()->m_radius);
 							cs.setFillColor(sf::Color::Red);
 							window.draw(cs);
 						}
@@ -109,8 +109,8 @@ void Game::Render()
 									(
 										{
 											//{...} is used as constructor of sf::Vector<float>
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2 //y of point
+											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width/64 / 2,//x of point
+											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height/64 / 2 //y of point
 										},
 										sf::Color::Red
 									);
@@ -123,8 +123,8 @@ void Game::Render()
 								(
 									{
 										//{...} is used as constructor of sf::Vector<float>
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2//y of point
+										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width /64/ 2,//x of point
+										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height/64 / 2//y of point
 									},
 									sf::Color::Red
 								)
@@ -501,8 +501,7 @@ void Game::ProccessEvents()
 			this->ShowGravityUI = !this->ShowGravityUI;
 			
 		}
-		
-		
+	
 	}
 }
 
@@ -585,9 +584,9 @@ void Game::Init()
 	dev64_64.setPoint(2, { 64,64 });
 	dev64_64.setPoint(3, { 0,64 });
 
-	for (int i = 0; i < 17; i++)
+	for (int i = 0; i < 19; i++)
 	{
-		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i *64, 400), path);
+		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i*64, 400), path);
 		sd->Init(path);
 		sd->InitPhysBody(path, this->world);
 
@@ -619,7 +618,7 @@ void Game::Run()
 
 
 
-Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f,9.8f))
+Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f,9.8f/FACTOR))
 {
 	
 	world.SetContactListener(&contactListener);
