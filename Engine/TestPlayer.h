@@ -22,6 +22,12 @@ public:
 	CTestPlayer(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
 
 	virtual void Init(std::string path)override;
+
+	virtual void InitPhysBody(std::string path, cpSpace*& world)override;
+
+	void Draw(sf::RenderWindow& window)override;
+
+	void Update(sf::Time dt);
 	
 	~CTestPlayer();
 };

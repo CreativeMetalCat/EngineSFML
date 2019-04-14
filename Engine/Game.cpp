@@ -59,11 +59,9 @@ void Game::Render()
 		for (size_t i = 0; i < SceneActors.size(); i++)
 		{
 
-
+			SceneActors.at(i)->Draw(window);
 			if (SceneActors.at(i)->As<CSolidBlock*>())
 			{
-
-				SceneActors.at(i)->Draw(this->window);
 				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
 				lightShape->_shape = SceneActors.at(i)->As<CSolidBlock*>()->ShadowShape;
@@ -239,7 +237,7 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(1)->As<Character*>()->MoveX(-1);
+			SceneActors.at(2)->As<Character*>()->MoveX(-1);
 
 			mLeft = true;
 			
@@ -295,13 +293,13 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(1)->As<Character*>()->MoveX(1);	
+			SceneActors.at(2)->As<Character*>()->MoveX(1);	
 
 			mRight= true;
 		}
 		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(1)->As<Character*>()->Jump();
+			SceneActors.at(2)->As<Character*>()->Jump();
 
 			using namespace luabridge;
 			if (!SceneActors.empty())
@@ -423,7 +421,7 @@ void Game::ProccessEvents()
 
 		if (!mRight && !mLeft)
 		{
-			SceneActors[1]->As<Character*>()->StopXMovement();
+			SceneActors[2]->As<Character*>()->StopXMovement();
 		}
 	}
 }
@@ -435,10 +433,16 @@ void Game::Update(sf::Time dt)
 
 	cpSpaceStep(space, 1 / dt.asSeconds());
 	
-	SceneActors.at(1)->Update(dt);
-
 	
-	std::cout << SceneActors.at(1)->GetActorLocation().y << std::endl;
+	if (!SceneActors.empty())
+	{
+		for (size_t i = 0; i < SceneActors.size(); i++)
+		{
+			SceneActors.at(i)->Update(dt);
+		}
+	}
+	
+	
 	ImGui::SFML::Update(window, dt);
 	if (ShowGravityUI)
 	{
@@ -491,10 +495,12 @@ void Game::Init()
 	s.setPoint(2, { 50,50 });
 	s.setPoint(3, { 0,50 });
 
-	std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(50,50 ), sf::Vector2f(300, -100), path);
+	std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(64,64 ), sf::Vector2f(200, -100), path);
 	
 	c->InitPhysBody(path,space);
 	SceneActors.push_back(c);
+
+	
 
 	
 	if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
@@ -508,6 +514,12 @@ void Game::Init()
 	dev64_64.setPoint(2, { 64,64 });
 	dev64_64.setPoint(3, { 0,64 });
 
+
+	std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64,s, sf::Vector2f(64, 64), sf::Vector2f(300, -100), path);
+	player->InitPhysBody(path, space);
+	this->SceneActors.push_back(player);
+
+
 	for (int i = 0; i < 19; i++)
 	{
 		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i*64, 400), path);
@@ -516,6 +528,10 @@ void Game::Init()
 
 		SceneActors.push_back(sd);
 	}
+
+	
+
+
 	int i = 0;
 }
 

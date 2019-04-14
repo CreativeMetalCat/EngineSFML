@@ -61,6 +61,20 @@ public:
 	//not const for LUA
 	cpBody * GetBody() { return Body; }
 
+	sf::Vector2f GetLinearVelocity()const
+	{
+		cpVect vel = cpBodyGetVelocity(this->Body);
+		return sf::Vector2f(vel.x, vel.y);
+	}
+
+	//Imp - impluse to apply
+	//LocalPoint - Point in the body where impulse will be aplied
+	void ApplyLinearImpulse(cpVect imp, cpVect localPoint)
+	{
+		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), imp, localPoint);
+		//Body->SetLinearVelocity(vel);
+	}
+
 	//returns copy of the Array
 	//Made primarly for the LUA
 	std::vector<std::shared_ptr<CActor>> GetChildren()const { return Children; }

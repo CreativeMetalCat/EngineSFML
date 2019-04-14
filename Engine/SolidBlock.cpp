@@ -32,7 +32,7 @@ void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 		{
 			//perform here actions that can happen only after body init
 
-			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, (sqrt(CollisionRectangle.width*CollisionRectangle.width + CollisionRectangle.height*CollisionRectangle.height) / 2)));
+			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, 0));
 
 			cpSpaceAddBody(world, this->Body);
 
@@ -56,7 +56,6 @@ void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 	{
 		std::cout << e.what() << std::endl;
 	}
-
 }
 
 void CSolidBlock::Draw(sf::RenderWindow & window)

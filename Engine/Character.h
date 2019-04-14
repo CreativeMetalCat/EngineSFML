@@ -41,19 +41,7 @@ public:
 
 	void SetMaxVelocity(sf::Vector2f v) { this->MaxVelocity = v; }
 
-	sf::Vector2f GetLinearVelocity()const
-	{
-		cpVect vel= cpBodyGetVelocity(this->Body);
-		return sf::Vector2f(vel.x, vel.y);
-	}
-
-	//Imp - impluse to apply
-	//LocalPoint - Point in the body where impulse will be aplied
-	void ApplyLinearImpulse(cpVect imp, cpVect localPoint)
-	{
-		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), imp, localPoint);
-		//Body->SetLinearVelocity(vel);
-	}
+	
 	inline void MoveX(float value);
 
 	void Jump();
