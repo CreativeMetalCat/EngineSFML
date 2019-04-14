@@ -2,6 +2,16 @@
 
 
 
+cpShape * CActor::GetShape(int i)
+{
+	if (i >= shapes.size() || i < 0) { return nullptr; }
+	else
+	{
+		return shapes.at(i);
+	}
+
+}
+
 void CActor::AddChildRaw(CActor * a)
 {
 	std::shared_ptr<CActor>ptr(a);

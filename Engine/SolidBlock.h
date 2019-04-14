@@ -27,7 +27,7 @@ public:
 	void SetSpriteTexture(sf::Texture & texture);
 
 	virtual void Init(std::string path)override;
-	virtual void InitPhysBody(std::string path, b2World &world);
+	virtual void InitPhysBody(std::string path, cpSpace *&world);
 
 	void Draw(sf::RenderWindow&window)override;
 

@@ -6,21 +6,19 @@ void Character::MoveX(float value)
 {
 	
 
-	float vel = (value*this->GetMaxVelocity().x)/FACTOR - this->GetLinearVelocity().x;
-	float impulse = /*this->GetBody()->GetMass()**/vel;
-	this->Body->SetLinearVelocity(b2Vec2(value/50, this->Body->GetLinearVelocity().y));
-	std::cout << vel << std::endl;
+	float vel = (value*this->GetMaxVelocity().x)- this->GetLinearVelocity().x;
+	float impulse = cpBodyGetMass(this->Body)* vel/100;
+	this->ApplyLinearImpulse(cpv(vel, 0), cpv(CollisionRectangle.width/2, CollisionRectangle.height/2));
 }
 
 void Character::Jump()
 {
-	float vel = this->GetMaxVelocity().y - this->GetLinearVelocity().y;
-	float impulse = this->GetBody()->GetMass()*vel;
-	//this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0, -impulse * 5000), true);
+	this->ApplyLinearImpulse(cpv(0, -10), cpv(0, 0));
+}
 
-	this->Body->ApplyLinearImpulseToCenter(b2Vec2(0, -impulse),true);
-
-
+void Character::StopXMovement()
+{
+	//cpBodySetVelocity(this->GetBody(), cpv(cpBodyGetVelocity(GetBody()).x*0.01f, cpBodyGetVelocity(GetBody()).y));
 }
 
 void Character::MoveY(float value)
@@ -106,68 +104,47 @@ void Character::Init(std::string path)
 	
 }
 
-void Character::InitPhysBody(std::string path, b2World & world)
+void Character::InitPhysBody(std::string path, cpSpace *&world)
 {
-	b2BodyDef defP;
-	defP.type = b2BodyType::b2_dynamicBody;
-	defP.position.Set((Location.x  + Size.x / 2) / FACTOR, (Location.y+ Size.y / 2) / FACTOR);
-	
-
-	this->Body = world.CreateBody(&defP);
-
-	
-
-	
-	
-
-	/*if (CollisionShape.getPointCount() > 0)
+	try
 	{
-		shape.m_count = CollisionShape.getPointCount();
-		for (int i = 0; i < CollisionShape.getPointCount(); i++)
+		std::vector<cpVect>points;
+		for (int i = 0; i < ShadowShape.getPointCount(); i++)
 		{
-			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
+			points.push_back(cpv(ShadowShape.getPoint(i).x, ShadowShape.getPoint(i).x));
 		}
 
-	}*/
-	
-	
-	
+		this->Body = cpBodyNew(100.f,cpMomentForBox(100.f,CollisionRectangle.width,CollisionRectangle.height));
+		if (this->Body != nullptr)
+		{
+			//perform here actions that can happen only after body init
 
-	
-	b2CircleShape smoothShape;
-	smoothShape.m_radius = 25 / 64;
-	smoothShape.m_p.Set((Location.x  + Size.x / 2)/ FACTOR, (Location.y  + Size.y / 2 + 10)/ FACTOR);
+			
+			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, (sqrt(CollisionRectangle.width*CollisionRectangle.width + CollisionRectangle.height*CollisionRectangle.height) / 2)));
 
-	
+			cpSpaceAddBody(world, this->Body);
 
-	b2FixtureDef smoothFixture;
-	smoothFixture.density = 1.f;
-	smoothFixture.shape = &smoothShape;
-	smoothFixture.isSensor = false;
-	smoothFixture.friction = 0.0f;
+			cpBodySetUserData(Body, this);
 
-	
-	
-	
+			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x, this->GetActorLocation().y));
 
-	b2PolygonShape shape;
-	shape.SetAsBox(CollisionRectangle.width/ FACTOR / 2, CollisionRectangle.height/ FACTOR / 2);
+			for (int i = 0; i < shapes.size(); i++)
+			{
+				if (shapes.at(i) != nullptr)
+				{
+					cpSpaceAddShape(world, shapes[i]);
+				}
 
-	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
-	TriggerFixtureP.shape = &shape;
-	TriggerFixtureP.isSensor = false;
-	TriggerFixtureP.friction = 0.0f;
-	
+			}
 
-	this->Body->SetBullet(true);
 
-	
-	this->Body->CreateFixture(&smoothFixture);
-	this->Body->CreateFixture(&TriggerFixtureP);
-	
-	this->Body->SetUserData(this);
-	
+			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
+		}
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 }
 
 void Character::RegisterClassLUA(lua_State *& L)
@@ -212,11 +189,9 @@ void Character::Update(sf::Time dt)
 {
 	if (Body != nullptr)
 	{
-
-		this->Location.x = Body->GetPosition().x*FACTOR;
-		this->Location.y = Body->GetPosition().y*FACTOR;
-
-		
+		cpBodySetAngle(Body, 0);
+		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
+		this->Location.y = cpBodyGetPosition(this->GetBody()).y;		
 	}
 }
 

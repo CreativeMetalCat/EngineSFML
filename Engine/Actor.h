@@ -6,6 +6,10 @@
 #include <Box2D.h>
 #endif
 
+#ifndef CHIPMUNK_H
+#include <chipmunk.h>
+#endif
+
 #define CLASS_ACTOR 2
 
 #define FACTOR 20
@@ -28,7 +32,12 @@ protected:
 
 	//LUA file that will be used
 	std::string CollisionScriptFileName;
+
+	std::vector<cpShape*>shapes;
 public:
+
+	cpShape*GetShape(int i);
+
 	//LUA file that will be used
 	void SetCollisionScriptFileName(std::string CollisionScriptFileName) { this->CollisionScriptFileName = CollisionScriptFileName; }
 
@@ -46,11 +55,11 @@ public:
 
 	//Physical body of the CActor
 	//find way use smart pointers right now it does not
-	b2Body* Body = nullptr;
+	cpBody * Body = nullptr;
 
 	//for the lua
 	//not const for LUA
-	b2Body* GetBody() { return Body; }
+	cpBody * GetBody() { return Body; }
 
 	//returns copy of the Array
 	//Made primarly for the LUA

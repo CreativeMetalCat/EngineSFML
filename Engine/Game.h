@@ -21,8 +21,6 @@ class Game
 
 	std::vector<std::shared_ptr<CActor>>SceneActors;
 
-	b2World world;
-
 	ContactListener contactListener;
 
 	sf::Texture devOrange64_64;
@@ -30,6 +28,13 @@ class Game
 	bool ShowGravityUI = false;
 
 	bool m = false;
+
+	cpSpace*space;
+
+	bool mLeft = false;
+
+	bool mRight = false;
+
 public:
 	//Init widnow etc.
 	void Init();

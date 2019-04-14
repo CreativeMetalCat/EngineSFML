@@ -43,22 +43,28 @@ public:
 
 	sf::Vector2f GetLinearVelocity()const
 	{
-		return sf::Vector2f(Body->GetLinearVelocity().x, Body->GetLinearVelocity().y);
+		cpVect vel= cpBodyGetVelocity(this->Body);
+		return sf::Vector2f(vel.x, vel.y);
 	}
 
-	void ApplyLinearImpulse(b2Vec2 vel)
+	//Imp - impluse to apply
+	//LocalPoint - Point in the body where impulse will be aplied
+	void ApplyLinearImpulse(cpVect imp, cpVect localPoint)
 	{
-		Body->ApplyLinearImpulseToCenter(vel,true);
+		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), imp, localPoint);
 		//Body->SetLinearVelocity(vel);
 	}
 	inline void MoveX(float value);
 
 	void Jump();
 
+	//Forces body to stop x velocity
+	void StopXMovement();
+
 	DEPRECATED_ERROR inline void MoveY(float value);
 
 	virtual void Init(std::string path);
-	virtual void InitPhysBody(std::string path,b2World &world);
+	virtual void InitPhysBody(std::string path,cpSpace *&world);
 
 	//Create LUA class from this for usage in LUA
 	static void RegisterClassLUA(lua_State *&L);

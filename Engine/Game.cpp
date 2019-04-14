@@ -75,102 +75,6 @@ void Game::Render()
 
 			}
 
-			if (SceneActors.at(i)->GetBody() != NULL)
-			{
-
-				for (b2Fixture*fix = this->SceneActors.at(i)->GetBody()->GetFixtureList(); fix != NULL; fix = fix->GetNext())
-				{
-					try
-					{
-
-						if (fix->GetShape()->GetType() == b2Shape::e_circle)
-						{
-							sf::CircleShape cs;
-							cs.setPosition(sf::Vector2f(SceneActors.at(i)->GetBody()->GetPosition().x, SceneActors.at(i)->GetBody()->GetPosition().y));
-							cs.setRadius(fix->GetShape()->m_radius);
-							cs.setFillColor(sf::Color::Red);
-							window.draw(cs);
-						}
-						else
-						{
-							sf::VertexArray va = sf::VertexArray
-							(
-								sf::PrimitiveType::LineStrip,
-								static_cast<b2PolygonShape*>(fix->GetShape())->m_count
-							);
-
-							//set point of shape
-							if (SceneActors.at(i)->As<CSolidBlock*>())
-							{
-								for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
-								{
-
-									va[j] = sf::Vertex
-									(
-										{
-											//{...} is used as constructor of sf::Vector<float>
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width/64 / 2,//x of point
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height/64 / 2 //y of point
-										},
-										sf::Color::Red
-									);
-
-
-								}
-
-								va.append
-								(sf::Vertex
-								(
-									{
-										//{...} is used as constructor of sf::Vector<float>
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width /64/ 2,//x of point
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y/64 + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height/64 / 2//y of point
-									},
-									sf::Color::Red
-								)
-								);
-							}
-
-							else
-							{
-								for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
-								{
-									va[j] = sf::Vertex
-									(
-										{
-											//{...} is used as constructor of sf::Vector<float>
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x ,//x of point
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
-										},
-										sf::Color::Red
-									);
-								}
-
-								va.append
-								(sf::Vertex
-								(
-									{
-										//{...} is used as constructor of sf::Vector<float>
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x,//x of point
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y //y of point
-									},
-									sf::Color::Red
-								)
-								);
-							}
-
-
-							window.draw(va);
-						}
-					}
-
-
-					catch (std::exception e)
-					{
-						std::cout << e.what() << std::endl;
-					}
-				}
-			}
 		}
 	}
 
@@ -285,6 +189,7 @@ void Game::ProccessEvents()
 		ImGui::SFML::ProcessEvent(event);
 		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyPressed)
 		{
+
 			using namespace luabridge;
 			if (!SceneActors.empty())
 			{
@@ -335,6 +240,8 @@ void Game::ProccessEvents()
 			}
 
 			SceneActors.at(1)->As<Character*>()->MoveX(-1);
+
+			mLeft = true;
 			
 		}
 		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyPressed)
@@ -388,7 +295,9 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(1)->As<Character*>()->MoveX(1);		
+			SceneActors.at(1)->As<Character*>()->MoveX(1);	
+
+			mRight= true;
 		}
 		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
 		{
@@ -502,6 +411,20 @@ void Game::ProccessEvents()
 			
 		}
 	
+		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		{
+			mRight = false;
+		}
+
+		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		{
+			mLeft = false;
+		}
+
+		if (!mRight && !mLeft)
+		{
+			SceneActors[1]->As<Character*>()->StopXMovement();
+		}
 	}
 }
 
@@ -510,38 +433,39 @@ void Game::Update(sf::Time dt)
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
-	world.Step(1 / dt.asSeconds(), 12,10);
-
+	cpSpaceStep(space, 1 / dt.asSeconds());
 	
-
 	SceneActors.at(1)->Update(dt);
 
 	
-	
+	std::cout << SceneActors.at(1)->GetActorLocation().y << std::endl;
 	ImGui::SFML::Update(window, dt);
-	if (ShowGravityUI) 
+	if (ShowGravityUI)
 	{
-		ImGui::Begin("Gravity Settings");
+		ImGui::Begin("Debug Menu");
 
-		float gravX = world.GetGravity().x;
-		float gravY = world.GetGravity().y;
-		bool CCDEnabled = world.GetContinuousPhysics();
+		ImGui::BeginChild("Gravity Settings", ImVec2(350, 100));
 
-		if (ImGui::DragFloat("Gravity X", &gravX))
+		cpVect gravity = cpSpaceGetGravity(space);
+
+		float gravX = gravity.x;
+		float gravY = gravity.y;
+		if (ImGui::DragFloat("Gravity X", &gravX, 0.0001f))
 		{
-			world.Step(0, 0, 0);
-			world.SetGravity(b2Vec2(gravX, world.GetGravity().y));
+			cpSpaceSetGravity(space, cpv(gravX, gravY));
 		}
 
-		if (ImGui::DragFloat("Gravity Y", &gravY))
+		if (ImGui::DragFloat("Gravity Y", &gravY, 0.0001f))
 		{
-			world.Step(0, 0, 0);
-			world.SetGravity(b2Vec2(world.GetGravity().x, gravY));
+			cpSpaceSetGravity(space, cpv(gravX, gravY));
 		}
-		if (ImGui::Checkbox("CCD Enabled", &CCDEnabled))
-		{
-			world.SetContinuousPhysics(CCDEnabled);
-		}
+
+		ImGui::EndChild();
+
+		ImGui::BeginChild("Character Output Data");
+		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().y).c_str());
+		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().x).c_str());
+		ImGui::EndChild();
 
 		ImGui::End();
 	}
@@ -567,9 +491,9 @@ void Game::Init()
 	s.setPoint(2, { 50,50 });
 	s.setPoint(3, { 0,50 });
 
-	std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(50,50 ), sf::Vector2f(300, 0), path);
+	std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(50,50 ), sf::Vector2f(300, -100), path);
 	
-	c->InitPhysBody(path,world);
+	c->InitPhysBody(path,space);
 	SceneActors.push_back(c);
 
 	
@@ -588,13 +512,10 @@ void Game::Init()
 	{
 		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i*64, 400), path);
 		sd->Init(path);
-		sd->InitPhysBody(path, this->world);
+		sd->InitPhysBody(path, this->space);
 
 		SceneActors.push_back(sd);
 	}
-	
-
-	
 	int i = 0;
 }
 
@@ -618,13 +539,21 @@ void Game::Run()
 
 
 
-Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f,9.8f/FACTOR))
+Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path)
 {
 	
-	world.SetContactListener(&contactListener);
+
+	// cpVect is a 2D vector and cpv() is a shortcut for initializing them.
+	cpVect gravity = cpv(0, 0.000098f);
+
+	// Create an empty space.
+	space = cpSpaceNew();
+	cpSpaceSetGravity(space, gravity);
+	
 }
 
 
 Game::~Game()
 {
+	cpSpaceFree(space);
 }
