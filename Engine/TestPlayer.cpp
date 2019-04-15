@@ -35,7 +35,7 @@ void CTestPlayer::Init(std::string path)
 
 	this->sprite.setScale(scale);
 
-	this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
+	//this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
 void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
@@ -54,13 +54,13 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 			//perform here actions that can happen only after body init
 
 
-			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, 0/*(sqrt(CollisionRectangle.width*CollisionRectangle.width + CollisionRectangle.height*CollisionRectangle.height) / 2)*/));
-
+			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, 0));
+			
 			cpSpaceAddBody(world, this->Body);
 
 			cpBodySetUserData(Body, this);
 
-			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x, this->GetActorLocation().y));
+			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x , this->GetActorLocation().y));
 
 			for (int i = 0; i < shapes.size(); i++)
 			{
