@@ -1,8 +1,5 @@
 #include "Game.h"
-#include "PhysicalObject.h"
-#include "Character.h"
-#include "SolidBlock.h"
-#include "TestPlayer.h"
+
 
 
 
@@ -478,60 +475,73 @@ void Game::Update(sf::Time dt)
 
 void Game::Init()
 {
-	ImGui::CreateContext();
-	ImGui::SFML::Init(window);
-
-	this->window.setFramerateLimit(60.f);
-	contactListener.path = path;
-	
-
-	std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0),path, "Wooden_Crate");
-	po->Init(path);
-	SceneActors.push_back(po);
-	sf::ConvexShape s;
-	s.setPointCount(4);
-	s.setPoint(0, { 0,0 });
-	s.setPoint(1, { 50,0 });
-	s.setPoint(2, { 50,50 });
-	s.setPoint(3, { 0,50 });
-
-	std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(64,64 ), sf::Vector2f(200, -100), path);
-	
-	c->InitPhysBody(path,space);
-	SceneActors.push_back(c);
-
-	
-
-	
-	if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
+	try
 	{
-		std::cout << "Failed to load texture\n";
+		ImGui::CreateContext();
+		ImGui::SFML::Init(window);
+
+		this->window.setFramerateLimit(60.f);
+
+
+		std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
+		po->Init(path);
+		SceneActors.push_back(po);
+		sf::ConvexShape s;
+		s.setPointCount(4);
+		s.setPoint(0, { 0,0 });
+		s.setPoint(1, { 50,0 });
+		s.setPoint(2, { 50,50 });
+		s.setPoint(3, { 0,50 });
+
+		std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, -100), path);
+
+		c->InitPhysBody(path, space);
+		SceneActors.push_back(c);
+
+
+
+
+		if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
+		{
+			std::cout << "Failed to load texture\n";
+		}
+		sf::ConvexShape dev64_64;
+		dev64_64.setPointCount(4);
+		dev64_64.setPoint(0, { 0,0 });
+		dev64_64.setPoint(1, { 64,0 });
+		dev64_64.setPoint(2, { 64,64 });
+		dev64_64.setPoint(3, { 0,64 });
+
+
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64, s, sf::Vector2f(64, 64), sf::Vector2f(300, -100), path);
+		player->InitPhysBody(path, space);
+		this->SceneActors.push_back(player);
+
+
+		for (int i = 0; i < 19; i++)
+		{
+			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			sd->Init(path);
+			sd->InitPhysBody(path, this->space);
+
+			SceneActors.push_back(sd);
+		}
+
+
+
+		if (!SceneActors.empty())
+		{
+			for (size_t i = 0; i < SceneActors.size(); i++) 
+			{
+				//path must be given here due to limitations of the chipmunk2D engine
+				SceneActors.at(i)->Init(path);
+			}
+		}
 	}
-	sf::ConvexShape dev64_64;
-	dev64_64.setPointCount(4);
-	dev64_64.setPoint(0, { 0,0 });
-	dev64_64.setPoint(1, { 64,0 });
-	dev64_64.setPoint(2, { 64,64 });
-	dev64_64.setPoint(3, { 0,64 });
-
-
-	std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64,s, sf::Vector2f(64, 64), sf::Vector2f(300, -100), path);
-	player->InitPhysBody(path, space);
-	this->SceneActors.push_back(player);
-
-
-	for (int i = 0; i < 19; i++)
+	catch (std::exception e)
 	{
-		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i*64, 400), path);
-		sd->Init(path);
-		sd->InitPhysBody(path, this->space);
-
-		SceneActors.push_back(sd);
+		std::cout << e.what() << std::endl;
 	}
-
-	
-
-
 	int i = 0;
 }
 
@@ -566,6 +576,8 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	space = cpSpaceNew();
 	cpSpaceSetGravity(space, gravity);
 	
+	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(space);
+	//handler->beginFunc = &Game::OnBeginCollision;
 }
 
 

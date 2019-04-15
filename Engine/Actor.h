@@ -34,6 +34,8 @@ protected:
 	std::string CollisionScriptFileName;
 
 	std::vector<cpShape*>shapes;
+
+	
 public:
 
 	cpShape*GetShape(int i);
@@ -119,7 +121,7 @@ public:
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnBeginCollision(CActor* otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua

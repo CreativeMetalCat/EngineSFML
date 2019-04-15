@@ -99,13 +99,12 @@ void Character::MoveY(float value)
 
 void Character::Init(std::string path)
 {
-	
-	
-	
+	this->path = path;
 }
 
 void Character::InitPhysBody(std::string path, cpSpace *&world)
 {
+	this->path = path;
 	try
 	{
 		std::vector<cpVect>points;

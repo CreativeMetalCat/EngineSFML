@@ -20,6 +20,7 @@ void CSolidBlock::Init(std::string path)
 
 void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 {
+	this->path = path;
 	try
 	{
 		std::vector<cpVect>points;

@@ -1,5 +1,9 @@
 #pragma once
-#include "ContactListener.h"
+#include "PhysicalObject.h"
+#include "Character.h"
+#include "SolidBlock.h"
+#include "TestPlayer.h"
+
 using namespace std;
 #include <include/lighting/LightSystem.h>
 #include <chipmunk.h>
@@ -21,7 +25,6 @@ class Game
 
 	std::vector<std::shared_ptr<CActor>>SceneActors;
 
-	ContactListener contactListener;
 
 	sf::Texture devOrange64_64;
 
@@ -35,6 +38,28 @@ class Game
 
 	bool mRight = false;
 
+	static cpBool OnBeginCollision(cpArbiter* arb, cpSpace* space, cpDataPointer userData)
+	{
+		try
+		{
+			cpBody* bodyA;
+			cpBody* bodyB;
+
+			cpArbiterGetBodies(arb, &bodyA, &bodyB);
+
+			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+
+			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+
+
+			//If objects are not sensors postSolve() &  preSolve() must be called
+			return cpTrue;
+		}
+		catch (std::exception e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+	}
 public:
 	//Init widnow etc.
 	void Init();

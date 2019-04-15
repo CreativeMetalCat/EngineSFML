@@ -160,7 +160,6 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="ContactListener.cpp" />
     <ClCompile Include="DynamicBodyRaycastCallback.cpp" />
     <ClCompile Include="imgui-SFML.cpp" />
     <ClCompile Include="imgui.cpp" />
@@ -179,7 +178,6 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="ContactListener.h" />
     <ClInclude Include="DynamicBodyRaycastCallback.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="SolidBlock.h" />

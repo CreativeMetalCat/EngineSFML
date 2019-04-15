@@ -25,6 +25,8 @@ CTestPlayer::CTestPlayer(sf::Texture&texture, sf::ConvexShape CollisionShape, sf
 void CTestPlayer::Init(std::string path)
 {
 
+	this->path = path;
+
 	sf::Vector2f scale;
 
 	if (this->sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->sprite.getTexture()->getSize().x; }
@@ -65,10 +67,12 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 				if (shapes.at(i) != nullptr)
 				{
 					cpSpaceAddShape(world, shapes[i]);
+					cpShapeSetCollisionType(shapes[i], (int)(this));
 				}
 
 			}
-
+			cpCollisionHandler* h = cpSpaceAddWildcardHandler(world, (int)(this));
+			
 
 			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
 		}
