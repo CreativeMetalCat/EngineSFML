@@ -577,7 +577,8 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	cpSpaceSetGravity(space, gravity);
 	
 	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(space);
-	//handler->beginFunc = &Game::OnBeginCollision;
+	handler->beginFunc = &Game::OnBeginCollision;
+	handler->separateFunc = &Game::OnEndCollision;
 }
 
 

@@ -51,9 +51,29 @@ class Game
 
 			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
 
-
 			//If objects are not sensors postSolve() &  preSolve() must be called
 			return cpTrue;
+		}
+		catch (std::exception e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+	}
+
+	static void OnEndCollision(cpArbiter* arb, cpSpace* space, cpDataPointer userData)
+	{
+		try
+		{
+			cpBody* bodyA;
+			cpBody* bodyB;
+
+			cpArbiterGetBodies(arb, &bodyA, &bodyB);
+
+			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnEndCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+
+			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnEndCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+
+			
 		}
 		catch (std::exception e)
 		{

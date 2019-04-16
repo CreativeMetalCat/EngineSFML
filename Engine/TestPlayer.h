@@ -2,6 +2,8 @@
 
 #include "Character.h"
 
+#define CLASS_CTESTPLAYER 4
+
 //Example player that moves using physics and has one sprite 
 //Category: Test-Basic
 class CTestPlayer : public Character
@@ -9,6 +11,13 @@ class CTestPlayer : public Character
 
 	sf::Sprite sprite;
 public:
+
+	//ID of class for Casting
+	//ID MUST be defined in the beggining of the file with class
+	//default is CObject
+	static const int ClassID = CLASS_CTESTPLAYER;
+
+	int GetClassID()const { return ClassID; }
 
 	void SetSprite(sf::Sprite s) { this->sprite = s; }
 
@@ -28,7 +37,15 @@ public:
 	void Draw(sf::RenderWindow& window)override;
 
 	void Update(sf::Time dt);
+
+	//Create LUA class from this for usage in LUA
+	static void RegisterClassLUA(lua_State*& L);
+
+	//PATH - Path to main folder and usually used to access scripts
+	//Defined by window.lua
+	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
 	
+	virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
 	~CTestPlayer();
 };
 

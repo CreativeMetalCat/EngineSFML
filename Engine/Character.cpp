@@ -7,13 +7,13 @@ void Character::MoveX(float value)
 	
 
 	float vel = (value*this->GetMaxVelocity().x)- this->GetLinearVelocity().x;
-	float impulse = cpBodyGetMass(this->Body)* vel/100;
+	float impulse = cpBodyGetMass(this->Body)* vel/10;
 	this->ApplyLinearImpulse(cpv(vel, 0), cpv(CollisionRectangle.width/2, CollisionRectangle.height/2));
 }
 
 void Character::Jump()
 {
-	this->ApplyLinearImpulse(cpv(0, -10), cpv(0, 0));
+	this->ApplyLinearImpulse(cpv(0, -15), cpv(0, 0));
 }
 
 void Character::StopXMovement()

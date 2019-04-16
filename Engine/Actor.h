@@ -12,7 +12,7 @@
 
 #define CLASS_ACTOR 2
 
-#define FACTOR 20
+
 //Base of all objects that can be placed in the scene
 class CActor : public CObject
 {
@@ -37,6 +37,7 @@ protected:
 
 	
 public:
+	int GetClassID()const { return ClassID; }
 
 	cpShape*GetShape(int i);
 
@@ -75,6 +76,11 @@ public:
 	{
 		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), imp, localPoint);
 		//Body->SetLinearVelocity(vel);
+	}
+
+	void ApplyLinearImpulseToZero(float x, float y)
+	{
+		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), cpv(x,y), cpv(0,0));
 	}
 
 	//returns copy of the Array
@@ -125,7 +131,7 @@ public:
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnEndCollision(CActor* otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
 
 	CActor(sf::Vector2f Location, std::string path="./../");
 	~CActor();
