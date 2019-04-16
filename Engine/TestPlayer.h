@@ -17,7 +17,7 @@ public:
 	//default is CObject
 	static const int ClassID = CLASS_CTESTPLAYER;
 
-	int GetClassID()const { return ClassID; }
+	int GetClassID()const { return  CLASS_CTESTPLAYER; }
 
 	void SetSprite(sf::Sprite s) { this->sprite = s; }
 

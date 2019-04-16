@@ -449,16 +449,16 @@ void Game::Update(sf::Time dt)
 
 		cpVect gravity = cpSpaceGetGravity(space);
 
-		float gravX = gravity.x;
-		float gravY = gravity.y;
-		if (ImGui::DragFloat("Gravity X", &gravX, 0.0001f))
+		float gravX = gravity.x*100000.f;
+		float gravY = gravity.y * 100000.f;
+		if (ImGui::DragFloat("Gravity X", &gravX, 0.1f))
 		{
-			cpSpaceSetGravity(space, cpv(gravX, gravY));
+			cpSpaceSetGravity(space, cpv(gravX / 100000.f, gravY / 100000.f));
 		}
 
-		if (ImGui::DragFloat("Gravity Y", &gravY, 0.0001f))
+		if (ImGui::DragFloat("Gravity Y", &gravY, 0.1f))
 		{
-			cpSpaceSetGravity(space, cpv(gravX, gravY));
+			cpSpaceSetGravity(space, cpv(gravX / 100000.f, gravY / 100000.f));
 		}
 
 		ImGui::EndChild();
@@ -570,7 +570,7 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	
 
 	// cpVect is a 2D vector and cpv() is a shortcut for initializing them.
-	cpVect gravity = cpv(0, 0.000098f);
+	cpVect gravity = cpv(0, 9.8f/100000);
 
 	// Create an empty space.
 	space = cpSpaceNew();

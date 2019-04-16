@@ -47,7 +47,7 @@ public:
 	static const int ClassID = CLASS_OBJECT;
 
 	
-	int GetClassID()const { return ClassID; }
+	virtual int GetClassID()const { return ClassID; }
 
 	//Made for easier usage
 	//Uses dynamic_cast as of now
