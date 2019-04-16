@@ -6,8 +6,13 @@
 #include <Box2D.h>
 #endif
 
+#ifndef CHIPMUNK_H
+#include <chipmunk.h>
+#endif
+
 #define CLASS_ACTOR 2
 
+#define FACTOR 20
 //Base of all objects that can be placed in the scene
 class CActor : public CObject
 {
@@ -27,7 +32,14 @@ protected:
 
 	//LUA file that will be used
 	std::string CollisionScriptFileName;
+
+	std::vector<cpShape*>shapes;
+
+	
 public:
+
+	cpShape*GetShape(int i);
+
 	//LUA file that will be used
 	void SetCollisionScriptFileName(std::string CollisionScriptFileName) { this->CollisionScriptFileName = CollisionScriptFileName; }
 
@@ -45,11 +57,25 @@ public:
 
 	//Physical body of the CActor
 	//find way use smart pointers right now it does not
-	b2Body* Body = nullptr;
+	cpBody * Body = nullptr;
 
 	//for the lua
 	//not const for LUA
-	b2Body* GetBody() { return Body; }
+	cpBody * GetBody() { return Body; }
+
+	sf::Vector2f GetLinearVelocity()const
+	{
+		cpVect vel = cpBodyGetVelocity(this->Body);
+		return sf::Vector2f(vel.x, vel.y);
+	}
+
+	//Imp - impluse to apply
+	//LocalPoint - Point in the body where impulse will be aplied
+	void ApplyLinearImpulse(cpVect imp, cpVect localPoint)
+	{
+		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), imp, localPoint);
+		//Body->SetLinearVelocity(vel);
+	}
 
 	//returns copy of the Array
 	//Made primarly for the LUA
@@ -95,7 +121,7 @@ public:
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnBeginCollision(CActor* otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua

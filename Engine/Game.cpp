@@ -1,8 +1,5 @@
 #include "Game.h"
-#include "PhysicalObject.h"
-#include "Character.h"
-#include "SolidBlock.h"
-#include "TestPlayer.h"
+
 
 
 
@@ -20,16 +17,16 @@ void Game::Render()
 
 
 
-	unshadowShader.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/unshadowShader.vert", "C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/unshadowShader.frag");
-	lightOverShapeShader.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/lightOverShapeShader.vert", "C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/lightOverShapeShader.frag");
+	unshadowShader.loadFromFile(path + "ltbl/resources/unshadowShader.vert", path + "ltbl/resources/unshadowShader.frag");
+	lightOverShapeShader.loadFromFile(path + "ltbl/resources/lightOverShapeShader.vert", path + "ltbl/resources/lightOverShapeShader.frag");
 
 
 	sf::Texture penumbraTexture;
-	penumbraTexture.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/penumbraTexture.png");
+	penumbraTexture.loadFromFile(path+"ltbl/resources/penumbraTexture.png");
 	penumbraTexture.setSmooth(true);
 
 	sf::Texture pointLightTexture;
-	pointLightTexture.loadFromFile("C:/Users/catgu/source/repos/Engine/x64/Debug/ltbl/resources/pointLightTexture.png");
+	pointLightTexture.loadFromFile(path + "ltbl/resources/pointLightTexture.png");
 	pointLightTexture.setSmooth(true);
 
 	ltbl::LightSystem ls;
@@ -59,11 +56,9 @@ void Game::Render()
 		for (size_t i = 0; i < SceneActors.size(); i++)
 		{
 
-
+			SceneActors.at(i)->Draw(window);
 			if (SceneActors.at(i)->As<CSolidBlock*>())
 			{
-
-				SceneActors.at(i)->Draw(this->window);
 				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
 				lightShape->_shape = SceneActors.at(i)->As<CSolidBlock*>()->ShadowShape;
@@ -75,102 +70,6 @@ void Game::Render()
 
 			}
 
-			if (SceneActors.at(i)->GetBody() != NULL)
-			{
-
-				for (b2Fixture*fix = this->SceneActors.at(i)->GetBody()->GetFixtureList(); fix != NULL; fix = fix->GetNext())
-				{
-					try
-					{
-
-						if (fix->GetShape()->GetType() == b2Shape::e_circle)
-						{
-							sf::CircleShape cs;
-							cs.setPosition(sf::Vector2f(SceneActors.at(i)->GetBody()->GetPosition().x, SceneActors.at(i)->GetBody()->GetPosition().y));
-							cs.setRadius(25);
-							cs.setFillColor(sf::Color::Red);
-							window.draw(cs);
-						}
-						else
-						{
-							sf::VertexArray va = sf::VertexArray
-							(
-								sf::PrimitiveType::LineStrip,
-								static_cast<b2PolygonShape*>(fix->GetShape())->m_count
-							);
-
-							//set point of shape
-							if (SceneActors.at(i)->As<CSolidBlock*>())
-							{
-								for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
-								{
-
-									va[j] = sf::Vertex
-									(
-										{
-											//{...} is used as constructor of sf::Vector<float>
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2 //y of point
-										},
-										sf::Color::Red
-									);
-
-
-								}
-
-								va.append
-								(sf::Vertex
-								(
-									{
-										//{...} is used as constructor of sf::Vector<float>
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.width / 2,//x of point
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y + SceneActors.at(i)->As<CSolidBlock*>()->CollisionRectangle.height / 2//y of point
-									},
-									sf::Color::Red
-								)
-								);
-							}
-
-							else
-							{
-								for (int j = 0; j < static_cast<b2PolygonShape*>(SceneActors.at(i)->GetBody()->GetFixtureList()->GetShape())->m_count; j++)
-								{
-									va[j] = sf::Vertex
-									(
-										{
-											//{...} is used as constructor of sf::Vector<float>
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].x + SceneActors.at(i)->GetActorLocation().x ,//x of point
-											static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[j].y + SceneActors.at(i)->GetActorLocation().y //y of point
-										},
-										sf::Color::Red
-									);
-								}
-
-								va.append
-								(sf::Vertex
-								(
-									{
-										//{...} is used as constructor of sf::Vector<float>
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].x + SceneActors.at(i)->GetActorLocation().x,//x of point
-										static_cast<b2PolygonShape*>(fix->GetShape())->m_vertices[0].y + SceneActors.at(i)->GetActorLocation().y //y of point
-									},
-									sf::Color::Red
-								)
-								);
-							}
-
-
-							window.draw(va);
-						}
-					}
-
-
-					catch (std::exception e)
-					{
-						std::cout << e.what() << std::endl;
-					}
-				}
-			}
 		}
 	}
 
@@ -285,6 +184,7 @@ void Game::ProccessEvents()
 		ImGui::SFML::ProcessEvent(event);
 		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyPressed)
 		{
+
 			using namespace luabridge;
 			if (!SceneActors.empty())
 			{
@@ -334,7 +234,9 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(1)->As<Character*>()->MoveX(-1);
+			SceneActors.at(2)->As<Character*>()->MoveX(-1);
+
+			mLeft = true;
 			
 		}
 		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyPressed)
@@ -388,11 +290,13 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(1)->As<Character*>()->MoveX(1);		
+			SceneActors.at(2)->As<Character*>()->MoveX(1);	
+
+			mRight= true;
 		}
 		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(1)->As<Character*>()->Jump();
+			SceneActors.at(2)->As<Character*>()->Jump();
 
 			using namespace luabridge;
 			if (!SceneActors.empty())
@@ -501,8 +405,21 @@ void Game::ProccessEvents()
 			this->ShowGravityUI = !this->ShowGravityUI;
 			
 		}
-		
-		
+	
+		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		{
+			mRight = false;
+		}
+
+		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		{
+			mLeft = false;
+		}
+
+		if (!mRight && !mLeft)
+		{
+			SceneActors[2]->As<Character*>()->StopXMovement();
+		}
 	}
 }
 
@@ -511,38 +428,45 @@ void Game::Update(sf::Time dt)
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
-	world.Step(1 / dt.asSeconds(), 12,10);
-
+	cpSpaceStep(space, 1 / dt.asSeconds());
 	
-
-	SceneActors.at(1)->Update(dt);
-
+	
+	if (!SceneActors.empty())
+	{
+		for (size_t i = 0; i < SceneActors.size(); i++)
+		{
+			SceneActors.at(i)->Update(dt);
+		}
+	}
 	
 	
 	ImGui::SFML::Update(window, dt);
-	if (ShowGravityUI) 
+	if (ShowGravityUI)
 	{
-		ImGui::Begin("Gravity Settings");
+		ImGui::Begin("Debug Menu");
 
-		float gravX = world.GetGravity().x;
-		float gravY = world.GetGravity().y;
-		bool CCDEnabled = world.GetContinuousPhysics();
+		ImGui::BeginChild("Gravity Settings", ImVec2(350, 100));
 
-		if (ImGui::DragFloat("Gravity X", &gravX))
+		cpVect gravity = cpSpaceGetGravity(space);
+
+		float gravX = gravity.x;
+		float gravY = gravity.y;
+		if (ImGui::DragFloat("Gravity X", &gravX, 0.0001f))
 		{
-			world.Step(0, 0, 0);
-			world.SetGravity(b2Vec2(gravX, world.GetGravity().y));
+			cpSpaceSetGravity(space, cpv(gravX, gravY));
 		}
 
-		if (ImGui::DragFloat("Gravity Y", &gravY))
+		if (ImGui::DragFloat("Gravity Y", &gravY, 0.0001f))
 		{
-			world.Step(0, 0, 0);
-			world.SetGravity(b2Vec2(world.GetGravity().x, gravY));
+			cpSpaceSetGravity(space, cpv(gravX, gravY));
 		}
-		if (ImGui::Checkbox("CCD Enabled", &CCDEnabled))
-		{
-			world.SetContinuousPhysics(CCDEnabled);
-		}
+
+		ImGui::EndChild();
+
+		ImGui::BeginChild("Character Output Data");
+		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().y).c_str());
+		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().x).c_str());
+		ImGui::EndChild();
 
 		ImGui::End();
 	}
@@ -551,51 +475,73 @@ void Game::Update(sf::Time dt)
 
 void Game::Init()
 {
-	ImGui::CreateContext();
-	ImGui::SFML::Init(window);
-
-	this->window.setFramerateLimit(60.f);
-	contactListener.path = path;
-	
-
-	std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0),path, "Wooden_Crate");
-	po->Init(path);
-	SceneActors.push_back(po);
-	sf::ConvexShape s;
-	s.setPointCount(4);
-	s.setPoint(0, { 0,0 });
-	s.setPoint(1, { 50,0 });
-	s.setPoint(2, { 50,50 });
-	s.setPoint(3, { 0,50 });
-
-	std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(50,50 ), sf::Vector2f(300, 0), path);
-	
-	c->InitPhysBody(path,world);
-	SceneActors.push_back(c);
-
-	
-	if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
+	try
 	{
-		std::cout << "Failed to load texture\n";
-	}
-	sf::ConvexShape dev64_64;
-	dev64_64.setPointCount(4);
-	dev64_64.setPoint(0, { 0,0 });
-	dev64_64.setPoint(1, { 64,0 });
-	dev64_64.setPoint(2, { 64,64 });
-	dev64_64.setPoint(3, { 0,64 });
+		ImGui::CreateContext();
+		ImGui::SFML::Init(window);
 
-	for (int i = 0; i < 17; i++)
+		this->window.setFramerateLimit(60.f);
+
+
+		std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
+		po->Init(path);
+		SceneActors.push_back(po);
+		sf::ConvexShape s;
+		s.setPointCount(4);
+		s.setPoint(0, { 0,0 });
+		s.setPoint(1, { 50,0 });
+		s.setPoint(2, { 50,50 });
+		s.setPoint(3, { 0,50 });
+
+		std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, -100), path);
+
+		c->InitPhysBody(path, space);
+		SceneActors.push_back(c);
+
+
+
+
+		if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
+		{
+			std::cout << "Failed to load texture\n";
+		}
+		sf::ConvexShape dev64_64;
+		dev64_64.setPointCount(4);
+		dev64_64.setPoint(0, { 0,0 });
+		dev64_64.setPoint(1, { 64,0 });
+		dev64_64.setPoint(2, { 64,64 });
+		dev64_64.setPoint(3, { 0,64 });
+
+
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64, s, sf::Vector2f(64, 64), sf::Vector2f(300, -100), path);
+		player->InitPhysBody(path, space);
+		this->SceneActors.push_back(player);
+
+
+		for (int i = 0; i < 19; i++)
+		{
+			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			sd->Init(path);
+			sd->InitPhysBody(path, this->space);
+
+			SceneActors.push_back(sd);
+		}
+
+
+
+		if (!SceneActors.empty())
+		{
+			for (size_t i = 0; i < SceneActors.size(); i++) 
+			{
+				//path must be given here due to limitations of the chipmunk2D engine
+				SceneActors.at(i)->Init(path);
+			}
+		}
+	}
+	catch (std::exception e)
 	{
-		std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i *64, 400), path);
-		sd->Init(path);
-		sd->InitPhysBody(path, this->world);
-
-		SceneActors.push_back(sd);
+		std::cout << e.what() << std::endl;
 	}
-	
-
-	
 	int i = 0;
 }
 
@@ -619,13 +565,23 @@ void Game::Run()
 
 
 
-Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path), world(b2Vec2(0.f,9.8f))
+Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path)
 {
 	
-	world.SetContactListener(&contactListener);
+
+	// cpVect is a 2D vector and cpv() is a shortcut for initializing them.
+	cpVect gravity = cpv(0, 0.000098f);
+
+	// Create an empty space.
+	space = cpSpaceNew();
+	cpSpaceSetGravity(space, gravity);
+	
+	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(space);
+	//handler->beginFunc = &Game::OnBeginCollision;
 }
 
 
 Game::~Game()
 {
+	cpSpaceFree(space);
 }

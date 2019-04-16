@@ -1,8 +1,12 @@
 #pragma once
-#include "ContactListener.h"
+#include "PhysicalObject.h"
+#include "Character.h"
+#include "SolidBlock.h"
+#include "TestPlayer.h"
+
 using namespace std;
 #include <include/lighting/LightSystem.h>
-
+#include <chipmunk.h>
 
 //class that manages all of the operations in game
 class Game
@@ -21,13 +25,41 @@ class Game
 
 	std::vector<std::shared_ptr<CActor>>SceneActors;
 
-	b2World world;
-
-	ContactListener contactListener;
 
 	sf::Texture devOrange64_64;
 
 	bool ShowGravityUI = false;
+
+	bool m = false;
+
+	cpSpace*space;
+
+	bool mLeft = false;
+
+	bool mRight = false;
+
+	static cpBool OnBeginCollision(cpArbiter* arb, cpSpace* space, cpDataPointer userData)
+	{
+		try
+		{
+			cpBody* bodyA;
+			cpBody* bodyB;
+
+			cpArbiterGetBodies(arb, &bodyA, &bodyB);
+
+			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+
+			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+
+
+			//If objects are not sensors postSolve() &  preSolve() must be called
+			return cpTrue;
+		}
+		catch (std::exception e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+	}
 public:
 	//Init widnow etc.
 	void Init();

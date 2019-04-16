@@ -2,6 +2,16 @@
 
 
 
+cpShape * CActor::GetShape(int i)
+{
+	if (i >= shapes.size() || i < 0) { return nullptr; }
+	else
+	{
+		return shapes.at(i);
+	}
+
+}
+
 void CActor::AddChildRaw(CActor * a)
 {
 	std::shared_ptr<CActor>ptr(a);
@@ -67,11 +77,11 @@ void CActor::RegisterClassLUA(lua_State *&L)
 	}
 }
 
-void CActor::OnBeginCollision(CActor* otherActor, b2Fixture * fixtureA, b2Fixture * fixtureB, std::string PATH)
+void CActor::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 {
 	using namespace luabridge;
 	lua_State* L = luaL_newstate();
-	std::string d = (PATH + "scripts/actor.lua");
+	std::string d = (path + "scripts/actor.lua");
 	try
 	{
 
@@ -118,10 +128,15 @@ void CActor::OnBeginCollision(CActor* otherActor, b2Fixture * fixtureA, b2Fixtur
 			.addFunction("ApplyImpulse", &b2Body::ApplyLinearImpulseToCenter)
 			.endClass();
 
+		getGlobalNamespace(L)
+			.beginClass<cpArbiter>("cpArbiter")
+
+			.endClass();
+
 		LuaRef LUAOnBeginCollision = getGlobal(L, "OnBeginCollision");
 		if (LUAOnBeginCollision.isFunction())
 		{
-			LUAOnBeginCollision(this, &(*otherActor), fixtureA, fixtureB);
+			LUAOnBeginCollision(this,arb, &(*otherActor));
 		}
 	}
 	catch (LuaException e)

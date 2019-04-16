@@ -18,44 +18,45 @@ void CSolidBlock::Init(std::string path)
 	this->sprite.setPosition(this->GetActorLocation());
 }
 
-void CSolidBlock::InitPhysBody(std::string path, b2World & world)
+void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 {
-
-	b2BodyDef defP;
-	defP.type = b2BodyType::b2_staticBody;
-	defP.position.Set(Location.x + Size.x/2 , Location.y + Size.y/2 );
-	defP.fixedRotation = true;
-
-	this->Body = world.CreateBody(&defP);
-
-	b2PolygonShape shape;
-	/*if (CollisionShape.getPointCount() > 0)
+	this->path = path;
+	try
 	{
-		shape.m_count = CollisionShape.getPointCount();
-		for (int i = 0; i < CollisionShape.getPointCount(); i++)
+		std::vector<cpVect>points;
+		for (int i = 0; i < ShadowShape.getPointCount(); i++)
 		{
-			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
+			points.push_back(cpv(ShadowShape.getPoint(i).x, ShadowShape.getPoint(i).x));
 		}
+		this->Body = cpBodyNewStatic();
+		if (this->Body != nullptr)
+		{
+			//perform here actions that can happen only after body init
 
-	}*/
+			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, 0));
 
-	shape.SetAsBox(CollisionRectangle.width/2 , CollisionRectangle.height/2);
-	
-	b2Filter filter;
-	filter.categoryBits = 0x1;
+			cpSpaceAddBody(world, this->Body);
 
-	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
-	TriggerFixtureP.shape = &shape;
-	TriggerFixtureP.filter = filter;
-	TriggerFixtureP.friction = 0.1f;
-	
+			cpBodySetUserData(Body, this);
 
-	TriggerFixtureP.isSensor = false;
+			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x, this->GetActorLocation().y));
 
+			for (int i = 0; i < shapes.size(); i++)
+			{
+				if (shapes.at(i) != nullptr)
+				{
+					cpSpaceAddShape(world, shapes[i]);
+				}
 
-	this->Body->CreateFixture(&TriggerFixtureP);
-	this->Body->SetUserData(this);
+			}
+
+			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
+		}
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 }
 
 void CSolidBlock::Draw(sf::RenderWindow & window)
