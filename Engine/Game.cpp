@@ -39,7 +39,7 @@ void Game::Render()
 		sf::Text t = sf::Text("Hello", calibri);
 		if (!SceneActors.empty())
 		{
-			t.setPosition(SceneActors.at(0)->As<PhysicalObject*>()->GetActorLocation());
+			t.setPosition(SceneActors.at(0)->As<Engine::PhysicalObject*>()->GetActorLocation());
 		}
 		window.draw(t);
 
@@ -105,7 +105,7 @@ void Game::Render()
 	light->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
 	light->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
 	light->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	light->_emissionSprite.setPosition(SceneActors.at(0)->As<PhysicalObject*>()->GetActorLocation());//Позиция света.
+	light->_emissionSprite.setPosition(SceneActors.at(0)->As<Engine::PhysicalObject*>()->GetActorLocation());//Позиция света.
 	light->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
 	light->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 	
@@ -202,7 +202,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -234,7 +234,7 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(2)->As<Character*>()->MoveX(-1);
+			SceneActors.at(2)->As<Engine::Character*>()->MoveX(-1);
 
 			mLeft = true;
 			
@@ -258,7 +258,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -290,13 +290,13 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(2)->As<Character*>()->MoveX(1);	
+			SceneActors.at(2)->As<Engine::Character*>()->MoveX(1);
 
 			mRight= true;
 		}
 		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(2)->As<Character*>()->Jump();
+			SceneActors.at(2)->As<Engine::Character*>()->Jump();
 
 			using namespace luabridge;
 			if (!SceneActors.empty())
@@ -315,7 +315,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -350,7 +350,7 @@ void Game::ProccessEvents()
 		}
 		if (event.key.code == sf::Keyboard::S&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(1)->As<Character*>()->MoveY(1);
+			SceneActors.at(1)->As<Engine::Character*>()->MoveY(1);
 			using namespace luabridge;
 			if (!SceneActors.empty())
 			{
@@ -368,7 +368,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -418,7 +418,7 @@ void Game::ProccessEvents()
 
 		if (!mRight && !mLeft)
 		{
-			SceneActors[2]->As<Character*>()->StopXMovement();
+			SceneActors[2]->As<Engine::Character*>()->StopXMovement();
 		}
 	}
 }
@@ -483,7 +483,7 @@ void Game::Init()
 		this->window.setFramerateLimit(60.f);
 
 
-		std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
+		std::shared_ptr<Engine::PhysicalObject> po = std::make_shared<Engine::PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
 		po->Init(path);
 		SceneActors.push_back(po);
 		sf::ConvexShape s;
@@ -492,8 +492,8 @@ void Game::Init()
 		s.setPoint(1, { 50,0 });
 		s.setPoint(2, { 50,50 });
 		s.setPoint(3, { 0,50 });
-
-		std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, -100), path);
+		
+		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, -100), path);
 
 		c->InitPhysBody(path, space);
 		SceneActors.push_back(c);

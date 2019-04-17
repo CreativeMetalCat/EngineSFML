@@ -13,7 +13,6 @@ std::string PATH = "C:/Users/catgu/source/repos/Engine/x64/Debug/";
 int main()
 {
 	
-	std::shared_ptr<CActor> actor = std::make_shared<CActor>(sf::Vector2f(120, 675),PATH);
 
 
 
@@ -32,38 +31,6 @@ int main()
 		luaL_openlibs(L);
 
 		lua_pcall(L, 0, 0, 0);
-
-		//Register CActor in lua
-		CActor::RegisterClassLUA(L);
-
-		//Register Vector2 in lua
-		getGlobalNamespace(L)
-			.beginClass<sf::Vector2f>("Vector2")
-			//add x,y and some functions possibly
-			.addData<float>("x", &sf::Vector2<float>::x)
-			.addData<float>("y", &sf::Vector2<float>::y)
-			.addConstructor<void(*) (void)>()
-			.endClass();
-
-
-		LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
-		LuaRef LuaMoveX = getGlobal(L, "MoveX");
-		LuaRef LuaAddChild = getGlobal(L, "AddChild");
-		LuaRef LuaGetChild = getGlobal(L, "GetChild");
-
-
-		if (LuaSetActorLocation.isFunction())
-		{
-			LuaSetActorLocation(&(*actor), &sf::Vector2f(450, 0));
-		}
-		if (LuaAddChild.isFunction())
-		{
-			//LuaAddChild(&(*CActor), a);
-		}
-		LuaMoveX(&(*actor), -1000);
-		LuaRef c = LuaGetChild(&(*actor), 0);
-		CActor*k = c.cast<CActor*>();
-
 
 		d = (PATH + "scripts/window.lua");
 		luaL_dofile(L, d.c_str());

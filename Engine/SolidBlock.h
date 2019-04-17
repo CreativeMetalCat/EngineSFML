@@ -3,7 +3,7 @@
 
 //Actor that has one texture(sprite) and static physical body
 //Category: Basic
-class CSolidBlock : public CActor
+class CSolidBlock : public Engine::CActor
 {
 	sf::Sprite sprite;
 

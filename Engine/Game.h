@@ -23,7 +23,7 @@ class Game
 
 	std::string path;
 
-	std::vector<std::shared_ptr<CActor>>SceneActors;
+	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
 
 	sf::Texture devOrange64_64;
@@ -47,9 +47,9 @@ class Game
 
 			cpArbiterGetBodies(arb, &bodyA, &bodyB);
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
 
 			//If objects are not sensors postSolve() &  preSolve() must be called
 			return cpTrue;
@@ -69,9 +69,9 @@ class Game
 
 			cpArbiterGetBodies(arb, &bodyA, &bodyB);
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnEndCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnEndCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnEndCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnEndCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
 
 			
 		}

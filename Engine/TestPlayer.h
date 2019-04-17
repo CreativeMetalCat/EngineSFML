@@ -6,7 +6,7 @@
 
 //Example player that moves using physics and has one sprite 
 //Category: Test-Basic
-class CTestPlayer : public Character
+class CTestPlayer : public Engine::Character
 {
 
 	sf::Sprite sprite;
