@@ -2,6 +2,9 @@
 #include <iostream>
 #include <memory>
 
+#include <imgui.h>
+#include <imgui-SFML.h>
+
 extern "C"
 {
 # include "lua.h"
@@ -22,7 +25,7 @@ extern "C"
 
 
 #ifndef DEPRECATED_ERROR
-//Depending on compiler this will act as error or warning ( in vs 2015 it is error while vs 2017 it is warning)
+//Depending on compiler this will act as error or warning ( in vs 2015 it is an error while vs 2017 it is warning)
 #define DEPRECATED_ERROR [[deprecated]]
 #endif // !DEPRECATED_ERROR
 
@@ -44,7 +47,7 @@ public:
 	static const int ClassID = CLASS_OBJECT;
 
 	
-	int GetClassID()const { return ClassID; }
+	virtual int GetClassID()const { return ClassID; }
 
 	//Made for easier usage
 	//Uses dynamic_cast as of now

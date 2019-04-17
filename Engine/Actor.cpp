@@ -2,6 +2,16 @@
 
 
 
+cpShape * CActor::GetShape(int i)
+{
+	if (i >= shapes.size() || i < 0) { return nullptr; }
+	else
+	{
+		return shapes.at(i);
+	}
+
+}
+
 void CActor::AddChildRaw(CActor * a)
 {
 	std::shared_ptr<CActor>ptr(a);
@@ -48,12 +58,16 @@ void CActor::RegisterClassLUA(lua_State *&L)
 		getGlobalNamespace(L)
 			.beginClass<CActor>("CActor")
 			.addConstructor<void(*) (sf::Vector2f)>()
+
 			.addProperty("Location", &CActor::GetActorLocation, &CActor::SetActorLocation)
 			.addProperty("PhysBodyInitialized",&CActor::GetPhysBodyInitialized,&CActor::SetPhysBodyInitialized)
 			.addProperty("AreaId",&CActor::GetAreaId,&CActor::SetAreaId)
+
 			.addFunction("AddChildRaw", &CActor::AddChildRaw)
 			.addFunction("GetChild", &CActor::GetChild)
 			.addFunction("GetBody",&CActor::GetBody)
+			.addFunction("ApplyLinearImpulse",&CActor::ApplyLinearImpulseToZero)
+			.addFunction("GetClassID", &CActor::GetClassID)
 			.endClass();
 	}
 	catch(LuaException e)
@@ -67,11 +81,11 @@ void CActor::RegisterClassLUA(lua_State *&L)
 	}
 }
 
-void CActor::OnBeginCollision(std::shared_ptr<CObject> otherActor, b2Fixture * fixtureA, b2Fixture * fixtureB, std::string PATH)
+void CActor::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 {
 	using namespace luabridge;
 	lua_State* L = luaL_newstate();
-	std::string d = (PATH + "scripts/actor.lua");
+	std::string d = (path + "scripts/actor.lua");
 	try
 	{
 
@@ -95,10 +109,24 @@ void CActor::OnBeginCollision(std::shared_ptr<CObject> otherActor, b2Fixture * f
 			.beginClass<b2Fixture>("b2Fixture")
 			.endClass();
 
+		//Register Vector2 in lua
+		getGlobalNamespace(L)
+			.beginClass<sf::Vector2f>("Vector2")
+			//add x,y and some functions possibly
+			.addData<float>("x", &sf::Vector2<float>::x)
+			.addData<float>("y", &sf::Vector2<float>::y)
+			.addConstructor<void(*) (void)>()
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<cpArbiter>("cpArbiter")
+
+			.endClass();
+
 		LuaRef LUAOnBeginCollision = getGlobal(L, "OnBeginCollision");
 		if (LUAOnBeginCollision.isFunction())
 		{
-			LUAOnBeginCollision(this, &(*otherActor), fixtureA, fixtureB);
+			LUAOnBeginCollision(this,arb, &(*otherActor));
 		}
 	}
 	catch (LuaException e)
@@ -112,11 +140,11 @@ void CActor::OnBeginCollision(std::shared_ptr<CObject> otherActor, b2Fixture * f
 	}
 }
 
-void CActor::OnEndCollision(std::shared_ptr<CActor> otherActor, b2Fixture * fixtureA, b2Fixture * fixtureB, std::string PATH)
+void CActor::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 {
 	using namespace luabridge;
 	lua_State* L = luaL_newstate();
-	std::string d = (PATH + "scripts/CActor.lua");
+	std::string d = (path + "scripts/actor.lua");
 	try
 	{
 
@@ -129,8 +157,8 @@ void CActor::OnEndCollision(std::shared_ptr<CActor> otherActor, b2Fixture * fixt
 
 		lua_pcall(L, 0, 0, 0);
 
-		//Register CActor in lua
-		CActor::RegisterClassLUA(L);
+		//Register this class in lua
+		this->RegisterClassLUA(L);
 
 		//register other CActor's class
 		otherActor->RegisterClassLUA(L);
@@ -140,11 +168,24 @@ void CActor::OnEndCollision(std::shared_ptr<CActor> otherActor, b2Fixture * fixt
 			.beginClass<b2Fixture>("b2Fixture")
 			.endClass();
 
+		//Register Vector2 in lua
+		getGlobalNamespace(L)
+			.beginClass<sf::Vector2f>("Vector2")
+			//add x,y and some functions possibly
+			.addData<float>("x", &sf::Vector2<float>::x)
+			.addData<float>("y", &sf::Vector2<float>::y)
+			.addConstructor<void(*) (void)>()
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<cpArbiter>("cpArbiter")
+
+			.endClass();
 
 		LuaRef LUAOnEndCollision = getGlobal(L, "OnEndCollision");
 		if (LUAOnEndCollision.isFunction())
 		{
-			LUAOnEndCollision(this, &(*otherActor), fixtureA, fixtureB);
+			LUAOnEndCollision(this,arb, &(*otherActor));
 		}
 	}
 	catch (LuaException e)

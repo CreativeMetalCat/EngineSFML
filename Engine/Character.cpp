@@ -1,14 +1,24 @@
 #include "Character.h"
 
-
+#include "DynamicBodyRaycastCallback.h"
 
 void Character::MoveX(float value)
 {
 	
 
-	float vel = (value*this->GetMaxVelocity().x) - this->GetLinearVelocity().x;
-	float impulse = this->GetBody()->GetMass()*vel;
-	this->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(impulse, 0), true);
+	float vel = (value*this->GetMaxVelocity().x)- this->GetLinearVelocity().x;
+	float impulse = cpBodyGetMass(this->Body)* vel/10;
+	this->ApplyLinearImpulse(cpv(vel, 0), cpv(CollisionRectangle.width/2, CollisionRectangle.height/2));
+}
+
+void Character::Jump()
+{
+	this->ApplyLinearImpulse(cpv(0, -15), cpv(0, 0));
+}
+
+void Character::StopXMovement()
+{
+	//cpBodySetVelocity(this->GetBody(), cpv(cpBodyGetVelocity(GetBody()).x*0.01f, cpBodyGetVelocity(GetBody()).y));
 }
 
 void Character::MoveY(float value)
@@ -89,60 +99,51 @@ void Character::MoveY(float value)
 
 void Character::Init(std::string path)
 {
-	
-	b2BodyDef defP;
-	defP.type = b2BodyType::b2_dynamicBody;
-	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
-
-	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
-	{
-		shape.m_count = CollisionShape.getPointCount();
-		for (int i = 0; i < CollisionShape.getPointCount(); i++)
-		{
-			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
-		}
-		
-	}
-	
-
-	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
-	TriggerFixtureP.shape = &shape;
-
-
-	this->Body->CreateFixture(&TriggerFixtureP);
-	this->Body->SetUserData(this);
-	
+	this->path = path;
 }
 
-void Character::InitPhysBody(std::string path, b2World & world)
+void Character::InitPhysBody(std::string path, cpSpace *&world)
 {
-	b2BodyDef defP;
-	defP.type = b2BodyType::b2_dynamicBody;
-	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
-
-	this->Body = world.CreateBody(&defP);
-
-	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
+	this->path = path;
+	try
 	{
-		shape.m_count = CollisionShape.getPointCount();
-		for (int i = 0; i < CollisionShape.getPointCount(); i++)
+		std::vector<cpVect>points;
+		for (int i = 0; i < ShadowShape.getPointCount(); i++)
 		{
-			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
+			points.push_back(cpv(ShadowShape.getPoint(i).x, ShadowShape.getPoint(i).x));
 		}
 
+		this->Body = cpBodyNew(100.f,cpMomentForBox(100.f,CollisionRectangle.width,CollisionRectangle.height));
+		if (this->Body != nullptr)
+		{
+			//perform here actions that can happen only after body init
+
+			
+			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, 0));
+
+			cpSpaceAddBody(world, this->Body);
+
+			cpBodySetUserData(Body, this);
+
+			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x, this->GetActorLocation().y));
+
+			for (int i = 0; i < shapes.size(); i++)
+			{
+				if (shapes.at(i) != nullptr)
+				{
+					cpSpaceAddShape(world, shapes[i]);
+				}
+
+			}
+
+
+			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
+		}
 	}
-
-
-	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
-	TriggerFixtureP.shape = &shape;
-
-
-	this->Body->CreateFixture(&TriggerFixtureP);
-	this->Body->SetUserData(this);
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 }
 
 void Character::RegisterClassLUA(lua_State *& L)
@@ -185,16 +186,23 @@ void Character::RegisterClassLUA(lua_State *& L)
 
 void Character::Update(sf::Time dt)
 {
-	this->Location.x = Body->GetPosition().x;
-	this->Location.y = Body->GetPosition().y;
+	if (Body != nullptr)
+	{
+		cpBodySetAngle(Body, 0);
+		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
+		this->Location.y = cpBodyGetPosition(this->GetBody()).y;		
+	}
 }
 
-Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size,sf::Vector2f Location, std::string path):CActor(Location,path),Size(Size),CollisionShape(CollisionShape)
+Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size,sf::Vector2f Location, std::string path):CActor(Location,path),Size(Size),ShadowShape(CollisionShape)
 {
 	if (CollisionShape.getPointCount() > 8)
 	{
 		std::cout << "Waring: Characters collision point count is greater than limit of the physics engine. This can result in unexpected behaviour" << std::endl;
 	}
+
+	CollisionRectangle.width = Size.x;
+	CollisionRectangle.height = Size.y;
 }
 
 

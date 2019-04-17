@@ -18,34 +18,47 @@ void CSolidBlock::Init(std::string path)
 	this->sprite.setPosition(this->GetActorLocation());
 }
 
-void CSolidBlock::InitPhysBody(std::string path, b2World & world)
+void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 {
-
-	b2BodyDef defP;
-	defP.type = b2BodyType::b2_staticBody;
-	defP.position.Set(Location.x + Size.x / 2, Location.y + Size.y / 2);
-
-	this->Body = world.CreateBody(&defP);
-
-	b2PolygonShape shape;
-	if (CollisionShape.getPointCount() > 0)
+	this->path = path;
+	try
 	{
-		shape.m_count = CollisionShape.getPointCount();
-		for (int i = 0; i < CollisionShape.getPointCount(); i++)
+		std::vector<cpVect>points;
+		for (int i = 0; i < ShadowShape.getPointCount(); i++)
 		{
-			shape.m_vertices[i].Set(CollisionShape.getPoint(i).x, CollisionShape.getPoint(i).y);
+			points.push_back(cpv(ShadowShape.getPoint(i).x, ShadowShape.getPoint(i).x));
 		}
+		this->Body = cpBodyNewStatic();
+		if (this->Body != nullptr)
+		{
+			//perform here actions that can happen only after body init
 
+			shapes.push_back(cpBoxShapeNew(this->GetBody(), CollisionRectangle.width, CollisionRectangle.height, 0));
+
+			cpSpaceAddBody(world, this->Body);
+
+			cpBodySetUserData(Body, this);
+
+			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x, this->GetActorLocation().y));
+
+			for (int i = 0; i < shapes.size(); i++)
+			{
+				if (shapes.at(i) != nullptr)
+				{
+					cpSpaceAddShape(world, shapes[i]);
+					//Prevent from bouncing 
+					cpShapeSetElasticity(shapes[i], 0.0f);
+				}
+
+			}
+
+			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
+		}
 	}
-
-
-	b2FixtureDef TriggerFixtureP;
-	TriggerFixtureP.density = 1.f;
-	TriggerFixtureP.shape = &shape;
-
-
-	this->Body->CreateFixture(&TriggerFixtureP);
-	this->Body->SetUserData(this);
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 }
 
 void CSolidBlock::Draw(sf::RenderWindow & window)
@@ -53,10 +66,13 @@ void CSolidBlock::Draw(sf::RenderWindow & window)
 	window.draw(sprite);
 }
 
-CSolidBlock::CSolidBlock(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path ):CActor(Location,path),Size(Size),CollisionShape(CollisionShape)
+CSolidBlock::CSolidBlock(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path ):CActor(Location,path),Size(Size), ShadowShape(CollisionShape)
 {
 	this->sprite = sf::Sprite(texture);
 	//this->sprite.setScale(scale);
+
+	CollisionRectangle.width = Size.x;
+	CollisionRectangle.height = Size.y;
 }
 
 

@@ -6,7 +6,12 @@
 #include <Box2D.h>
 #endif
 
+#ifndef CHIPMUNK_H
+#include <chipmunk.h>
+#endif
+
 #define CLASS_ACTOR 2
+
 
 //Base of all objects that can be placed in the scene
 class CActor : public CObject
@@ -27,7 +32,15 @@ protected:
 
 	//LUA file that will be used
 	std::string CollisionScriptFileName;
+
+	std::vector<cpShape*>shapes;
+
+	
 public:
+	int GetClassID()const { return ClassID; }
+
+	cpShape*GetShape(int i);
+
 	//LUA file that will be used
 	void SetCollisionScriptFileName(std::string CollisionScriptFileName) { this->CollisionScriptFileName = CollisionScriptFileName; }
 
@@ -45,11 +58,30 @@ public:
 
 	//Physical body of the CActor
 	//find way use smart pointers right now it does not
-	b2Body* Body = nullptr;
+	cpBody * Body = nullptr;
 
 	//for the lua
 	//not const for LUA
-	b2Body* GetBody() { return Body; }
+	cpBody * GetBody() { return Body; }
+
+	sf::Vector2f GetLinearVelocity()const
+	{
+		cpVect vel = cpBodyGetVelocity(this->Body);
+		return sf::Vector2f(vel.x, vel.y);
+	}
+
+	//Imp - impluse to apply
+	//LocalPoint - Point in the body where impulse will be aplied
+	void ApplyLinearImpulse(cpVect imp, cpVect localPoint)
+	{
+		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), imp, localPoint);
+		//Body->SetLinearVelocity(vel);
+	}
+
+	void ApplyLinearImpulseToZero(float x, float y)
+	{
+		cpBodyApplyImpulseAtLocalPoint(this->GetBody(), cpv(x,y), cpv(0,0));
+	}
 
 	//returns copy of the Array
 	//Made primarly for the LUA
@@ -95,11 +127,11 @@ public:
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnBeginCollision(std::shared_ptr<CObject> otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
 
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
-	virtual void OnEndCollision(std::shared_ptr<CActor> otherActor, b2Fixture *fixtureA, b2Fixture *fixtureB, std::string PATH);
+	virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
 
 	CActor(sf::Vector2f Location, std::string path="./../");
 	~CActor();
