@@ -513,7 +513,7 @@ void Game::Init()
 		dev64_64.setPoint(3, { 0,64 });
 
 
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64, s, sf::Vector2f(64, 64), sf::Vector2f(300, -100), path);
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64, s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
 		player->InitPhysBody(path, space);
 		this->SceneActors.push_back(player);
 

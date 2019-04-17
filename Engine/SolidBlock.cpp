@@ -46,6 +46,8 @@ void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 				if (shapes.at(i) != nullptr)
 				{
 					cpSpaceAddShape(world, shapes[i]);
+					//Prevent from bouncing 
+					cpShapeSetElasticity(shapes[i], 0.0f);
 				}
 
 			}

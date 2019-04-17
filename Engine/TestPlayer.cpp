@@ -68,10 +68,11 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 				{
 					cpSpaceAddShape(world, shapes[i]);
 					cpShapeSetCollisionType(shapes[i], (int)(this));
+					//Prevent from bouncing 
+					cpShapeSetElasticity(shapes[i], 0.0f);
 				}
 
 			}
-
 			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
 		}
 	}
