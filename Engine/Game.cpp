@@ -579,10 +579,13 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(space);
 	handler->beginFunc = &Game::OnBeginCollision;
 	handler->separateFunc = &Game::OnEndCollision;
+
+	TextureResources = std::make_unique<Engine::Resources::CTextureContainer>(path);
 }
 
 
 Game::~Game()
 {
+	TextureResources.release();
 	cpSpaceFree(space);
 }

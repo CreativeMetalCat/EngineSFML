@@ -1,5 +1,7 @@
 #pragma once
+#ifndef CLASS_CTEXTURERESOURCE
 #include "TextureResource.h"
+#endif // !CLASS_CTEXTURERESOURCE
 
 //prevent from multyple includes
 #ifndef _VECTOR_
@@ -12,6 +14,7 @@
 #endif
 
 #define CLASS_CTEXTUREHANDLER 5
+
 
 
 
@@ -32,11 +35,14 @@ namespace Engine::Resources
 
 		CTextureContainer(std::string path);
 
-		sf::Texture& GetTextureByName();
+		CTextureResource GetTextureByName(std::string name);
 
-		sf::Texture& GetTextureByID();
-		//release all resources used by class including container
+		CTextureResource GetTextureByID(size_t id);
 
+		void AddTextureResource(CTextureResource& r);
+
+		//loads all textures by calling CTextureResource->Init(std::string path)
+		virtual void Init(std::string path)override;
 
 		~CTextureContainer();
 	};

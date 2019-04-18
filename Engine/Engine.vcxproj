@@ -160,7 +160,6 @@
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="DynamicBodyRaycastCallback.cpp" />
     <ClCompile Include="imgui-SFML.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
@@ -174,11 +173,12 @@
     <ClCompile Include="PhysicalObject.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TextureContainer.cpp" />
+    <ClCompile Include="TextureResource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="DynamicBodyRaycastCallback.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="SolidBlock.h" />
     <ClInclude Include="TestPlayer.h" />
@@ -189,6 +189,8 @@
     <ClInclude Include="PhysicalMaterial.h" />
     <ClInclude Include="PhysicalObject.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TextureContainer.h" />
+    <ClInclude Include="TextureResource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

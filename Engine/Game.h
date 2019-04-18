@@ -8,6 +8,10 @@ using namespace std;
 #include <include/lighting/LightSystem.h>
 #include <chipmunk.h>
 
+#ifndef CLASS_CTEXTUREHANDLER
+#include "TextureContainer.h"
+#endif // !CLASS_CTEXTUREHANDLER
+
 //class that manages all of the operations in game
 class Game
 {
@@ -25,6 +29,7 @@ class Game
 
 	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
+	std::unique_ptr<Engine::Resources::CTextureContainer> TextureResources;
 
 	sf::Texture devOrange64_64;
 
@@ -80,6 +85,7 @@ class Game
 			std::cout << e.what() << std::endl;
 		}
 	}
+
 public:
 	//Init widnow etc.
 	void Init();
