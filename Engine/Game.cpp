@@ -5,6 +5,20 @@
 
 using namespace std;
 
+#ifndef _RANDOM_
+#include <random>
+
+int m_get_random_number(int min, int max)
+{
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 eng(rd()); // seed the generator
+	std::uniform_int_distribution<> distr(min, max); // define the range
+
+	return distr(eng);
+}
+#endif // !_RANDOM_
+
+
 
 void Game::Render()
 {
@@ -438,6 +452,20 @@ void Game::Update(sf::Time dt)
 			SceneActors.at(i)->Update(dt);
 		}
 	}
+	try
+	{
+		time += dt.asSeconds();
+		if (time > 1.f)
+		{
+			FMOD::Channel* ch;
+			lowLevelSoundSystem->playSound(Sounds[m_get_random_number(0, 3)], 0, false, &ch);
+			time = 0.f;
+		}
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	
 	
 	ImGui::SFML::Update(window, dt);
@@ -500,10 +528,6 @@ void Game::Init()
 
 		TextureResources->Init(path);
 
-		if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
-		{
-			std::cout << "Failed to load texture\n";
-		}
 		sf::ConvexShape dev64_64;
 		dev64_64.setPointCount(4);
 		dev64_64.setPoint(0, { 0,0 });
@@ -536,6 +560,24 @@ void Game::Init()
 				SceneActors.at(i)->Init(path);
 			}
 		}
+
+	
+
+		for (int i = 1;i <= 4; i++)
+		{
+			std::string filename = path + "sounds/Hit" + std::to_string(i) + ".wav";
+			FMOD::Sound* sound;
+			FMOD_RESULT res = lowLevelSoundSystem->createSound(filename.c_str(), FMOD_2D, 0, &sound);
+			if (res != FMOD_RESULT::FMOD_OK)
+			{
+				std::cout << FMOD_ErrorString(res) << std::endl;
+			}
+			else
+			{
+				Sounds.push_back(sound);
+			}
+		}
+		
 	}
 	catch (std::exception e)
 	{
@@ -562,8 +604,6 @@ void Game::Run()
 	ImGui::DestroyContext();
 }
 
-
-
 Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path)
 {
 	
@@ -580,6 +620,29 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	handler->separateFunc = &Game::OnEndCollision;
 
 	TextureResources = std::make_unique<Engine::Resources::CTextureContainer>(path);
+
+
+	FMOD_RESULT res;
+	res = FMOD::System_Create(&lowLevelSoundSystem);
+	if (res != FMOD_RESULT::FMOD_OK)
+	{
+		std::cout << FMOD_ErrorString(res) << std::endl;
+	}
+	else
+	{
+		std::cout << "Sound system was created without errors" << std::endl;
+	}
+	res = lowLevelSoundSystem->init(1024, FMOD_INIT_NORMAL, NULL);
+	if (res != FMOD_RESULT::FMOD_OK)
+	{
+		std::cout << FMOD_ErrorString(res) << std::endl;
+	}
+	else
+	{
+		std::cout << "Sound system was inited without errors" << std::endl;
+	}
+
+	
 }
 
 

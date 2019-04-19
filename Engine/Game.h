@@ -12,6 +12,9 @@ using namespace std;
 #include "TextureContainer.h"
 #endif // !CLASS_CTEXTUREHANDLER
 
+#include <fmod.hpp>
+#include <fmod_errors.h>
+
 //class that manages all of the operations in game
 class Game
 {
@@ -29,8 +32,13 @@ class Game
 
 	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
-	
-	sf::Texture devOrange64_64;
+	//array of "Engine"-default sounds 
+	//they can be used for testing or something else
+	std::vector<FMOD::Sound*>Sounds;
+
+	float time = 0.f;
+
+	FMOD::Sound* test_sound;
 
 	bool ShowGravityUI = false;
 
@@ -85,6 +93,8 @@ class Game
 		}
 	}
 
+
+	FMOD::System* lowLevelSoundSystem = NULL;
 public:
 
 	std::unique_ptr<Engine::Resources::CTextureContainer> TextureResources;
