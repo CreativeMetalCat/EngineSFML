@@ -78,23 +78,33 @@ int main()
 		{
 			if (textureTable.isTable())
 			{
-				for (int i = 0; i < textureTable.length(); i++)
+				//In LUA first array index is 1 while in c/c++ it's zero
+				for (int i = 1; i <= textureTable.length(); i++)
 				{
 					LuaRef textureData = textureTable[i];
+					//if there is a mistake in table we skip this field and continue
+					if (!textureData.isNil())
+					{
+						std::string name = textureData["name"].cast<std::string>();
 
-					std::string name = textureData["name"].cast<std::string>();
+						std::string pathToFile = textureData["path"].cast<std::string>();
 
-					std::string path = textureData["path"].cast<std::string>();
+						bool smooth = textureData["smooth"].cast<bool>();
 
-					bool smooth = textureData["smooth"].cast<bool>();
+						bool repeated = textureData["repeated"].cast<bool>();
 
-					bool repeated = textureData["repeated"].cast<bool>();
+						game.TextureResources->AddTextureResource(std::make_shared<Engine::Resources::CTextureResource>(name, pathToFile, smooth, repeated, PATH));
+					}
+					else 
+					{
+						std::cout << "LUA Warning: Attempted to read Nil value in table. Execution will be continued\n";
+					}
 
-					int oi = 0;
+					
 				}
 			}
 		}
-		game.TextureResources->AddTextureResource(std::make_shared<Engine::Resources::CTextureResource>("dev64_orange", "textures/dev/dev_orange_64x64.png", true, false, PATH));
+		
 		//----------------------------------------------------------------------------------
 		game.Init();
 
