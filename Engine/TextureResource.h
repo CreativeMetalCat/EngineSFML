@@ -6,11 +6,15 @@ namespace Engine::Resources
 {
 	class CTextureResource :public CObject
 	{
+	protected:
 		bool m_smooth = false;
 		bool m_repeated = false;
 
+		//to ensure that object will get proper pointer you can use object itself
 		sf::Texture m_texture;
 	public:
+
+
 		//name of the texture that will be used 
 		std::string Name;
 
@@ -28,9 +32,12 @@ namespace Engine::Resources
 
 		bool GetIsRepeated()const { return m_repeated; }
 
-		sf::Texture GetTexture() { return m_texture; }
 
-		CTextureResource(sf::Texture texture,bool smooth, bool repeated, std::string path);
+		sf::Texture& GetTexture() { return m_texture; }
+
+		CTextureResource(sf::Texture texture, bool smooth, bool repeated, std::string path);
+
+		CTextureResource(std::string Name, std::string NameOfFile, bool smooth, bool repeated, std::string path);
 
 		//creates empty object
 		static CTextureResource CreateAsNULL();

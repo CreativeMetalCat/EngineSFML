@@ -8,27 +8,27 @@ namespace Engine::Resources
 	}
 
 	//if texture was not found emtpy texture will be returned NOT NULL
-	CTextureResource CTextureContainer::GetTextureByName(std::string name)
+	CTextureResource* CTextureContainer::GetTextureByName(std::string name)
 	{
 
-		if (Textures.empty()) { return CTextureResource::CreateAsNULL(); }
+		if (Textures.empty()) { return nullptr; }
 		else
 		{
 			for  (auto var : Textures)
 			{
-				if (var.Name == name) { return var; }
+				if (var->Name == name) { return &(*var); }
 			}
 		}
 		// TODO: insert return statement here
 	}
 
-	CTextureResource CTextureContainer::GetTextureByID(size_t id)
+	CTextureResource* CTextureContainer::GetTextureByID(size_t id)
 	{
-		if (Textures.empty()) { return CTextureResource::CreateAsNULL(); }
-		else if (id<Textures.size() && id>-1) { return Textures[id]; }
+		if (Textures.empty()) { return nullptr; }
+		else if (id<Textures.size() && id>-1) { return &(*Textures[id]); }
 	}
 
-	void CTextureContainer::AddTextureResource(CTextureResource& r)
+	void CTextureContainer::AddTextureResource(std::shared_ptr<CTextureResource> r)
 	{
 		this->Textures.push_back(r);
 	}
@@ -40,7 +40,7 @@ namespace Engine::Resources
 		{
 			for (auto texture : Textures)
 			{
-				texture.Init(path);
+				texture->Init(path);
 			}
 		}
 	}

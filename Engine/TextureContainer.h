@@ -31,15 +31,15 @@ namespace Engine::Resources
 
 		virtual int GetClassID()const { return CLASS_CTEXTUREHANDLER; }
 
-		std::vector<CTextureResource> Textures;
+		std::vector<std::shared_ptr<CTextureResource>> Textures;
 
 		CTextureContainer(std::string path);
 
-		CTextureResource GetTextureByName(std::string name);
+		CTextureResource* GetTextureByName(std::string name);
 
-		CTextureResource GetTextureByID(size_t id);
+		CTextureResource* GetTextureByID(size_t id);
 
-		void AddTextureResource(CTextureResource& r);
+		void AddTextureResource(std::shared_ptr<CTextureResource> r);
 
 		//loads all textures by calling CTextureResource->Init(std::string path)
 		virtual void Init(std::string path)override;

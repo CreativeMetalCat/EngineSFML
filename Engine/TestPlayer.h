@@ -9,7 +9,7 @@
 class CTestPlayer : public Engine::Character
 {
 
-	sf::Sprite sprite;
+	sf::Sprite m_sprite;
 public:
 
 	//ID of class for Casting
@@ -19,16 +19,16 @@ public:
 
 	int GetClassID()const { return  CLASS_CTESTPLAYER; }
 
-	void SetSprite(sf::Sprite s) { this->sprite = s; }
+	void SetSprite(sf::Sprite s) { this->m_sprite = s; }
 
-	sf::Sprite GetSprite()const { return sprite; }
+	sf::Sprite GetSprite()const { return m_sprite; }
 
 	void SetSpriteTexture(sf::Texture & texture);
 
 	//Size and Location will also be used to define size of the sprite
 	//Scales image inside of this funtion
 	//AND does the same in the Init
-	CTestPlayer(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
+	CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
 
 	virtual void Init(std::string path)override;
 

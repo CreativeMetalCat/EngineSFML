@@ -29,8 +29,7 @@ class Game
 
 	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
-	std::unique_ptr<Engine::Resources::CTextureContainer> TextureResources;
-
+	
 	sf::Texture devOrange64_64;
 
 	bool ShowGravityUI = false;
@@ -87,6 +86,9 @@ class Game
 	}
 
 public:
+
+	std::unique_ptr<Engine::Resources::CTextureContainer> TextureResources;
+
 	//Init widnow etc.
 	void Init();
 	

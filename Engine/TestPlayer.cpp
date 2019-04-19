@@ -7,19 +7,20 @@ void CTestPlayer::SetSpriteTexture(sf::Texture & t)
 }
 
 
-CTestPlayer::CTestPlayer(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path):Character(CollisionShape,Size,Location,path)
+CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :
+	Character(CollisionShape, Size, Location, path),
+	m_sprite(sprite)
 {
 
-	this->sprite = sf::Sprite(texture);
 
 	sf::Vector2f scale;
-	
-	if (texture.getSize().x != 0) { scale.x = Size.x / texture.getSize().x; }
 
-	if (texture.getSize().y != 0) { scale.y = Size.y / texture.getSize().y; }
+	if (m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite.getTexture()->getSize().x; }
 
-	this->sprite.setScale(scale);
-	
+	if (m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite.getTexture()->getSize().y; }
+
+	this->m_sprite.setScale(scale);
+
 }
 
 void CTestPlayer::Init(std::string path)
@@ -29,11 +30,11 @@ void CTestPlayer::Init(std::string path)
 
 	sf::Vector2f scale;
 
-	if (this->sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->sprite.getTexture()->getSize().x; }
+	if (this->m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->m_sprite.getTexture()->getSize().x; }
 
-	if (this->sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->sprite.getTexture()->getSize().y; }
+	if (this->m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->m_sprite.getTexture()->getSize().y; }
 
-	this->sprite.setScale(scale);
+	this->m_sprite.setScale(scale);
 
 	//this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
@@ -84,7 +85,7 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 
 void CTestPlayer::Draw(sf::RenderWindow& window)
 {
-	window.draw(sprite);
+	window.draw(m_sprite);
 }
 
 void CTestPlayer::Update(sf::Time dt)
@@ -96,7 +97,7 @@ void CTestPlayer::Update(sf::Time dt)
 		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
 		this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
-		sprite.setPosition(this->GetActorLocation());
+		m_sprite.setPosition(this->GetActorLocation());
 	}
 }
 

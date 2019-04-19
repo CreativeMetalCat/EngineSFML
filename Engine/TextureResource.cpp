@@ -11,6 +11,15 @@ namespace Engine::Resources
 	{
 	}
 
+	CTextureResource::CTextureResource(std::string Name, std::string NameOfFile, bool smooth, bool repeated, std::string path):
+		CObject(path),
+		m_smooth(smooth),
+		m_repeated(repeated),
+		NameOfFile(NameOfFile),
+		Name(Name)
+	{
+	}
+
 	CTextureResource CTextureResource::CreateAsNULL()
 	{
 		return CTextureResource(sf::Texture(), NULL, NULL, nullptr);
@@ -20,7 +29,10 @@ namespace Engine::Resources
 	{
 		if (NameOfFile != "")//if texture is nameless we skip it 
 		{
-			m_texture.loadFromFile(path + NameOfFile);
+			if (!m_texture.loadFromFile(path + NameOfFile))
+			{
+				std::cout << "Failed to load texture Name: " << this->Name << " Path to file" << path + NameOfFile << std::endl;;
+			}
 			m_texture.setSmooth(m_smooth);
 			m_texture.setRepeated(m_repeated);
 		}

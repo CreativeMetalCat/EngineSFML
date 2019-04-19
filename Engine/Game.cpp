@@ -498,8 +498,7 @@ void Game::Init()
 		c->InitPhysBody(path, space);
 		SceneActors.push_back(c);
 
-
-
+		TextureResources->Init(path);
 
 		if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
 		{
@@ -512,15 +511,15 @@ void Game::Init()
 		dev64_64.setPoint(2, { 64,64 });
 		dev64_64.setPoint(3, { 0,64 });
 
-
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64, s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
+		
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
 		player->InitPhysBody(path, space);
 		this->SceneActors.push_back(player);
 
 
 		for (int i = 0; i < 19; i++)
 		{
-			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
 			sd->Init(path);
 			sd->InitPhysBody(path, this->space);
 
