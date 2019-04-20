@@ -439,6 +439,7 @@ void Game::ProccessEvents()
 
 void Game::Update(sf::Time dt)
 {
+	
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
@@ -458,7 +459,11 @@ void Game::Update(sf::Time dt)
 		if (time > 1.f)
 		{
 			FMOD::Channel* ch;
-			lowLevelSoundSystem->playSound(Sounds[m_get_random_number(0, 3)], 0, false, &ch);
+			int randI = (m_get_random_number(0, 3));
+			
+			lowLevelSoundSystem->playSound(Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
+			
+			
 			time = 0.f;
 		}
 	}
@@ -498,7 +503,7 @@ void Game::Update(sf::Time dt)
 
 		ImGui::End();
 	}
-	
+	this->lowLevelSoundSystem->update();
 }
 
 void Game::Init()
@@ -527,6 +532,7 @@ void Game::Init()
 		SceneActors.push_back(c);
 
 		TextureResources->Init(path);
+
 
 		sf::ConvexShape dev64_64;
 		dev64_64.setPointCount(4);
@@ -562,6 +568,27 @@ void Game::Init()
 		}
 
 	
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit1", path + "sounds/Hit1.wav", path));
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit2", path + "sounds/Hit2.wav", path));
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit3", path + "sounds/Hit3.wav", path));
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit4", path + "sounds/Hit4.wav", path));
+
+		if (!Sounds->Sounds.empty())
+		{
+			for (auto var : Sounds->Sounds)
+			{
+				std::string d = path + var->NameOfFile;
+				FMOD_RESULT res = lowLevelSoundSystem->createSound(d.c_str(), FMOD_2D, 0, &var->m_sound);
+				if (res != FMOD_RESULT::FMOD_OK)
+				{
+					std::cout << FMOD_ErrorString(res) << std::endl;
+				}
+				else
+				{
+					
+				}
+			}
+		}
 
 		for (int i = 1;i <= 4; i++)
 		{
@@ -574,7 +601,7 @@ void Game::Init()
 			}
 			else
 			{
-				Sounds.push_back(sound);
+				//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit" + std::to_string(i), filename, path));
 			}
 		}
 		
@@ -619,8 +646,9 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	handler->beginFunc = &Game::OnBeginCollision;
 	handler->separateFunc = &Game::OnEndCollision;
 
-	TextureResources = std::make_unique<Engine::Resources::CTextureContainer>(path);
+	TextureResources = std::make_unique<Engine::Resources::Materials::CTextureContainer>(path);
 
+	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
 
 	FMOD_RESULT res;
 	res = FMOD::System_Create(&lowLevelSoundSystem);

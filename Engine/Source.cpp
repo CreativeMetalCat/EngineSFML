@@ -73,7 +73,6 @@ int main()
 
 		LuaRef textureTable = getGlobal(L, "textures");
 
-		bool f = textureTable.isTable();
 		if (!textureTable.isNil())
 		{
 			if (textureTable.isTable())
@@ -93,7 +92,7 @@ int main()
 
 						bool repeated = textureData["repeated"].cast<bool>();
 
-						game.TextureResources->AddTextureResource(std::make_shared<Engine::Resources::CTextureResource>(name, pathToFile, smooth, repeated, PATH));
+						game.TextureResources->AddTextureResource(std::make_shared<Engine::Resources::Materials::CTextureResource>(name, pathToFile, smooth, repeated, PATH));
 					}
 					else 
 					{
@@ -105,6 +104,51 @@ int main()
 			}
 		}
 		
+		//----------------------------------------------------------------------------------
+
+
+
+		d = (PATH + "scripts/SoundPaths.lua");
+
+		status = luaL_dofile(L, d.c_str());
+		if (status != 0)
+		{
+			fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+		}
+		luaL_openlibs(L);
+
+		lua_pcall(L, 0, 0, 0);
+
+		LuaRef soundTable = getGlobal(L, "sounds");
+
+		if (!soundTable.isNil())
+		{
+			if (soundTable.isTable())
+			{
+				//In LUA first array index is 1 while in c/c++ it's zero
+				for (int i = 1; i <= soundTable.length(); i++)
+				{
+					LuaRef soundData = soundTable[i];
+					//if there is a mistake in table we skip this field and continue
+					if (!soundData.isNil())
+					{
+						std::string name = soundData["name"].cast<std::string>();
+
+						std::string pathToFile = soundData["path"].cast<std::string>();
+
+
+						game.Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>(name, pathToFile, PATH));
+					}
+					else
+					{
+						std::cout << "LUA Warning: Attempted to read Nil value in table. Execution will be continued\n";
+					}
+
+
+				}
+			}
+		}
+
 		//----------------------------------------------------------------------------------
 		game.Init();
 

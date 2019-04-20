@@ -1,7 +1,7 @@
 #include "TextureResource.h"
 
 
-namespace Engine::Resources
+namespace Engine::Resources::Materials
 {
 	CTextureResource::CTextureResource(sf::Texture texture, bool smooth, bool repeated, std::string path) :
 		CObject(path),

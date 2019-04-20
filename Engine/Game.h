@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "SolidBlock.h"
 #include "TestPlayer.h"
+#include "SoundContainer.h"
 
 using namespace std;
 #include <include/lighting/LightSystem.h>
@@ -12,8 +13,13 @@ using namespace std;
 #include "TextureContainer.h"
 #endif // !CLASS_CTEXTUREHANDLER
 
+#ifndef _FMOD_HPP
 #include <fmod.hpp>
+#endif
+
+#ifndef _FMOD_ERRORS_H
 #include <fmod_errors.h>
+#endif
 
 //class that manages all of the operations in game
 class Game
@@ -32,9 +38,7 @@ class Game
 
 	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
-	//array of "Engine"-default sounds 
-	//they can be used for testing or something else
-	std::vector<FMOD::Sound*>Sounds;
+	
 
 	float time = 0.f;
 
@@ -96,8 +100,11 @@ class Game
 
 	FMOD::System* lowLevelSoundSystem = NULL;
 public:
+	//array of "Engine"-default sounds 
+	//they can be used for testing or something else
+	std::unique_ptr < Engine::Resources::Sound::CSoundContainer> Sounds;
 
-	std::unique_ptr<Engine::Resources::CTextureContainer> TextureResources;
+	std::unique_ptr<Engine::Resources::Materials::CTextureContainer> TextureResources;
 
 	//Init widnow etc.
 	void Init();

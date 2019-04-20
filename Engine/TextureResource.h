@@ -2,7 +2,7 @@
 #include "Object.h"
 
 #define CLASS_CTEXTURERESOURCE 6
-namespace Engine::Resources
+namespace Engine::Resources::Materials
 {
 	class CTextureResource :public CObject
 	{

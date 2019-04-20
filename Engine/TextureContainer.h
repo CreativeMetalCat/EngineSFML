@@ -18,7 +18,7 @@
 
 
 
-namespace Engine::Resources
+namespace Engine::Resources::Materials
 {
 	class CTextureContainer : public CObject
 	{

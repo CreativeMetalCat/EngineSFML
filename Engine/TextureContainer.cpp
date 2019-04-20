@@ -1,7 +1,7 @@
 #include "TextureContainer.h"
 
 
-namespace Engine::Resources
+namespace Engine::Resources::Materials
 {
 	CTextureContainer::CTextureContainer(std::string path) :CObject(path)
 	{
@@ -19,13 +19,14 @@ namespace Engine::Resources
 				if (var->Name == name) { return &(*var); }
 			}
 		}
-		// TODO: insert return statement here
+		return nullptr;
 	}
 
 	CTextureResource* CTextureContainer::GetTextureByID(size_t id)
 	{
 		if (Textures.empty()) { return nullptr; }
 		else if (id<Textures.size() && id>-1) { return &(*Textures[id]); }
+		return nullptr;
 	}
 
 	void CTextureContainer::AddTextureResource(std::shared_ptr<CTextureResource> r)
