@@ -61,11 +61,11 @@ namespace Engine
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
 
-		virtual void Init(std::string path) {}
+		virtual void Init(std::string path, Context* context) {}
 
-		virtual void Update(sf::Time) {}
+		virtual void Update(sf::Time, Context* context) {}
 
-		virtual void HanleEvent(sf::Event event, Context* context) {}
+		virtual void HandleEvent(sf::Event event, Context* context) {}
 
 		CObject(std::string path);
 

@@ -13,8 +13,17 @@ class CTestPlayer : public Engine::Character
 {
 
 	sf::Sprite m_sprite;
-public:
 
+	FMOD::Channel* m_footstep_sound_channel;
+
+	float m_per_foostep_time = 1.f;
+	float m_passed_footstep_time = 0.f;
+
+	bool m_moving_left = false;
+
+	bool m_moving_right = false;
+public:
+	
 	//ID of class for Casting
 	//ID MUST be defined in the beggining of the file with class
 	//default is CObject
@@ -33,13 +42,13 @@ public:
 	//AND does the same in the Init
 	CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
 
-	virtual void Init(std::string path)override;
+	virtual void Init(std::string path, Context* context)override;
 
 	virtual void InitPhysBody(std::string path, cpSpace*& world)override;
 
 	void Draw(sf::RenderWindow& window)override;
 
-	void Update(sf::Time dt);
+	void Update(sf::Time dt, Context* context);
 
 	//Create LUA class from this for usage in LUA
 	static void RegisterClassLUA(lua_State*& L);
@@ -49,6 +58,8 @@ public:
 	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
 	
 	virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
+
+	virtual void HandleEvent(sf::Event event, Context* context)override;
 	~CTestPlayer();
 };
 

@@ -80,7 +80,7 @@ namespace Engine
 
 		static void RegisterClassLUA(lua_State*& L);
 
-		virtual void Init(std::string PATH);
+		virtual void Init(std::string PATH, Context* context)override;
 
 		PhysicalMaterial(std::string name, std::string path);
 		~PhysicalMaterial();

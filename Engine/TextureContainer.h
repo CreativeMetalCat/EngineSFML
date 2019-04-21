@@ -7,6 +7,8 @@
 #ifndef _VECTOR_
 #include <vector>
 #endif
+#include <iostream>
+
 
 //prevent from multyple includes
 #ifndef SFML_GRAPHICS_HPP
@@ -20,7 +22,7 @@
 
 namespace Engine::Resources::Materials
 {
-	class CTextureContainer : public CObject
+	class CTextureContainer
 	{
 	public:
 
@@ -42,7 +44,7 @@ namespace Engine::Resources::Materials
 		void AddTextureResource(std::shared_ptr<CTextureResource> r);
 
 		//loads all textures by calling CTextureResource->Init(std::string path)
-		virtual void Init(std::string path)override;
+		virtual void Init(std::string path);
 
 		~CTextureContainer();
 	};

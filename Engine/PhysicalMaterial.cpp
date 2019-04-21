@@ -30,7 +30,7 @@ namespace Engine
 
 	}
 
-	void PhysicalMaterial::Init(std::string PATH)
+	void PhysicalMaterial::Init(std::string PATH, Context* context)
 	{
 		using namespace luabridge;
 

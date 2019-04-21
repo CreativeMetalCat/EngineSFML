@@ -3,9 +3,9 @@
 
 namespace Engine
 {
-	void PhysicalObject::Init(std::string PATH)
+	void PhysicalObject::Init(std::string PATH, Context* context)
 	{
-		PhysMaterial->Init(PATH);
+		PhysMaterial->Init(PATH,context);
 	}
 
 	PhysicalObject::PhysicalObject(sf::Vector2f position, std::string MaterialName, std::string path) : CActor(position, path), MaterialName(MaterialName)

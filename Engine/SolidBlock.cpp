@@ -5,7 +5,7 @@ void CSolidBlock::SetSpriteTexture(sf::Texture & texture)
 
 }
 
-void CSolidBlock::Init(std::string path)
+void CSolidBlock::Init(std::string path, Context* context)
 {
 
 	sf::Vector2f scale;

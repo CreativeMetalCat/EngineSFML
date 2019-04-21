@@ -4,7 +4,6 @@
 namespace Engine::Resources::Materials
 {
 	CTextureResource::CTextureResource(sf::Texture texture, bool smooth, bool repeated, std::string path) :
-		CObject(path),
 		m_texture(texture),
 		m_smooth(smooth),
 		m_repeated(repeated)
@@ -12,7 +11,6 @@ namespace Engine::Resources::Materials
 	}
 
 	CTextureResource::CTextureResource(std::string Name, std::string NameOfFile, bool smooth, bool repeated, std::string path):
-		CObject(path),
 		m_smooth(smooth),
 		m_repeated(repeated),
 		NameOfFile(NameOfFile),

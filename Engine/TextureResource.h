@@ -1,10 +1,11 @@
 #pragma once
-#include "Object.h"
+#include <iostream>
+#include <SFML/Graphics.hpp>
 
 #define CLASS_CTEXTURERESOURCE 6
 namespace Engine::Resources::Materials
 {
-	class CTextureResource :public CObject
+	class CTextureResource
 	{
 	protected:
 		bool m_smooth = false;

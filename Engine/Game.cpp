@@ -248,7 +248,6 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(2)->As<Engine::Character*>()->MoveX(-1);
 
 			mLeft = true;
 			
@@ -304,7 +303,6 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(2)->As<Engine::Character*>()->MoveX(1);
 
 			mRight= true;
 		}
@@ -425,7 +423,7 @@ void Game::ProccessEvents()
 			mRight = false;
 		}
 
-		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyReleased)
 		{
 			mLeft = false;
 		}
@@ -435,7 +433,14 @@ void Game::ProccessEvents()
 			SceneActors[2]->As<Engine::Character*>()->StopXMovement();
 		}
 
-		this->SceneActors[0]->HanleEvent(event, &(*GameContext) );
+
+		if (!SceneActors.empty())
+		{
+			for (auto& var : SceneActors)
+			{
+				var->HandleEvent(event, &(*this->GameContext));
+			}
+		}
 	}
 }
 
@@ -452,7 +457,7 @@ void Game::Update(sf::Time dt)
 	{
 		for (size_t i = 0; i < SceneActors.size(); i++)
 		{
-			SceneActors.at(i)->Update(dt);
+			SceneActors.at(i)->Update(dt, &(*this->GameContext));
 		}
 	}
 	try
@@ -463,7 +468,7 @@ void Game::Update(sf::Time dt)
 			FMOD::Channel* ch;
 			int randI = (m_get_random_number(0, 3));
 			
-			GameContext->lowLevelSoundSystem->playSound(GameContext->Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
+			//GameContext->lowLevelSoundSystem->playSound(GameContext->Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
 			
 			
 			time = 0.f;
@@ -519,7 +524,7 @@ void Game::Init()
 
 
 		std::shared_ptr<Engine::PhysicalObject> po = std::make_shared<Engine::PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
-		po->Init(path);
+		po->Init(path, &(*this->GameContext));
 		SceneActors.push_back(po);
 		sf::ConvexShape s;
 		s.setPointCount(4);
@@ -528,7 +533,7 @@ void Game::Init()
 		s.setPoint(2, { 50,50 });
 		s.setPoint(3, { 0,50 });
 		
-		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, -100), path);
+		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, 100), path);
 
 		c->InitPhysBody(path, space);
 		SceneActors.push_back(c);
@@ -552,7 +557,7 @@ void Game::Init()
 		for (int i = 0; i < 19; i++)
 		{
 			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
-			sd->Init(path);
+			sd->Init(path, &(*this->GameContext));
 			sd->InitPhysBody(path, this->space);
 
 			SceneActors.push_back(sd);
@@ -565,7 +570,7 @@ void Game::Init()
 			for (size_t i = 0; i < SceneActors.size(); i++) 
 			{
 				//path must be given here due to limitations of the chipmunk2D engine
-				SceneActors.at(i)->Init(path);
+				SceneActors.at(i)->Init(path, &(*this->GameContext));
 			}
 		}
 

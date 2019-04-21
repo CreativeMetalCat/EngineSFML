@@ -27,7 +27,7 @@ namespace Engine
 
 		void SetMaterialName(std::string MaterialName = "") { this->MaterialName = MaterialName; }
 
-		void Init(std::string path)override;
+		void Init(std::string path, Context* context)override;
 
 		PhysicalObject(sf::Vector2f position, std::string path, std::string MaterialName = "");
 		~PhysicalObject();

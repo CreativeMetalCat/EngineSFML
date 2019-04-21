@@ -3,7 +3,7 @@
 
 namespace Engine::Resources::Materials
 {
-	CTextureContainer::CTextureContainer(std::string path) :CObject(path)
+	CTextureContainer::CTextureContainer(std::string path)
 	{
 	}
 

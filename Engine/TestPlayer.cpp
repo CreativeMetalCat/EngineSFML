@@ -23,7 +23,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 
 }
 
-void CTestPlayer::Init(std::string path)
+void CTestPlayer::Init(std::string path, Context* context)
 {
 
 	this->path = path;
@@ -88,16 +88,26 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 	window.draw(m_sprite);
 }
 
-void CTestPlayer::Update(sf::Time dt)
+void CTestPlayer::Update(sf::Time dt, Context* context)
 {
 	if (Body != nullptr)
 	{
-		
+
 		cpBodySetAngle(Body, 0);
 		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
 		this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
 		m_sprite.setPosition(this->GetActorLocation());
+	}
+
+	if (m_moving_left || m_moving_right)
+	{
+		m_passed_footstep_time += dt.asSeconds();
+		if (m_passed_footstep_time >= m_per_foostep_time)
+		{
+			m_passed_footstep_time = 0.f;
+			context->lowLevelSoundSystem->playSound(context->Sounds->GetSoundByName("footstep_tile2")->m_sound, 0, false, &m_footstep_sound_channel);
+		}
 	}
 }
 
@@ -249,6 +259,37 @@ void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 	}
 
 }
+
+void CTestPlayer::HandleEvent(sf::Event event, Context* context)
+{
+	if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
+	{
+		m_moving_left = true;
+		this->MoveX(-1);
+	}
+	if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyPressed)
+	{
+		m_moving_right = true;
+		this->MoveX(1);
+		
+	}
+	if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
+	{
+		this->Jump();
+	}
+
+	if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
+	{
+		m_moving_right =false;
+	}
+
+	if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyReleased)
+	{
+		m_moving_left = false;
+	}
+
+}
+
 CTestPlayer::~CTestPlayer()
 {
 }
