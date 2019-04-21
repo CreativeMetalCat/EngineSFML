@@ -137,7 +137,7 @@ int main()
 						std::string pathToFile = soundData["path"].cast<std::string>();
 
 
-						game.Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>(name, pathToFile, PATH));
+						game.GameContext->Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>(name, pathToFile, PATH));
 					}
 					else
 					{

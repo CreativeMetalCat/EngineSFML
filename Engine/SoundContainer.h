@@ -1,5 +1,7 @@
 #pragma once
-#include "Object.h"
+//#include "Object.h"
+#include <iostream>
+#include <vector>
 
 #ifndef CLASS_CSOUNDSOURCE
 #include "SoundResource.h"
@@ -9,7 +11,7 @@
 
 namespace Engine::Resources::Sound
 {
-	class CSoundContainer : public CObject
+	class CSoundContainer
 	{
 	public:
 
@@ -29,7 +31,7 @@ namespace Engine::Resources::Sound
 		void AddSoundResource(std::shared_ptr<CSoundResource> r);
 
 		//loads all textures by calling CTextureResource->Init(std::string path)
-		void Init(std::string path, FMOD::System*& system);
+		virtual void Init(std::string path, FMOD::System*& system);
 
 		CSoundContainer(std::string path);
 		~CSoundContainer();

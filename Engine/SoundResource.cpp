@@ -20,7 +20,7 @@ namespace Engine::Resources::Sound
 	}
 
 	CSoundResource::CSoundResource(std::string Name, std::string NameOfFile, std::string path) :
-		CObject(path),
+
 		NameOfFile(NameOfFile),
 		Name(Name)
 	{

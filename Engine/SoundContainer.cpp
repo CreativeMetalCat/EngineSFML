@@ -40,7 +40,7 @@ namespace Engine::Resources::Sound
 		}
 	}
 
-	CSoundContainer::CSoundContainer(std::string path):CObject(path)
+	CSoundContainer::CSoundContainer(std::string path)
 	{
 		
 	}

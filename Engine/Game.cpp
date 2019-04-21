@@ -434,6 +434,8 @@ void Game::ProccessEvents()
 		{
 			SceneActors[2]->As<Engine::Character*>()->StopXMovement();
 		}
+
+		this->SceneActors[0]->HanleEvent(event, &(*GameContext) );
 	}
 }
 
@@ -461,7 +463,7 @@ void Game::Update(sf::Time dt)
 			FMOD::Channel* ch;
 			int randI = (m_get_random_number(0, 3));
 			
-			lowLevelSoundSystem->playSound(Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
+			GameContext->lowLevelSoundSystem->playSound(GameContext->Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
 			
 			
 			time = 0.f;
@@ -503,7 +505,7 @@ void Game::Update(sf::Time dt)
 
 		ImGui::End();
 	}
-	this->lowLevelSoundSystem->update();
+	this->GameContext->lowLevelSoundSystem->update();
 }
 
 void Game::Init()
@@ -573,12 +575,12 @@ void Game::Init()
 		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit3", path + "sounds/Hit3.wav", path));
 		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit4", path + "sounds/Hit4.wav", path));
 
-		if (!Sounds->Sounds.empty())
+		if (!GameContext->Sounds->Sounds.empty())
 		{
-			for (auto var : Sounds->Sounds)
+			for (auto var : GameContext->Sounds->Sounds)
 			{
 				std::string d = path + var->NameOfFile;
-				FMOD_RESULT res = lowLevelSoundSystem->createSound(d.c_str(), FMOD_2D, 0, &var->m_sound);
+				FMOD_RESULT res = GameContext->lowLevelSoundSystem->createSound(d.c_str(), FMOD_2D, 0, &var->m_sound);
 				if (res != FMOD_RESULT::FMOD_OK)
 				{
 					std::cout << FMOD_ErrorString(res) << std::endl;
@@ -587,21 +589,6 @@ void Game::Init()
 				{
 					
 				}
-			}
-		}
-
-		for (int i = 1;i <= 4; i++)
-		{
-			std::string filename = path + "sounds/Hit" + std::to_string(i) + ".wav";
-			FMOD::Sound* sound;
-			FMOD_RESULT res = lowLevelSoundSystem->createSound(filename.c_str(), FMOD_2D, 0, &sound);
-			if (res != FMOD_RESULT::FMOD_OK)
-			{
-				std::cout << FMOD_ErrorString(res) << std::endl;
-			}
-			else
-			{
-				//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit" + std::to_string(i), filename, path));
 			}
 		}
 		
@@ -650,8 +637,9 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 
 	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
 
-	FMOD_RESULT res;
-	res = FMOD::System_Create(&lowLevelSoundSystem);
+	GameContext = std::make_shared<Context>(path);
+	/*FMOD_RESULT res;
+	res = FMOD::System_Create(&GameContext->lowLevelSoundSystem);
 	if (res != FMOD_RESULT::FMOD_OK)
 	{
 		std::cout << FMOD_ErrorString(res) << std::endl;
@@ -660,7 +648,7 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	{
 		std::cout << "Sound system was created without errors" << std::endl;
 	}
-	res = lowLevelSoundSystem->init(1024, FMOD_INIT_NORMAL, NULL);
+	res = GameContext->lowLevelSoundSystem->init(1024, FMOD_INIT_NORMAL, NULL);
 	if (res != FMOD_RESULT::FMOD_OK)
 	{
 		std::cout << FMOD_ErrorString(res) << std::endl;
@@ -668,7 +656,7 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	else
 	{
 		std::cout << "Sound system was inited without errors" << std::endl;
-	}
+	}*/
 
 	
 }

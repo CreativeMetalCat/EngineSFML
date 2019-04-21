@@ -2,6 +2,9 @@
 
 #include "Character.h"
 
+#ifndef  CLASS_CSOUNDSOURCE
+#include "SoundResource.h"
+#endif
 #define CLASS_CTESTPLAYER 4
 
 //Example player that moves using physics and has one sprite 

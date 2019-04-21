@@ -1,5 +1,5 @@
 #pragma once
-#include "Object.h"
+#include <iostream>
 
 #ifndef _FMOD_HPP
 #include <fmod.hpp>
@@ -13,7 +13,7 @@
 
 namespace Engine::Resources::Sound
 {
-	class CSoundResource : public CObject
+	class CSoundResource
 	{
 	protected:
 		
@@ -36,7 +36,7 @@ namespace Engine::Resources::Sound
 
 		virtual int GetClassID()const { return CLASS_CSOUNDSOURCE; }
 
-		void Init(std::string path)override;
+		void Init(std::string path);
 
 		FMOD_CREATESOUNDEXINFO InitSound(std::string path,FMOD::System*&system);
 

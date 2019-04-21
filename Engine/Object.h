@@ -16,7 +16,6 @@ extern "C"
 //#include "MainFuncLib.h"
 #include <SFML/Graphics.hpp>
 
-
 #define CLASS_OBJECT 1
 
 #ifndef DEPRECATED_WARING
@@ -28,6 +27,8 @@ extern "C"
 //Depending on compiler this will act as error or warning ( in vs 2015 it is an error while vs 2017 it is warning)
 #define DEPRECATED_ERROR [[deprecated]]
 #endif // !DEPRECATED_ERROR
+
+#include "Context.h"
 
 namespace Engine
 {
@@ -63,6 +64,9 @@ namespace Engine
 		virtual void Init(std::string path) {}
 
 		virtual void Update(sf::Time) {}
+
+		virtual void HanleEvent(sf::Event event, Context* context) {}
+
 		CObject(std::string path);
 
 		virtual void Release() {}

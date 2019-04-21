@@ -21,6 +21,7 @@ using namespace std;
 #include <fmod_errors.h>
 #endif
 
+
 //class that manages all of the operations in game
 class Game
 {
@@ -98,8 +99,12 @@ class Game
 	}
 
 
-	FMOD::System* lowLevelSoundSystem = NULL;
+	//FMOD::System* lowLevelSoundSystem = NULL;
+
+	
 public:
+	std::shared_ptr<Context>GameContext;
+
 	//array of "Engine"-default sounds 
 	//they can be used for testing or something else
 	std::unique_ptr < Engine::Resources::Sound::CSoundContainer> Sounds;
