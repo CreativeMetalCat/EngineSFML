@@ -3,10 +3,24 @@
 #include "Character.h"
 #include "SolidBlock.h"
 #include "TestPlayer.h"
+#include "SoundContainer.h"
 
 using namespace std;
 #include <include/lighting/LightSystem.h>
 #include <chipmunk.h>
+
+#ifndef CLASS_CTEXTUREHANDLER
+#include "TextureContainer.h"
+#endif // !CLASS_CTEXTUREHANDLER
+
+#ifndef _FMOD_HPP
+#include <fmod.hpp>
+#endif
+
+#ifndef _FMOD_ERRORS_H
+#include <fmod_errors.h>
+#endif
+
 
 //class that manages all of the operations in game
 class Game
@@ -23,10 +37,13 @@ class Game
 
 	std::string path;
 
-	std::vector<std::shared_ptr<CActor>>SceneActors;
+	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
+	
 
-	sf::Texture devOrange64_64;
+	float time = 0.f;
+
+	FMOD::Sound* test_sound;
 
 	bool ShowGravityUI = false;
 
@@ -47,9 +64,9 @@ class Game
 
 			cpArbiterGetBodies(arb, &bodyA, &bodyB);
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
 
 			//If objects are not sensors postSolve() &  preSolve() must be called
 			return cpTrue;
@@ -69,9 +86,9 @@ class Game
 
 			cpArbiterGetBodies(arb, &bodyA, &bodyB);
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyA))->OnEndCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyB)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnEndCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
 
-			static_cast<CActor*>(cpBodyGetUserData(bodyB))->OnEndCollision(arb, static_cast<CActor*>(cpBodyGetUserData(bodyA)));
+			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnEndCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
 
 			
 		}
@@ -80,7 +97,20 @@ class Game
 			std::cout << e.what() << std::endl;
 		}
 	}
+
+
+	//FMOD::System* lowLevelSoundSystem = NULL;
+
+	
 public:
+	std::shared_ptr<Context>GameContext;
+
+	//array of "Engine"-default sounds 
+	//they can be used for testing or something else
+	std::unique_ptr < Engine::Resources::Sound::CSoundContainer> Sounds;
+
+	std::unique_ptr<Engine::Resources::Materials::CTextureContainer> TextureResources;
+
 	//Init widnow etc.
 	void Init();
 	

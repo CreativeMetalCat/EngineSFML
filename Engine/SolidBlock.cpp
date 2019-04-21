@@ -5,17 +5,17 @@ void CSolidBlock::SetSpriteTexture(sf::Texture & texture)
 
 }
 
-void CSolidBlock::Init(std::string path)
+void CSolidBlock::Init(std::string path, Context* context)
 {
 
 	sf::Vector2f scale;
 
-	if (this->sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->sprite.getTexture()->getSize().x; }
+	if (this->m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->m_sprite.getTexture()->getSize().x; }
 
-	if (this->sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->sprite.getTexture()->getSize().y; }
+	if (this->m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->m_sprite.getTexture()->getSize().y; }
 
-	this->sprite.setScale(scale);
-	this->sprite.setPosition(this->GetActorLocation());
+	this->m_sprite.setScale(scale);
+	this->m_sprite.setPosition(this->GetActorLocation());
 }
 
 void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
@@ -63,12 +63,15 @@ void CSolidBlock::InitPhysBody(std::string path, cpSpace *&world)
 
 void CSolidBlock::Draw(sf::RenderWindow & window)
 {
-	window.draw(sprite);
+	window.draw(m_sprite);
 }
 
-CSolidBlock::CSolidBlock(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path ):CActor(Location,path),Size(Size), ShadowShape(CollisionShape)
+CSolidBlock::CSolidBlock(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path ):
+	CActor(Location,path),
+	Size(Size),
+	ShadowShape(CollisionShape),
+	m_sprite(sprite)
 {
-	this->sprite = sf::Sprite(texture);
 	//this->sprite.setScale(scale);
 
 	CollisionRectangle.width = Size.x;

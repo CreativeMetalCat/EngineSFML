@@ -6,64 +6,33 @@ int SCREENHEIGHT = 720;
 
 using namespace luabridge;
 
+//delete this before releasing or any check outside of this machine
+#define DEBUG
 
+#ifdef DEBUG
 std::string PATH = "C:/Users/catgu/source/repos/Engine/x64/Debug/";
+#else
+std::string PATH = "./../";
+#endif // !DEBUG
+
+
 
 //a = &(*CActor);
 int main()
 {
 	
-	std::shared_ptr<CActor> actor = std::make_shared<CActor>(sf::Vector2f(120, 675),PATH);
 
 
 
 	lua_State* L = luaL_newstate();
 
 	
-	std::string d = (PATH + "scripts/actor.lua");
+	
 	try
 	{
+		std::string d = (PATH + "scripts/TexturesPaths.lua");
 
-		int status = luaL_dofile(L, d.c_str());
-		if (status != 0)
-		{
-			fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
-		}
-		luaL_openlibs(L);
-
-		lua_pcall(L, 0, 0, 0);
-
-		//Register CActor in lua
-		CActor::RegisterClassLUA(L);
-
-		//Register Vector2 in lua
-		getGlobalNamespace(L)
-			.beginClass<sf::Vector2f>("Vector2")
-			//add x,y and some functions possibly
-			.addData<float>("x", &sf::Vector2<float>::x)
-			.addData<float>("y", &sf::Vector2<float>::y)
-			.addConstructor<void(*) (void)>()
-			.endClass();
-
-
-		LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
-		LuaRef LuaMoveX = getGlobal(L, "MoveX");
-		LuaRef LuaAddChild = getGlobal(L, "AddChild");
-		LuaRef LuaGetChild = getGlobal(L, "GetChild");
-
-
-		if (LuaSetActorLocation.isFunction())
-		{
-			LuaSetActorLocation(&(*actor), &sf::Vector2f(450, 0));
-		}
-		if (LuaAddChild.isFunction())
-		{
-			//LuaAddChild(&(*CActor), a);
-		}
-		LuaMoveX(&(*actor), -1000);
-		LuaRef c = LuaGetChild(&(*actor), 0);
-		CActor*k = c.cast<CActor*>();
-
+		
 
 		d = (PATH + "scripts/window.lua");
 		luaL_dofile(L, d.c_str());
@@ -88,7 +57,99 @@ int main()
 
 		Game game(title, sf::VideoMode(SCREENWIDTH, SCREENHEIGHT), PATH);
 		
+		//-----------------------------------------------------------------
+
+
+		d = (PATH + "scripts/TexturesPaths.lua");
+
+		int status = luaL_dofile(L, d.c_str());
+		if (status != 0)
+		{
+			fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+		}
+		luaL_openlibs(L);
+
+		lua_pcall(L, 0, 0, 0);
+
+		LuaRef textureTable = getGlobal(L, "textures");
+
+		if (!textureTable.isNil())
+		{
+			if (textureTable.isTable())
+			{
+				//In LUA first array index is 1 while in c/c++ it's zero
+				for (int i = 1; i <= textureTable.length(); i++)
+				{
+					LuaRef textureData = textureTable[i];
+					//if there is a mistake in table we skip this field and continue
+					if (!textureData.isNil())
+					{
+						std::string name = textureData["name"].cast<std::string>();
+
+						std::string pathToFile = textureData["path"].cast<std::string>();
+
+						bool smooth = textureData["smooth"].cast<bool>();
+
+						bool repeated = textureData["repeated"].cast<bool>();
+
+						game.TextureResources->AddTextureResource(std::make_shared<Engine::Resources::Materials::CTextureResource>(name, pathToFile, smooth, repeated, PATH));
+					}
+					else 
+					{
+						std::cout << "LUA Warning: Attempted to read Nil value in table. Execution will be continued\n";
+					}
+
+					
+				}
+			}
+		}
 		
+		//----------------------------------------------------------------------------------
+
+
+
+		d = (PATH + "scripts/SoundPaths.lua");
+
+		status = luaL_dofile(L, d.c_str());
+		if (status != 0)
+		{
+			fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+		}
+		luaL_openlibs(L);
+
+		lua_pcall(L, 0, 0, 0);
+
+		LuaRef soundTable = getGlobal(L, "sounds");
+
+		if (!soundTable.isNil())
+		{
+			if (soundTable.isTable())
+			{
+				//In LUA first array index is 1 while in c/c++ it's zero
+				for (int i = 1; i <= soundTable.length(); i++)
+				{
+					LuaRef soundData = soundTable[i];
+					//if there is a mistake in table we skip this field and continue
+					if (!soundData.isNil())
+					{
+						std::string name = soundData["name"].cast<std::string>();
+
+						std::string pathToFile = soundData["path"].cast<std::string>();
+
+
+						game.GameContext->Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>(name, pathToFile, PATH));
+					}
+					else
+					{
+						std::cout << "LUA Warning: Attempted to read Nil value in table. Execution will be continued\n";
+					}
+
+
+				}
+			}
+		}
+
+		//----------------------------------------------------------------------------------
 		game.Init();
 
 		game.Run();

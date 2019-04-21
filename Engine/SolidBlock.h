@@ -3,9 +3,9 @@
 
 //Actor that has one texture(sprite) and static physical body
 //Category: Basic
-class CSolidBlock : public CActor
+class CSolidBlock : public Engine::CActor
 {
-	sf::Sprite sprite;
+	sf::Sprite m_sprite;
 
 	sf::Vector2f Size;
 
@@ -20,18 +20,18 @@ public:
 	//there is no way to properly check if collision is good for the polygon shape at runtime and change
 	sf::FloatRect CollisionRectangle;
 
-	void SetSprite(sf::Sprite s) { this->sprite = s; }
+	void SetSprite(sf::Sprite s) { this->m_sprite = s; }
 
-	sf::Sprite GetSprite()const { return sprite; }
+	sf::Sprite GetSprite()const { return m_sprite; }
 
 	void SetSpriteTexture(sf::Texture & texture);
 
-	virtual void Init(std::string path)override;
+	virtual void Init(std::string path, Context* context)override;
 	virtual void InitPhysBody(std::string path, cpSpace *&world);
 
 	void Draw(sf::RenderWindow&window)override;
 
-	CSolidBlock(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
+	CSolidBlock(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
 	~CSolidBlock();
 };
 

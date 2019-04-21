@@ -5,6 +5,20 @@
 
 using namespace std;
 
+#ifndef _RANDOM_
+#include <random>
+
+int m_get_random_number(int min, int max)
+{
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 eng(rd()); // seed the generator
+	std::uniform_int_distribution<> distr(min, max); // define the range
+
+	return distr(eng);
+}
+#endif // !_RANDOM_
+
+
 
 void Game::Render()
 {
@@ -39,7 +53,7 @@ void Game::Render()
 		sf::Text t = sf::Text("Hello", calibri);
 		if (!SceneActors.empty())
 		{
-			t.setPosition(SceneActors.at(0)->As<PhysicalObject*>()->GetActorLocation());
+			t.setPosition(SceneActors.at(0)->As<Engine::PhysicalObject*>()->GetActorLocation());
 		}
 		window.draw(t);
 
@@ -105,7 +119,7 @@ void Game::Render()
 	light->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
 	light->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
 	light->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	light->_emissionSprite.setPosition(SceneActors.at(0)->As<PhysicalObject*>()->GetActorLocation());//Позиция света.
+	light->_emissionSprite.setPosition(SceneActors.at(0)->As<Engine::PhysicalObject*>()->GetActorLocation());//Позиция света.
 	light->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
 	light->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 	
@@ -202,7 +216,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -234,7 +248,6 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(2)->As<Character*>()->MoveX(-1);
 
 			mLeft = true;
 			
@@ -258,7 +271,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -290,13 +303,12 @@ void Game::ProccessEvents()
 				}
 			}
 
-			SceneActors.at(2)->As<Character*>()->MoveX(1);	
 
 			mRight= true;
 		}
 		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(2)->As<Character*>()->Jump();
+			SceneActors.at(2)->As<Engine::Character*>()->Jump();
 
 			using namespace luabridge;
 			if (!SceneActors.empty())
@@ -315,7 +327,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -350,7 +362,7 @@ void Game::ProccessEvents()
 		}
 		if (event.key.code == sf::Keyboard::S&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(1)->As<Character*>()->MoveY(1);
+			SceneActors.at(1)->As<Engine::Character*>()->MoveY(1);
 			using namespace luabridge;
 			if (!SceneActors.empty())
 			{
@@ -368,7 +380,7 @@ void Game::ProccessEvents()
 					lua_pcall(L, 0, 0, 0);
 
 					//Register CActor in lua
-					CActor::RegisterClassLUA(L);
+					Engine::CActor::RegisterClassLUA(L);
 
 					//Register Vector2 in lua
 					getGlobalNamespace(L)
@@ -411,20 +423,30 @@ void Game::ProccessEvents()
 			mRight = false;
 		}
 
-		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyReleased)
 		{
 			mLeft = false;
 		}
 
 		if (!mRight && !mLeft)
 		{
-			SceneActors[2]->As<Character*>()->StopXMovement();
+			SceneActors[2]->As<Engine::Character*>()->StopXMovement();
+		}
+
+
+		if (!SceneActors.empty())
+		{
+			for (auto& var : SceneActors)
+			{
+				var->HandleEvent(event, &(*this->GameContext));
+			}
 		}
 	}
 }
 
 void Game::Update(sf::Time dt)
 {
+	
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();	
 
@@ -435,8 +457,26 @@ void Game::Update(sf::Time dt)
 	{
 		for (size_t i = 0; i < SceneActors.size(); i++)
 		{
-			SceneActors.at(i)->Update(dt);
+			SceneActors.at(i)->Update(dt, &(*this->GameContext));
 		}
+	}
+	try
+	{
+		time += dt.asSeconds();
+		if (time > 1.f)
+		{
+			FMOD::Channel* ch;
+			int randI = (m_get_random_number(0, 3));
+			
+			//GameContext->lowLevelSoundSystem->playSound(GameContext->Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
+			
+			
+			time = 0.f;
+		}
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
 	}
 	
 	
@@ -470,7 +510,7 @@ void Game::Update(sf::Time dt)
 
 		ImGui::End();
 	}
-	
+	this->GameContext->lowLevelSoundSystem->update();
 }
 
 void Game::Init()
@@ -483,8 +523,8 @@ void Game::Init()
 		this->window.setFramerateLimit(60.f);
 
 
-		std::shared_ptr<PhysicalObject> po = std::make_shared<PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
-		po->Init(path);
+		std::shared_ptr<Engine::PhysicalObject> po = std::make_shared<Engine::PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
+		po->Init(path, &(*this->GameContext));
 		SceneActors.push_back(po);
 		sf::ConvexShape s;
 		s.setPointCount(4);
@@ -492,19 +532,15 @@ void Game::Init()
 		s.setPoint(1, { 50,0 });
 		s.setPoint(2, { 50,50 });
 		s.setPoint(3, { 0,50 });
-
-		std::shared_ptr<Character> c = std::make_shared<Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, -100), path);
+		
+		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, 100), path);
 
 		c->InitPhysBody(path, space);
 		SceneActors.push_back(c);
 
+		TextureResources->Init(path);
 
 
-
-		if (!devOrange64_64.loadFromFile(path + "textures/dev/dev_orange_64x64.png"))
-		{
-			std::cout << "Failed to load texture\n";
-		}
 		sf::ConvexShape dev64_64;
 		dev64_64.setPointCount(4);
 		dev64_64.setPoint(0, { 0,0 });
@@ -512,16 +548,16 @@ void Game::Init()
 		dev64_64.setPoint(2, { 64,64 });
 		dev64_64.setPoint(3, { 0,64 });
 
-
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(devOrange64_64, s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
+		
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
 		player->InitPhysBody(path, space);
 		this->SceneActors.push_back(player);
 
 
 		for (int i = 0; i < 19; i++)
 		{
-			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(devOrange64_64, dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
-			sd->Init(path);
+			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			sd->Init(path, &(*this->GameContext));
 			sd->InitPhysBody(path, this->space);
 
 			SceneActors.push_back(sd);
@@ -534,9 +570,33 @@ void Game::Init()
 			for (size_t i = 0; i < SceneActors.size(); i++) 
 			{
 				//path must be given here due to limitations of the chipmunk2D engine
-				SceneActors.at(i)->Init(path);
+				SceneActors.at(i)->Init(path, &(*this->GameContext));
 			}
 		}
+
+	
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit1", path + "sounds/Hit1.wav", path));
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit2", path + "sounds/Hit2.wav", path));
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit3", path + "sounds/Hit3.wav", path));
+		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit4", path + "sounds/Hit4.wav", path));
+
+		if (!GameContext->Sounds->Sounds.empty())
+		{
+			for (auto var : GameContext->Sounds->Sounds)
+			{
+				std::string d = path + var->NameOfFile;
+				FMOD_RESULT res = GameContext->lowLevelSoundSystem->createSound(d.c_str(), FMOD_2D, 0, &var->m_sound);
+				if (res != FMOD_RESULT::FMOD_OK)
+				{
+					std::cout << FMOD_ErrorString(res) << std::endl;
+				}
+				else
+				{
+					
+				}
+			}
+		}
+		
 	}
 	catch (std::exception e)
 	{
@@ -563,8 +623,6 @@ void Game::Run()
 	ImGui::DestroyContext();
 }
 
-
-
 Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path)
 {
 	
@@ -579,10 +637,38 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(space);
 	handler->beginFunc = &Game::OnBeginCollision;
 	handler->separateFunc = &Game::OnEndCollision;
+
+	TextureResources = std::make_unique<Engine::Resources::Materials::CTextureContainer>(path);
+
+	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
+
+	GameContext = std::make_shared<Context>(path);
+	/*FMOD_RESULT res;
+	res = FMOD::System_Create(&GameContext->lowLevelSoundSystem);
+	if (res != FMOD_RESULT::FMOD_OK)
+	{
+		std::cout << FMOD_ErrorString(res) << std::endl;
+	}
+	else
+	{
+		std::cout << "Sound system was created without errors" << std::endl;
+	}
+	res = GameContext->lowLevelSoundSystem->init(1024, FMOD_INIT_NORMAL, NULL);
+	if (res != FMOD_RESULT::FMOD_OK)
+	{
+		std::cout << FMOD_ErrorString(res) << std::endl;
+	}
+	else
+	{
+		std::cout << "Sound system was inited without errors" << std::endl;
+	}*/
+
+	
 }
 
 
 Game::~Game()
 {
+	TextureResources.release();
 	cpSpaceFree(space);
 }

@@ -7,33 +7,34 @@ void CTestPlayer::SetSpriteTexture(sf::Texture & t)
 }
 
 
-CTestPlayer::CTestPlayer(sf::Texture&texture, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path):Character(CollisionShape,Size,Location,path)
+CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :
+	Character(CollisionShape, Size, Location, path),
+	m_sprite(sprite)
 {
 
-	this->sprite = sf::Sprite(texture);
 
 	sf::Vector2f scale;
-	
-	if (texture.getSize().x != 0) { scale.x = Size.x / texture.getSize().x; }
 
-	if (texture.getSize().y != 0) { scale.y = Size.y / texture.getSize().y; }
+	if (m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite.getTexture()->getSize().x; }
 
-	this->sprite.setScale(scale);
-	
+	if (m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite.getTexture()->getSize().y; }
+
+	this->m_sprite.setScale(scale);
+
 }
 
-void CTestPlayer::Init(std::string path)
+void CTestPlayer::Init(std::string path, Context* context)
 {
 
 	this->path = path;
 
 	sf::Vector2f scale;
 
-	if (this->sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->sprite.getTexture()->getSize().x; }
+	if (this->m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->m_sprite.getTexture()->getSize().x; }
 
-	if (this->sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->sprite.getTexture()->getSize().y; }
+	if (this->m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->m_sprite.getTexture()->getSize().y; }
 
-	this->sprite.setScale(scale);
+	this->m_sprite.setScale(scale);
 
 	//this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
@@ -84,19 +85,29 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 
 void CTestPlayer::Draw(sf::RenderWindow& window)
 {
-	window.draw(sprite);
+	window.draw(m_sprite);
 }
 
-void CTestPlayer::Update(sf::Time dt)
+void CTestPlayer::Update(sf::Time dt, Context* context)
 {
 	if (Body != nullptr)
 	{
-		
+
 		cpBodySetAngle(Body, 0);
 		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
 		this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
-		sprite.setPosition(this->GetActorLocation());
+		m_sprite.setPosition(this->GetActorLocation());
+	}
+
+	if (m_moving_left || m_moving_right)
+	{
+		m_passed_footstep_time += dt.asSeconds();
+		if (m_passed_footstep_time >= m_per_foostep_time)
+		{
+			m_passed_footstep_time = 0.f;
+			context->lowLevelSoundSystem->playSound(context->Sounds->GetSoundByName("footstep_tile2")->m_sound, 0, false, &m_footstep_sound_channel);
+		}
 	}
 }
 
@@ -248,6 +259,37 @@ void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 	}
 
 }
+
+void CTestPlayer::HandleEvent(sf::Event event, Context* context)
+{
+	if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
+	{
+		m_moving_left = true;
+		this->MoveX(-1);
+	}
+	if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyPressed)
+	{
+		m_moving_right = true;
+		this->MoveX(1);
+		
+	}
+	if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
+	{
+		this->Jump();
+	}
+
+	if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
+	{
+		m_moving_right =false;
+	}
+
+	if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyReleased)
+	{
+		m_moving_left = false;
+	}
+
+}
+
 CTestPlayer::~CTestPlayer()
 {
 }
