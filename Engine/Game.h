@@ -47,6 +47,8 @@ class Game
 
 	bool ShowGravityUI = false;
 
+	bool ShowDebugSpawner = false;
+
 	bool m = false;
 
 	cpSpace*space;
@@ -100,7 +102,9 @@ class Game
 
 
 	//FMOD::System* lowLevelSoundSystem = NULL;
+	int texture_id = 0;
 
+	bool isUsingMenu = false;
 	
 public:
 	std::shared_ptr<Context>GameContext;

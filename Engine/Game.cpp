@@ -308,7 +308,6 @@ void Game::ProccessEvents()
 		}
 		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
 		{
-			SceneActors.at(2)->As<Engine::Character*>()->Jump();
 
 			using namespace luabridge;
 			if (!SceneActors.empty())
@@ -414,23 +413,32 @@ void Game::ProccessEvents()
 		}
 		if (event.key.code == sf::Keyboard::Tilde&&event.type == sf::Event::EventType::KeyPressed)
 		{
+			this->ShowDebugSpawner = !this->ShowDebugSpawner;
 			this->ShowGravityUI = !this->ShowGravityUI;
+			
 			
 		}
 	
-		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyReleased)
+		if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::EventType::MouseButtonPressed)
 		{
-			mRight = false;
-		}
+			if (!isUsingMenu)
+			{
+				/*if (texture_id > -1 && texture_id < TextureResources->Textures.size())
+				{
+					sf::ConvexShape dev64_64;
+					dev64_64.setPointCount(4);
+					dev64_64.setPoint(0, { 0,0 });
+					dev64_64.setPoint(1, { 64,0 });
+					dev64_64.setPoint(2, { 64,64 });
+					dev64_64.setPoint(3, { 0,64 });
 
-		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyReleased)
-		{
-			mLeft = false;
-		}
+					std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(event.mouseButton.x, event.mouseButton.y), path);
+					sd->Init(path, &(*this->GameContext));
+					sd->InitPhysBody(path, this->space);
 
-		if (!mRight && !mLeft)
-		{
-			SceneActors[2]->As<Engine::Character*>()->StopXMovement();
+					SceneActors.push_back(sd);
+				}*/
+			}
 		}
 
 
@@ -446,13 +454,13 @@ void Game::ProccessEvents()
 
 void Game::Update(sf::Time dt)
 {
-	
+
 	//create lua state  for Game's own scripts
-	lua_State* L = luaL_newstate();	
+	lua_State* L = luaL_newstate();
 
 	cpSpaceStep(space, 1 / dt.asSeconds());
-	
-	
+
+
 	if (!SceneActors.empty())
 	{
 		for (size_t i = 0; i < SceneActors.size(); i++)
@@ -467,10 +475,10 @@ void Game::Update(sf::Time dt)
 		{
 			FMOD::Channel* ch;
 			int randI = (m_get_random_number(0, 3));
-			
+
 			//GameContext->lowLevelSoundSystem->playSound(GameContext->Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
-			
-			
+
+
 			time = 0.f;
 		}
 	}
@@ -478,8 +486,8 @@ void Game::Update(sf::Time dt)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	
-	
+
+
 	ImGui::SFML::Update(window, dt);
 	if (ShowGravityUI)
 	{
@@ -489,7 +497,7 @@ void Game::Update(sf::Time dt)
 
 		cpVect gravity = cpSpaceGetGravity(space);
 
-		float gravX = gravity.x*100000.f;
+		float gravX = gravity.x * 100000.f;
 		float gravY = gravity.y * 100000.f;
 		if (ImGui::DragFloat("Gravity X", &gravX, 0.1f))
 		{
@@ -507,9 +515,69 @@ void Game::Update(sf::Time dt)
 		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().y).c_str());
 		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().x).c_str());
 		ImGui::EndChild();
+		ImGui::End();
+
+
+	}
+	if (ShowDebugSpawner)
+	{
+		
+		std::vector<sf::FloatRect>rects;
+		for (int x = 0; x < window.getSize().x / 64; x++)
+		{
+			for (int y = 0; y < window.getSize().y / 64; y++)
+			{
+				rects.push_back(sf::FloatRect(x * 64, y * 64, 64, 64));
+			}
+		}
+		
+		
+		ImGui::Begin("Object Spawner");
+		for (size_t i = 0; i < TextureResources->Textures.size(); i++)
+		{
+			ImGuiStyle style;
+			style.FrameBorderSize = 0.f;
+			if (ImGui::ImageButton(sf::Sprite(TextureResources->Textures[i]->m_texture)))
+			{
+				texture_id = i;
+			}
+			
+		}
+		this->isUsingMenu = ImGui::IsMouseHoveringAnyWindow();
+		if (ImGui::IsMouseClicked(sf::Mouse::Button::Left)&&!ImGui::IsMouseHoveringAnyWindow()&&!ImGui::IsAnyItemHovered())
+		{
+			
+			if (texture_id > -1 && texture_id < TextureResources->Textures.size())
+			{
+				sf::ConvexShape dev64_64;
+				dev64_64.setPointCount(4);
+				dev64_64.setPoint(0, { 0,0 });
+				dev64_64.setPoint(1, { 64,0 });
+				dev64_64.setPoint(2, { 64,64 });
+				dev64_64.setPoint(3, { 0,64 });
+
+				for (int i = 0; i < rects.size(); i++)
+				{
+					if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
+					{
+						std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left,rects[i].top), path);
+						sd->Init(path, &(*this->GameContext));
+						sd->InitPhysBody(path, this->space);
+
+						SceneActors.push_back(sd);
+						break;
+					}
+				}
+				
+				
+			}
+		}
 
 		ImGui::End();
+		rects.~vector();
 	}
+	
+
 	this->GameContext->lowLevelSoundSystem->update();
 }
 
@@ -556,7 +624,7 @@ void Game::Init()
 
 		for (int i = 0; i < 19; i++)
 		{
-			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
 			sd->Init(path, &(*this->GameContext));
 			sd->InitPhysBody(path, this->space);
 
@@ -643,26 +711,6 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
 
 	GameContext = std::make_shared<Context>(path);
-	/*FMOD_RESULT res;
-	res = FMOD::System_Create(&GameContext->lowLevelSoundSystem);
-	if (res != FMOD_RESULT::FMOD_OK)
-	{
-		std::cout << FMOD_ErrorString(res) << std::endl;
-	}
-	else
-	{
-		std::cout << "Sound system was created without errors" << std::endl;
-	}
-	res = GameContext->lowLevelSoundSystem->init(1024, FMOD_INIT_NORMAL, NULL);
-	if (res != FMOD_RESULT::FMOD_OK)
-	{
-		std::cout << FMOD_ErrorString(res) << std::endl;
-	}
-	else
-	{
-		std::cout << "Sound system was inited without errors" << std::endl;
-	}*/
-
 	
 }
 

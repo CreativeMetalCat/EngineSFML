@@ -11,10 +11,10 @@ namespace Engine::Resources::Materials
 		bool m_smooth = false;
 		bool m_repeated = false;
 
+		
+	public:
 		//to ensure that object will get proper pointer you can use object itself
 		sf::Texture m_texture;
-	public:
-
 
 		//name of the texture that will be used 
 		std::string Name;
