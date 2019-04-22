@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include "CPhysicsBox.h"
 
 
 
@@ -44,25 +44,7 @@ void Game::Render()
 	pointLightTexture.setSmooth(true);
 
 	ltbl::LightSystem ls;
-
 	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
-
-	sf::Font calibri;
-	if (calibri.loadFromFile(path + "fonts/calibri.ttf"))
-	{
-		sf::Text t = sf::Text("Hello", calibri);
-		if (!SceneActors.empty())
-		{
-			t.setPosition(SceneActors.at(0)->As<Engine::PhysicalObject*>()->GetActorLocation());
-		}
-		window.draw(t);
-
-
-	}
-	else
-	{
-		std::cout << "Failed to load font" << std::endl;
-	}
 
 
 	if (!SceneActors.empty())
@@ -71,17 +53,26 @@ void Game::Render()
 		{
 
 			SceneActors.at(i)->Draw(window);
-			if (SceneActors.at(i)->As<CSolidBlock*>())
+			if (SceneActors.at(i)->As<Engine::CSolidBlock*>())
 			{
 				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
-				lightShape->_shape = SceneActors.at(i)->As<CSolidBlock*>()->ShadowShape;
+				lightShape->_shape = SceneActors.at(i)->As<Engine::CSolidBlock*>()->ShadowShape;
 
 				lightShape->_renderLightOverShape = true;
 				lightShape->_shape.setPosition(SceneActors.at(i)->GetActorLocation());
 				ls.addShape(lightShape);
 
+			}
+			else if (SceneActors.at(i)->As<CPhysicsBox*>())
+			{
+				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
+				lightShape->_shape = SceneActors.at(i)->As<CPhysicsBox*>()->ShadowShape;
+
+				lightShape->_renderLightOverShape = true;
+				lightShape->_shape.setPosition(SceneActors.at(i)->GetActorLocation());
+				ls.addShape(lightShape);
 			}
 
 		}
@@ -119,7 +110,7 @@ void Game::Render()
 	light->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
 	light->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
 	light->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	light->_emissionSprite.setPosition(SceneActors.at(0)->As<Engine::PhysicalObject*>()->GetActorLocation());//Позиция света.
+	light->_emissionSprite.setPosition(sf::Vector2f(100,100));//Позиция света.
 	light->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
 	light->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 	
@@ -196,221 +187,6 @@ void Game::ProccessEvents()
 	while (window.pollEvent(event))
 	{
 		ImGui::SFML::ProcessEvent(event);
-		if (event.key.code == sf::Keyboard::A&&event.type == sf::Event::EventType::KeyPressed)
-		{
-
-			using namespace luabridge;
-			if (!SceneActors.empty())
-			{
-				
-				lua_State* L = luaL_newstate();
-
-
-				std::string d = (path + "scripts/actor.lua");
-				try
-				{
-
-					luaL_dofile(L, d.c_str());
-					luaL_openlibs(L);
-
-					lua_pcall(L, 0, 0, 0);
-
-					//Register CActor in lua
-					Engine::CActor::RegisterClassLUA(L);
-
-					//Register Vector2 in lua
-					getGlobalNamespace(L)
-						.beginClass<sf::Vector2f>("Vector2")
-						//add x,y and some functions possibly
-						.addData<float>("x", &sf::Vector2<float>::x)
-						.addData<float>("y", &sf::Vector2<float>::y)
-						.addConstructor<void(*) (void)>()
-						.endClass();
-
-
-					LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
-					LuaRef LuaMoveX = getGlobal(L, "MoveX");
-					LuaRef LuaAddChild = getGlobal(L, "AddChild");
-					LuaRef LuaGetChild = getGlobal(L, "GetChild");
-
-
-
-					LuaMoveX(&(*SceneActors.at(0)), -1);
-				}
-				catch (LuaException e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-
-				catch (std::exception e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-			}
-
-
-			mLeft = true;
-			
-		}
-		if (event.key.code == sf::Keyboard::D&&event.type == sf::Event::EventType::KeyPressed)
-		{
-			using namespace luabridge;
-			if (!SceneActors.empty())
-			{
-
-				lua_State* L = luaL_newstate();
-
-
-				std::string d = (path + "scripts/actor.lua");
-				try
-				{
-
-					luaL_dofile(L, d.c_str());
-					luaL_openlibs(L);
-
-					lua_pcall(L, 0, 0, 0);
-
-					//Register CActor in lua
-					Engine::CActor::RegisterClassLUA(L);
-
-					//Register Vector2 in lua
-					getGlobalNamespace(L)
-						.beginClass<sf::Vector2f>("Vector2")
-						//add x,y and some functions possibly
-						.addData<float>("x", &sf::Vector2<float>::x)
-						.addData<float>("y", &sf::Vector2<float>::y)
-						.addConstructor<void(*) (void)>()
-						.endClass();
-
-
-					LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
-					LuaRef LuaMoveX = getGlobal(L, "MoveX");
-					LuaRef LuaAddChild = getGlobal(L, "AddChild");
-					LuaRef LuaGetChild = getGlobal(L, "GetChild");
-
-
-
-					LuaMoveX(&(*SceneActors.at(0)), 1);
-				}
-				catch (LuaException e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-
-				catch (std::exception e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-			}
-
-
-			mRight= true;
-		}
-		if(event.key.code == sf::Keyboard::W&&event.type == sf::Event::EventType::KeyPressed)
-		{
-
-			using namespace luabridge;
-			if (!SceneActors.empty())
-			{
-
-				lua_State* L = luaL_newstate();
-
-
-				std::string d = (path + "scripts/actor.lua");
-				try
-				{
-
-					luaL_dofile(L, d.c_str());
-					luaL_openlibs(L);
-
-					lua_pcall(L, 0, 0, 0);
-
-					//Register CActor in lua
-					Engine::CActor::RegisterClassLUA(L);
-
-					//Register Vector2 in lua
-					getGlobalNamespace(L)
-						.beginClass<sf::Vector2f>("Vector2")
-						//add x,y and some functions possibly
-						.addData<float>("x", &sf::Vector2<float>::x)
-						.addData<float>("y", &sf::Vector2<float>::y)
-						.addConstructor<void(*) (void)>()
-						.endClass();
-
-
-					LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
-					LuaRef LuaMoveX = getGlobal(L, "MoveY");
-					LuaRef LuaAddChild = getGlobal(L, "AddChild");
-					LuaRef LuaGetChild = getGlobal(L, "GetChild");
-
-
-
-					LuaMoveX(&(*SceneActors.at(0)), -1);
-				}
-				catch (LuaException e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-
-				catch (std::exception e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-			}
-
-		}
-		if (event.key.code == sf::Keyboard::S&&event.type == sf::Event::EventType::KeyPressed)
-		{
-			SceneActors.at(1)->As<Engine::Character*>()->MoveY(1);
-			using namespace luabridge;
-			if (!SceneActors.empty())
-			{
-
-				lua_State* L = luaL_newstate();
-
-
-				std::string d = (path + "scripts/actor.lua");
-				try
-				{
-
-					luaL_dofile(L, d.c_str());
-					luaL_openlibs(L);
-
-					lua_pcall(L, 0, 0, 0);
-
-					//Register CActor in lua
-					Engine::CActor::RegisterClassLUA(L);
-
-					//Register Vector2 in lua
-					getGlobalNamespace(L)
-						.beginClass<sf::Vector2f>("Vector2")
-						//add x,y and some functions possibly
-						.addData<float>("x", &sf::Vector2<float>::x)
-						.addData<float>("y", &sf::Vector2<float>::y)
-						.addConstructor<void(*) (void)>()
-						.endClass();
-
-
-					LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
-					LuaRef LuaMoveX = getGlobal(L, "MoveY");
-					LuaRef LuaAddChild = getGlobal(L, "AddChild");
-					LuaRef LuaGetChild = getGlobal(L, "GetChild");
-
-
-
-					LuaMoveX(&(*SceneActors.at(0)), 1);
-				}
-				catch (LuaException e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-
-				catch (std::exception e)
-				{
-					std::cout << e.what() << std::endl;
-				}
-			}
-		}
 		if (event.key.code == sf::Keyboard::Tilde&&event.type == sf::Event::EventType::KeyPressed)
 		{
 			this->ShowDebugSpawner = !this->ShowDebugSpawner;
@@ -418,29 +194,6 @@ void Game::ProccessEvents()
 			
 			
 		}
-	
-		if (event.mouseButton.button == sf::Mouse::Left && event.type == sf::Event::EventType::MouseButtonPressed)
-		{
-			if (!isUsingMenu)
-			{
-				/*if (texture_id > -1 && texture_id < TextureResources->Textures.size())
-				{
-					sf::ConvexShape dev64_64;
-					dev64_64.setPointCount(4);
-					dev64_64.setPoint(0, { 0,0 });
-					dev64_64.setPoint(1, { 64,0 });
-					dev64_64.setPoint(2, { 64,64 });
-					dev64_64.setPoint(3, { 0,64 });
-
-					std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(event.mouseButton.x, event.mouseButton.y), path);
-					sd->Init(path, &(*this->GameContext));
-					sd->InitPhysBody(path, this->space);
-
-					SceneActors.push_back(sd);
-				}*/
-			}
-		}
-
 
 		if (!SceneActors.empty())
 		{
@@ -540,36 +293,59 @@ void Game::Update(sf::Time dt)
 			if (ImGui::ImageButton(sf::Sprite(TextureResources->Textures[i]->m_texture)))
 			{
 				texture_id = i;
-			}
-			
+			}			
 		}
+		ImGui::Checkbox("Spawn Physics?", &this->SpawnPhys);
+		//if (this->SpawnPhys) { ImGui::DragFloat("Mass", &this->DebugMass, 0.5f, 0.5f); }
 		this->isUsingMenu = ImGui::IsMouseHoveringAnyWindow();
 		if (ImGui::IsMouseClicked(sf::Mouse::Button::Left)&&!ImGui::IsMouseHoveringAnyWindow()&&!ImGui::IsAnyItemHovered())
 		{
 			
+			
 			if (texture_id > -1 && texture_id < TextureResources->Textures.size())
 			{
-				sf::ConvexShape dev64_64;
-				dev64_64.setPointCount(4);
-				dev64_64.setPoint(0, { 0,0 });
-				dev64_64.setPoint(1, { 64,0 });
-				dev64_64.setPoint(2, { 64,64 });
-				dev64_64.setPoint(3, { 0,64 });
-
-				for (int i = 0; i < rects.size(); i++)
+				if (!SpawnPhys)
 				{
-					if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
-					{
-						std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left,rects[i].top), path);
-						sd->Init(path, &(*this->GameContext));
-						sd->InitPhysBody(path, this->space);
+					sf::ConvexShape dev64_64;
+					dev64_64.setPointCount(4);
+					dev64_64.setPoint(0, { 0,0 });
+					dev64_64.setPoint(1, { 64,0 });
+					dev64_64.setPoint(2, { 64,64 });
+					dev64_64.setPoint(3, { 0,64 });
 
-						SceneActors.push_back(sd);
-						break;
+					for (int i = 0; i < rects.size(); i++)
+					{
+						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
+						{
+							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), path);
+							sd->Init(path, &(*this->GameContext));
+							sd->InitPhysBody(path, this->space);
+
+							SceneActors.push_back(sd);
+							break;
+						}
 					}
 				}
-				
-				
+				else
+				{
+					sf::ConvexShape dev64_64;
+					dev64_64.setPointCount(4);
+					dev64_64.setPoint(0, { 0,0 });
+					dev64_64.setPoint(1, { 64,0 });
+					dev64_64.setPoint(2, { 64,64 });
+					dev64_64.setPoint(3, { 0,64 });
+
+					for (int i = 0; i < rects.size(); i++)
+					{
+						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
+						{
+							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, this->DebugMass, "Wooden_Crate");
+							po->Init(path, &(*this->GameContext));
+							po->InitPhysBody(path, this->space);
+							SceneActors.push_back(po);
+						}
+					}
+				}
 			}
 		}
 
@@ -591,9 +367,7 @@ void Game::Init()
 		this->window.setFramerateLimit(60.f);
 
 
-		std::shared_ptr<Engine::PhysicalObject> po = std::make_shared<Engine::PhysicalObject>(sf::Vector2f(0, 0), path, "Wooden_Crate");
-		po->Init(path, &(*this->GameContext));
-		SceneActors.push_back(po);
+		
 		sf::ConvexShape s;
 		s.setPointCount(4);
 		s.setPoint(0, { 0,0 });
@@ -624,7 +398,7 @@ void Game::Init()
 
 		for (int i = 0; i < 19; i++)
 		{
-			std::shared_ptr<CSolidBlock> sd = std::make_shared<CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
 			sd->Init(path, &(*this->GameContext));
 			sd->InitPhysBody(path, this->space);
 

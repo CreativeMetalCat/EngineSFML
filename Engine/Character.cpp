@@ -194,8 +194,9 @@ namespace Engine
 		}
 	}
 
-	Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :CActor(Location, path), Size(Size), ShadowShape(CollisionShape)
+	Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :CActor(Location, path), Size(Size)
 	{
+		this->ShadowShape = CollisionShape;
 		if (CollisionShape.getPointCount() > 8)
 		{
 			std::cout << "Waring: Characters collision point count is greater than limit of the physics engine. This can result in unexpected behaviour" << std::endl;

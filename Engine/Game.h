@@ -49,6 +49,10 @@ class Game
 
 	bool ShowDebugSpawner = false;
 
+	float DebugMass = 100.f;
+
+	bool SpawnPhys = false;
+
 	bool m = false;
 
 	cpSpace*space;
@@ -56,6 +60,8 @@ class Game
 	bool mLeft = false;
 
 	bool mRight = false;
+
+	
 
 	static cpBool OnBeginCollision(cpArbiter* arb, cpSpace* space, cpDataPointer userData)
 	{

@@ -6,8 +6,9 @@ namespace Engine
 {
 	//Basic CObject that simulates physics
 	//Unlike all other CActor's children it is supossed to have functionality to play sounds on hit etc.
-	class PhysicalObject : public CActor
+	class CPhysicalObject : public CActor
 	{
+	protected:
 		std::string MaterialName = "";
 
 		float mass = 1.f;
@@ -29,7 +30,9 @@ namespace Engine
 
 		void Init(std::string path, Context* context)override;
 
-		PhysicalObject(sf::Vector2f position, std::string path, std::string MaterialName = "");
-		~PhysicalObject();
+		virtual void InitPhysBody(std::string path, cpSpace*& world);
+
+		CPhysicalObject(sf::Vector2f position, std::string path, float Mass = 100.f, std::string MaterialName = "");
+		~CPhysicalObject();
 	};
 }
