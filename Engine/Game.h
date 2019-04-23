@@ -37,13 +37,11 @@ class Game
 
 	std::string path;
 
-	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
+	//std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
 	
 
 	float time = 0.f;
-
-	FMOD::Sound* test_sound;
 
 	bool ShowGravityUI = false;
 
@@ -55,7 +53,7 @@ class Game
 
 	bool m = false;
 
-	cpSpace*space;
+	//cpSpace*space;
 
 	bool mLeft = false;
 
@@ -113,7 +111,7 @@ class Game
 	bool isUsingMenu = false;
 	
 public:
-	std::shared_ptr<Context>GameContext;
+	std::shared_ptr<Engine::Context>GameContext;
 
 	//array of "Engine"-default sounds 
 	//they can be used for testing or something else

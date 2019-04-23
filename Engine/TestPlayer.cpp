@@ -23,7 +23,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 
 }
 
-void CTestPlayer::Init(std::string path, Context* context)
+void CTestPlayer::Init(std::string path, Engine::Context* context)
 {
 
 	this->path = path;
@@ -88,7 +88,7 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 	window.draw(m_sprite);
 }
 
-void CTestPlayer::Update(sf::Time dt, Context* context)
+void CTestPlayer::Update(sf::Time dt, Engine::Context* context)
 {
 	if (Body != nullptr)
 	{
@@ -260,32 +260,54 @@ void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 
 }
 
-void CTestPlayer::HandleEvent(sf::Event event, Context* context)
+void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
 {
-	if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
+	if (ControlledByPlayer)
 	{
-		m_moving_left = true;
-		this->MoveX(-1);
-	}
-	if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyPressed)
-	{
-		m_moving_right = true;
-		this->MoveX(1);
-		
-	}
-	if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
-	{
-		this->Jump();
-	}
+		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
+		{
+			m_moving_left = true;
+			this->MoveX(-1);
+		}
+		if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyPressed)
+		{
+			m_moving_right = true;
+			this->MoveX(1);
 
-	if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
-	{
-		m_moving_right =false;
-	}
+		}
+		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
+		{
+			this->Jump();
+		}
 
-	if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyReleased)
-	{
-		m_moving_left = false;
+		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
+		{
+			std::cout << 0 << std::endl;
+			context->AddActor
+			(
+				new CTestPlayer
+				(
+					this->m_sprite,
+					this->ShadowShape,
+					this->Size,
+					sf::Vector2f(this->Location.x, this->Location.y - 100),
+					this->path
+				)
+			);
+			context->SceneActors.at(context->SceneActors.size() - 1)->Init(path, context);
+			context->SceneActors.at(context->SceneActors.size() - 1)->InitPhysBody(path, context->space);
+
+		}
+
+		if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
+		{
+			m_moving_right = false;
+		}
+
+		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyReleased)
+		{
+			m_moving_left = false;
+		}
 	}
 
 }

@@ -1,6 +1,6 @@
 #include "CPhysicsBox.h"
 
-void CPhysicsBox::Init(std::string path, Context* context)
+void CPhysicsBox::Init(std::string path, Engine::Context* context)
 {
 	this->path = path;
 
@@ -20,7 +20,7 @@ void CPhysicsBox::Init(std::string path, Context* context)
 	ShadowShape.setPoint(3, sf::Vector2f(0, CollisionRectangle.height));
 }
 
-void CPhysicsBox::Update(sf::Time, Context* context)
+void CPhysicsBox::Update(sf::Time, Engine::Context* context)
 {
 	if (Body != nullptr)
 	{

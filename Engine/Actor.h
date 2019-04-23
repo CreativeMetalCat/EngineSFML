@@ -127,10 +127,9 @@ namespace Engine
 
 		//void SetActorLocation(float x, float y) { Location.x = x; Location.y = y; }
 
-		virtual void Draw(sf::RenderWindow& window)
-		{
+		virtual void Draw(sf::RenderWindow& window) {}
 
-		}
+		virtual void InitPhysBody(std::string path, cpSpace*& world) {}
 
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);

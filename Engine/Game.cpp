@@ -47,31 +47,31 @@ void Game::Render()
 	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
 
 
-	if (!SceneActors.empty())
+	if (!GameContext->SceneActors.empty())
 	{
-		for (size_t i = 0; i < SceneActors.size(); i++)
+		for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 		{
 
-			SceneActors.at(i)->Draw(window);
-			if (SceneActors.at(i)->As<Engine::CSolidBlock*>())
+			GameContext->SceneActors.at(i)->Draw(window);
+			if (GameContext->SceneActors.at(i)->As<Engine::CSolidBlock*>())
 			{
 				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
-				lightShape->_shape = SceneActors.at(i)->As<Engine::CSolidBlock*>()->ShadowShape;
+				lightShape->_shape = GameContext->SceneActors.at(i)->As<Engine::CSolidBlock*>()->ShadowShape;
 
 				lightShape->_renderLightOverShape = true;
-				lightShape->_shape.setPosition(SceneActors.at(i)->GetActorLocation());
+				lightShape->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
 				ls.addShape(lightShape);
 
 			}
-			else if (SceneActors.at(i)->As<CPhysicsBox*>())
+			else if (GameContext->SceneActors.at(i)->As<CPhysicsBox*>())
 			{
 				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
 
-				lightShape->_shape = SceneActors.at(i)->As<CPhysicsBox*>()->ShadowShape;
+				lightShape->_shape = GameContext->SceneActors.at(i)->As<CPhysicsBox*>()->ShadowShape;
 
 				lightShape->_renderLightOverShape = true;
-				lightShape->_shape.setPosition(SceneActors.at(i)->GetActorLocation());
+				lightShape->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
 				ls.addShape(lightShape);
 			}
 
@@ -125,7 +125,7 @@ void Game::Render()
 	light1->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
 	light1->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
 	light1->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	light1->_emissionSprite.setPosition(SceneActors.at(1)->GetActorLocation());//Позиция света.
+	light1->_emissionSprite.setPosition(GameContext->SceneActors.at(1)->GetActorLocation());//Позиция света.
 	light1->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
 	light1->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 
@@ -186,21 +186,35 @@ void Game::ProccessEvents()
 
 	while (window.pollEvent(event))
 	{
-		ImGui::SFML::ProcessEvent(event);
-		if (event.key.code == sf::Keyboard::Tilde&&event.type == sf::Event::EventType::KeyPressed)
+		try
 		{
-			this->ShowDebugSpawner = !this->ShowDebugSpawner;
-			this->ShowGravityUI = !this->ShowGravityUI;
-			
-			
-		}
-
-		if (!SceneActors.empty())
-		{
-			for (auto& var : SceneActors)
+			ImGui::SFML::ProcessEvent(event);
+			if (event.key.code == sf::Keyboard::Tilde && event.type == sf::Event::EventType::KeyPressed)
 			{
-				var->HandleEvent(event, &(*this->GameContext));
+				this->ShowDebugSpawner = !this->ShowDebugSpawner;
+				this->ShowGravityUI = !this->ShowGravityUI;
+
+
 			}
+
+			if (!GameContext->SceneActors.empty())
+			{
+				/*for (auto& var : GameContext->SceneActors)
+				{
+					if (var != nullptr || var.use_count() != 0|| &(*var) != nullptr)
+					{	
+						var->HandleEvent(event, &(*this->GameContext));
+					}
+				}*/
+				for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
+				{
+					GameContext->SceneActors.at(i)->HandleEvent(event, &(*this->GameContext));
+				}
+			}
+		}
+		catch (std::exception e)
+		{
+			std::cout << e.what() << std::endl;
 		}
 	}
 }
@@ -211,14 +225,14 @@ void Game::Update(sf::Time dt)
 	//create lua state  for Game's own scripts
 	lua_State* L = luaL_newstate();
 
-	cpSpaceStep(space, 1 / dt.asSeconds());
+	cpSpaceStep(GameContext->space, 1 / dt.asSeconds());
 
 
-	if (!SceneActors.empty())
+	if (!GameContext->SceneActors.empty())
 	{
-		for (size_t i = 0; i < SceneActors.size(); i++)
+		for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 		{
-			SceneActors.at(i)->Update(dt, &(*this->GameContext));
+			GameContext->SceneActors.at(i)->Update(dt, &(*this->GameContext));
 		}
 	}
 	try
@@ -248,25 +262,25 @@ void Game::Update(sf::Time dt)
 
 		ImGui::BeginChild("Gravity Settings", ImVec2(350, 100));
 
-		cpVect gravity = cpSpaceGetGravity(space);
+		cpVect gravity = cpSpaceGetGravity(GameContext->space);
 
 		float gravX = gravity.x * 100000.f;
 		float gravY = gravity.y * 100000.f;
 		if (ImGui::DragFloat("Gravity X", &gravX, 0.1f))
 		{
-			cpSpaceSetGravity(space, cpv(gravX / 100000.f, gravY / 100000.f));
+			cpSpaceSetGravity(GameContext->space, cpv(gravX / 100000.f, gravY / 100000.f));
 		}
 
 		if (ImGui::DragFloat("Gravity Y", &gravY, 0.1f))
 		{
-			cpSpaceSetGravity(space, cpv(gravX / 100000.f, gravY / 100000.f));
+			cpSpaceSetGravity(GameContext->space, cpv(gravX / 100000.f, gravY / 100000.f));
 		}
 
 		ImGui::EndChild();
 
 		ImGui::BeginChild("Character Output Data");
-		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().y).c_str());
-		ImGui::Text(std::to_string(SceneActors.at(1)->GetActorLocation().x).c_str());
+		ImGui::Text(std::to_string(GameContext->SceneActors.at(1)->GetActorLocation().y).c_str());
+		ImGui::Text(std::to_string(GameContext->SceneActors.at(1)->GetActorLocation().x).c_str());
 		ImGui::EndChild();
 		ImGui::End();
 
@@ -319,9 +333,9 @@ void Game::Update(sf::Time dt)
 						{
 							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), path);
 							sd->Init(path, &(*this->GameContext));
-							sd->InitPhysBody(path, this->space);
+							sd->InitPhysBody(path, this->GameContext->space);
 
-							SceneActors.push_back(sd);
+							GameContext->SceneActors.push_back(sd);
 							break;
 						}
 					}
@@ -341,8 +355,8 @@ void Game::Update(sf::Time dt)
 						{
 							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, this->DebugMass, "Wooden_Crate");
 							po->Init(path, &(*this->GameContext));
-							po->InitPhysBody(path, this->space);
-							SceneActors.push_back(po);
+							po->InitPhysBody(path, this->GameContext->space);
+							GameContext->SceneActors.push_back(po);
 						}
 					}
 				}
@@ -377,8 +391,8 @@ void Game::Init()
 		
 		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, 100), path);
 
-		c->InitPhysBody(path, space);
-		SceneActors.push_back(c);
+		c->InitPhysBody(path, GameContext->space);
+		GameContext->SceneActors.push_back(c);
 
 		TextureResources->Init(path);
 
@@ -392,27 +406,28 @@ void Game::Init()
 
 		
 		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
-		player->InitPhysBody(path, space);
-		this->SceneActors.push_back(player);
+		player->InitPhysBody(path, GameContext->space);
+		player->ControlledByPlayer = true;
+		GameContext->SceneActors.push_back(player);
 
 
 		for (int i = 0; i < 19; i++)
 		{
 			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
 			sd->Init(path, &(*this->GameContext));
-			sd->InitPhysBody(path, this->space);
+			sd->InitPhysBody(path, this->GameContext->space);
 
-			SceneActors.push_back(sd);
+			GameContext->SceneActors.push_back(sd);
 		}
 
 
 
-		if (!SceneActors.empty())
+		if (!GameContext->SceneActors.empty())
 		{
-			for (size_t i = 0; i < SceneActors.size(); i++) 
+			for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 			{
 				//path must be given here due to limitations of the chipmunk2D engine
-				SceneActors.at(i)->Init(path, &(*this->GameContext));
+				GameContext->SceneActors.at(i)->Init(path, &(*this->GameContext));
 			}
 		}
 
@@ -438,6 +453,7 @@ void Game::Init()
 				}
 			}
 		}
+		
 		
 	}
 	catch (std::exception e)
@@ -468,15 +484,10 @@ void Game::Run()
 Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :window(videoMode, WindowName),path(path)
 {
 	
-
-	// cpVect is a 2D vector and cpv() is a shortcut for initializing them.
-	cpVect gravity = cpv(0, 9.8f/100000);
-
-	// Create an empty space.
-	space = cpSpaceNew();
-	cpSpaceSetGravity(space, gravity);
+	GameContext = std::make_shared<Engine::Context>(path);
 	
-	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(space);
+	
+	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(GameContext->space);
 	handler->beginFunc = &Game::OnBeginCollision;
 	handler->separateFunc = &Game::OnEndCollision;
 
@@ -484,7 +495,7 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 
 	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
 
-	GameContext = std::make_shared<Context>(path);
+	
 	
 }
 
@@ -492,5 +503,5 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 Game::~Game()
 {
 	TextureResources.release();
-	cpSpaceFree(space);
+	cpSpaceFree(GameContext->space);
 }

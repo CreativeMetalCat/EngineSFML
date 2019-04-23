@@ -15,9 +15,9 @@ public:
 
 	sf::Sprite GetSprite()const { return m_sprite; }
 
-	virtual void Init(std::string path, Context* context)override;
+	virtual void Init(std::string path, Engine::Context* context)override;
 
-	virtual void Update(sf::Time, Context* context)override;
+	virtual void Update(sf::Time, Engine::Context* context)override;
 
 	void Draw(sf::RenderWindow& window)override;
 

@@ -9,20 +9,36 @@
 #include <fmod_errors.h>
 #endif
 
+#ifndef CHIPMUNK_H
+#include <chipmunk.h>
+#endif
 
-//class that contains and hanldes all game resources
-//Made to create ability to pass resources between objects
-class Context sealed
+namespace Engine
 {
-public:
-	std::unique_ptr<Engine::Resources::Sound::CSoundContainer> Sounds;
+	class CActor;
 
-	FMOD::System* lowLevelSoundSystem = NULL;
+	//class that contains and hanldes all game resources
+	//Made to create ability to pass resources between objects
+	class Context sealed
+	{
+		std::string path;
+	public:
+		std::unique_ptr<Engine::Resources::Sound::CSoundContainer> Sounds;
 
-	void Init(std::string path);
+		std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
+		FMOD::System* lowLevelSoundSystem = NULL;
 
-	Context(std::string path);
-	~Context();
-};
+		cpSpace* space;
 
+		void Init(std::string path);
+
+		void AddActor(CActor* actor)
+		{
+			
+			SceneActors.push_back(std::shared_ptr<CActor>(actor));
+		}
+		Context(std::string path);
+		~Context();
+	};
+}
