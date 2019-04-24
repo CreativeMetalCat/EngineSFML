@@ -38,7 +38,7 @@ namespace Engine
 	protected:
 
 	public:
-		Context*& WorldContext;
+		Context* WorldContext;
 
 		std::string path;
 		//ID of parent for checking
@@ -63,11 +63,11 @@ namespace Engine
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
 
-		virtual void Init(std::string path, Context* context) {}
+		virtual void Init(std::string path) {}
 
-		virtual void Update(sf::Time, Context* context) {}
+		virtual void Update(sf::Time) {}
 
-		virtual void HandleEvent(sf::Event event, Context* context) {}
+		virtual void HandleEvent(sf::Event event) {}
 
 		CObject(Context* WorldContext,std::string path);
 

@@ -208,7 +208,7 @@ void Game::ProccessEvents()
 				}*/
 				for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 				{
-					GameContext->SceneActors.at(i)->HandleEvent(event, &(*this->GameContext));
+					GameContext->SceneActors.at(i)->HandleEvent(event);
 				}
 			}
 		}
@@ -232,7 +232,7 @@ void Game::Update(sf::Time dt)
 	{
 		for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 		{
-			GameContext->SceneActors.at(i)->Update(dt, &(*this->GameContext));
+			GameContext->SceneActors.at(i)->Update(dt);
 		}
 	}
 
@@ -314,7 +314,7 @@ void Game::Update(sf::Time dt)
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
 							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), &(*this->GameContext), path);
-							sd->Init(path, &(*this->GameContext));
+							sd->Init(path);
 							sd->InitPhysBody(path, this->GameContext->space);
 
 							GameContext->SceneActors.push_back(sd);
@@ -336,7 +336,7 @@ void Game::Update(sf::Time dt)
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
 							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, &(*this->GameContext), this->DebugMass, "Wooden_Crate");
-							po->Init(path, &(*this->GameContext));
+							po->Init(path);
 							po->InitPhysBody(path, this->GameContext->space);
 							GameContext->SceneActors.push_back(po);
 						}
@@ -396,7 +396,7 @@ void Game::Init()
 		{
 			
 			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), &(*this->GameContext), path);
-			sd->Init(path, &(*this->GameContext));
+			sd->Init(path);
 			sd->InitPhysBody(path, this->GameContext->space);
 
 			GameContext->SceneActors.push_back(sd);
@@ -408,7 +408,7 @@ void Game::Init()
 			for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 			{
 				//path must be given here due to limitations of the chipmunk2D engine
-				GameContext->SceneActors.at(i)->Init(path, &(*this->GameContext));
+				GameContext->SceneActors.at(i)->Init(path);
 			}
 		}
 

@@ -28,7 +28,7 @@ namespace Engine
 
 		void SetMaterialName(std::string MaterialName = "") { this->MaterialName = MaterialName; }
 
-		void Init(std::string path, Context* context)override;
+		void Init(std::string path)override;
 
 		virtual void InitPhysBody(std::string path, cpSpace*& world);
 

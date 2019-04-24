@@ -23,7 +23,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 
 }
 
-void CTestPlayer::Init(std::string path, Engine::Context* context)
+void CTestPlayer::Init(std::string path)
 {
 
 	this->path = path;
@@ -87,7 +87,7 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 	window.draw(m_sprite);
 }
 
-void CTestPlayer::Update(sf::Time dt, Engine::Context* context)
+void CTestPlayer::Update(sf::Time dt)
 {
 	if (Body != nullptr)
 	{
@@ -105,9 +105,9 @@ void CTestPlayer::Update(sf::Time dt, Engine::Context* context)
 		if (m_passed_footstep_time >= m_per_foostep_time)
 		{
 			m_passed_footstep_time = 0.f;
-			context->lowLevelSoundSystem->playSound(context->Sounds->GetSoundByName("footstep_tile2")->m_sound, 0, false, &m_footstep_sound_channel);
+			WorldContext->lowLevelSoundSystem->playSound(WorldContext->Sounds->GetSoundByName("footstep_tile2")->m_sound, 0, false, &m_footstep_sound_channel);
 
-				context->AddActor
+			WorldContext->AddActor
 				(
 					new CTestPlayer
 					(
@@ -119,9 +119,9 @@ void CTestPlayer::Update(sf::Time dt, Engine::Context* context)
 						this->path
 					)
 				);
-				context->SceneActors.at(context->SceneActors.size() - 1)->Init(path, context);
-				context->SceneActors.at(context->SceneActors.size() - 1)->InitPhysBody(path, context->space);
-				context->SceneActors.at(context->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
+			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->Init(path);
+			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->InitPhysBody(path, WorldContext->space);
+			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
 			
 		}
 	}
@@ -302,7 +302,7 @@ void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 
 }
 
-void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
+void CTestPlayer::HandleEvent(sf::Event event)
 {
 	if (ControlledByPlayer)
 	{
@@ -324,7 +324,7 @@ void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
 
 		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
 		{
-			context->AddActor
+			WorldContext->AddActor
 			(
 				new CTestPlayer
 				(
@@ -336,9 +336,9 @@ void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
 					this->path
 				)
 			);
-			context->SceneActors.at(context->SceneActors.size() - 1)->Init(path, context);
-			context->SceneActors.at(context->SceneActors.size() - 1)->InitPhysBody(path, context->space);
-			context->SceneActors.at(context->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
+			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->Init(path);
+			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->InitPhysBody(path, WorldContext->space);
+			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
 
 		}
 

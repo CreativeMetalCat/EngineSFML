@@ -3,9 +3,9 @@
 
 namespace Engine
 {
-	void CPhysicalObject::Init(std::string PATH, Context* context)
+	void CPhysicalObject::Init(std::string PATH)
 	{
-		PhysMaterial->Init(PATH,context);
+		PhysMaterial->Init(PATH);
 	}
 
 	void CPhysicalObject::InitPhysBody(std::string path, cpSpace*& world)

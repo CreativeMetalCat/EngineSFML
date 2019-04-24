@@ -7,7 +7,7 @@ namespace Engine
 
 	}
 
-	void CSolidBlock::Init(std::string path, Context* context)
+	void CSolidBlock::Init(std::string path)
 	{
 
 		sf::Vector2f scale;

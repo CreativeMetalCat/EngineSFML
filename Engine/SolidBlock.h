@@ -21,7 +21,7 @@ namespace Engine
 
 		void SetSpriteTexture(sf::Texture& texture);
 
-		virtual void Init(std::string path, Context* context)override;
+		virtual void Init(std::string path)override;
 		virtual void InitPhysBody(std::string path, cpSpace*& world);
 
 		void Draw(sf::RenderWindow& window)override;
