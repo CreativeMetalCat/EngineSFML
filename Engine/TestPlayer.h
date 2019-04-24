@@ -54,6 +54,10 @@ public:
 	//Create LUA class from this for usage in LUA
 	static void RegisterClassLUA(lua_State*& L);
 
+	//creates copy of this play at given location
+	//for testing
+	static void Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path);
+
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
 	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);

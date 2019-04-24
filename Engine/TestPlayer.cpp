@@ -107,50 +107,68 @@ void CTestPlayer::Update(sf::Time dt)
 			m_passed_footstep_time = 0.f;
 			WorldContext->lowLevelSoundSystem->playSound(WorldContext->Sounds->GetSoundByName("footstep_tile2")->m_sound, 0, false, &m_footstep_sound_channel);
 
-			WorldContext->AddActor
-				(
-					new CTestPlayer
-					(
-						this->m_sprite,
-						this->ShadowShape,
-						this->Size,
-						sf::Vector2f(this->Location.x, this->Location.y - 100),
-						this->WorldContext,
-						this->path
-					)
-				);
-			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->Init(path);
-			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->InitPhysBody(path, WorldContext->space);
-			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
-			
+			//Duplicate(sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true);
+
+//-------------------------------------------------------------------------------------------------------------
+			using namespace luabridge;
+			try
+			{
+				lua_State* L = luaL_newstate();
+
+				std::string d = (path + "scripts/testplayer/mainscript.lua");
+
+				luaL_dofile(L, d.c_str());
+				luaL_openlibs(L);
+
+				lua_pcall(L, 0, 0, 0);
+
+				CTestPlayer::RegisterClassLUA(L);
+
+				//Register Vector2 in lua
+				getGlobalNamespace(L)
+					.beginClass<sf::Vector2f>("Vector2")
+					//add x,y and some functions possibly
+					.addData<float>("x", &sf::Vector2<float>::x)
+					.addData<float>("y", &sf::Vector2<float>::y)
+					.addConstructor<void(*) (void)>()
+					.endClass();
+
+				getGlobalNamespace(L)
+					.beginClass<sf::Sprite>("Spite")
+
+					.endClass();
+
+				getGlobalNamespace(L)
+					.beginClass<sf::ConvexShape>("ConvexShape")
+
+					.endClass();
+
+				getGlobalNamespace(L)
+					.beginClass<Engine::Context>("WorldContext")
+
+					.endClass();
+
+
+				LuaRef SpawnPlayer = getGlobal(L, "SpawnPlayer");
+				if (SpawnPlayer.isFunction())
+				{
+					SpawnPlayer(this, this->GetSprite(), this->ShadowShape, this->Size, sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true, this->WorldContext, path);
+				}
+			}
+			catch (LuaException e)
+			{
+				std::cout << e.what() << std::endl;
+			}
+			catch (std::exception e)
+			{
+				std::cout << e.what() << std::endl;
+			}
+//--------------------------------------------------------------------------------------------------------------------------
+
 		}
 	}
 
-	using namespace luabridge;
-	try
-	{
-		/*lua_State* L = luaL_newstate();
-
-		std::string d = (path + "scripts/testplayer/mainscript.lua");
-
-
-
-		d = (path + "scripts/window.lua");
-		luaL_dofile(L, d.c_str());
-		luaL_openlibs(L);
-
-		lua_pcall(L, 0, 0, 0);
-
-		LuaRef SpawnProjectile = getGlobal(L, "SpawnProjectile");*/
-	}
-	catch (LuaException e)
-	{
-		std::cout << e.what() << std::endl;
-	}
-	catch (std::exception e)
-	{
-		std::cout << e.what() << std::endl;
-	}
+	
 	
 }
 
@@ -235,10 +253,13 @@ void CTestPlayer::RegisterClassLUA(lua_State*& L)
 			.addFunction("MoveX", &CTestPlayer::MoveX)
 			.addFunction("ApplyLinearImpulse", &CTestPlayer::ApplyLinearImpulse)
 			.addFunction("GetLinearVelocity", &CTestPlayer::GetLinearVelocity)
+			.addFunction("GetClassID", &CTestPlayer::GetClassID)
+
+			.addStaticFunction("Duplicate", &CTestPlayer::Duplicate)
 
 			.addData<bool>("IsMovingX", &CTestPlayer::IsMovingX)
 			.addData<bool>("IsMovingY", &CTestPlayer::IsMovingY)
-			.addFunction("GetClassID", &CTestPlayer::GetClassID)
+			
 
 			.endClass();
 	}
@@ -250,6 +271,26 @@ void CTestPlayer::RegisterClassLUA(lua_State*& L)
 	{
 		std::cout << "Failed to register class in LUA " << e.what() << std::endl;
 	}
+}
+
+void CTestPlayer::Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path)
+{
+	WorldContext->AddActor
+	(
+		new CTestPlayer
+		(
+			sprite,
+			CollisionShape,
+			Size,
+			newLocation,
+			WorldContext,
+			path
+		)
+	);
+	WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->Init(path);
+	WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->InitPhysBody(path, WorldContext->space);
+	WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = PlayerControlled;
+
 }
 
 void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
@@ -324,22 +365,7 @@ void CTestPlayer::HandleEvent(sf::Event event)
 
 		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
 		{
-			WorldContext->AddActor
-			(
-				new CTestPlayer
-				(
-					this->m_sprite,
-					this->ShadowShape,
-					this->Size,
-					sf::Vector2f(this->Location.x, this->Location.y - 100),
-					this->WorldContext,
-					this->path
-				)
-			);
-			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->Init(path);
-			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->InitPhysBody(path, WorldContext->space);
-			WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
-
+			Duplicate(this->GetSprite(),this->ShadowShape,this->Size,sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true,this->WorldContext,path);
 		}
 
 		if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
