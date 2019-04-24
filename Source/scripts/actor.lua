@@ -34,14 +34,6 @@ function OnBeginCollision (actor,arb,otherActor)
 end
 
 function OnEndCollision (actor,arb,otherActor)
-
-if otherActor:GetClassID()==4
-    then
-      local vect= Vector2();
-      vect.x=100;
-      vect.y=-500;
-      otherActor:ApplyLinearImpulse(0,-5);
-      end
   --Copy this function to your script and add actions
 end
 
