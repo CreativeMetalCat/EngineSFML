@@ -24,7 +24,9 @@ namespace Engine
 		}
 	}
 
-	CObject::CObject(std::string path) :path(path)
+	CObject::CObject(Context* WorldContext, std::string path) :
+		path(path),
+		WorldContext(WorldContext)
 	{
 	}
 

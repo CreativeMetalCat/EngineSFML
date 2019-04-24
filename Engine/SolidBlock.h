@@ -26,7 +26,7 @@ namespace Engine
 
 		void Draw(sf::RenderWindow& window)override;
 
-		CSolidBlock(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
+		CSolidBlock(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
 		~CSolidBlock();
 	};
 }

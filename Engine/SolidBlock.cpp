@@ -68,8 +68,8 @@ namespace Engine
 		window.draw(m_sprite);
 	}
 
-	CSolidBlock::CSolidBlock(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :
-		CActor(Location, path),
+	CSolidBlock::CSolidBlock(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path) :
+		CActor(Location,WorldContext ,path),
 		Size(Size),
 		m_sprite(sprite)
 	{

@@ -41,7 +41,7 @@ public:
 	//Size and Location will also be used to define size of the sprite
 	//Scales image inside of this funtion
 	//AND does the same in the Init
-	CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
+	CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Engine::Context* WorldContext, std::string path = "./../");
 
 	virtual void Init(std::string path, Engine::Context* context)override;
 

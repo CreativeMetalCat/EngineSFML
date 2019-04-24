@@ -46,12 +46,12 @@ namespace Engine
 		}
 	}
 
-	CPhysicalObject::CPhysicalObject(sf::Vector2f position, std::string MaterialName, float Mass, std::string path) :
-		CActor(position, path),
+	CPhysicalObject::CPhysicalObject(sf::Vector2f position, std::string MaterialName, Context* WorldContext, float Mass, std::string path) :
+		CActor(position,WorldContext, path),
 		MaterialName(MaterialName),
 		mass(Mass)
 	{
-		PhysMaterial = std::make_shared<PhysicalMaterial>(MaterialName, path);
+		PhysMaterial = std::make_shared<PhysicalMaterial>(MaterialName, WorldContext,path);
 	}
 
 

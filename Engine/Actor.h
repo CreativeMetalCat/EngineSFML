@@ -142,7 +142,7 @@ namespace Engine
 		//Defined by window.lua
 		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
 
-		CActor(sf::Vector2f Location, std::string path = "./../");
+		CActor(sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
 		~CActor();
 	};
 

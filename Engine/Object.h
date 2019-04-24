@@ -38,6 +38,8 @@ namespace Engine
 	protected:
 
 	public:
+		Context*& WorldContext;
+
 		std::string path;
 		//ID of parent for checking
 		//default is CObject
@@ -67,7 +69,7 @@ namespace Engine
 
 		virtual void HandleEvent(sf::Event event, Context* context) {}
 
-		CObject(std::string path);
+		CObject(Context* WorldContext,std::string path);
 
 		virtual void Release() {}
 		~CObject();

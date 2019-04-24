@@ -76,8 +76,8 @@ void CPhysicsBox::InitPhysBody(std::string path, cpSpace*& world)
 	}
 }
 
-CPhysicsBox::CPhysicsBox(sf::Sprite sprite, sf::Vector2f Size, sf::Vector2f position, std::string path, float Mass, std::string MaterialName)
-	:Engine::CPhysicalObject(position,path,Mass,MaterialName),
+CPhysicsBox::CPhysicsBox(sf::Sprite sprite, sf::Vector2f Size, sf::Vector2f position, std::string path, Engine::Context* WorldContext, float Mass, std::string MaterialName)
+	:Engine::CPhysicalObject(position,path,WorldContext, Mass,MaterialName),
 	Size(Size),
 	m_sprite(sprite)
 {

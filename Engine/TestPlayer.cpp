@@ -7,8 +7,8 @@ void CTestPlayer::SetSpriteTexture(sf::Texture & t)
 }
 
 
-CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :
-	Character(CollisionShape, Size, Location, path),
+CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location,Engine::Context* WorldContext, std::string path) :
+	Character(CollisionShape, Size, Location,WorldContext, path),
 	m_sprite(sprite)
 {
 
@@ -68,7 +68,6 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 				if (shapes.at(i) != nullptr)
 				{
 					cpSpaceAddShape(world, shapes[i]);
-					cpShapeSetCollisionType(shapes[i], (int)(this));
 					//Prevent from bouncing 
 					cpShapeSetElasticity(shapes[i], 0.0f);
 				}
@@ -107,8 +106,52 @@ void CTestPlayer::Update(sf::Time dt, Engine::Context* context)
 		{
 			m_passed_footstep_time = 0.f;
 			context->lowLevelSoundSystem->playSound(context->Sounds->GetSoundByName("footstep_tile2")->m_sound, 0, false, &m_footstep_sound_channel);
+
+				context->AddActor
+				(
+					new CTestPlayer
+					(
+						this->m_sprite,
+						this->ShadowShape,
+						this->Size,
+						sf::Vector2f(this->Location.x, this->Location.y - 100),
+						this->WorldContext,
+						this->path
+					)
+				);
+				context->SceneActors.at(context->SceneActors.size() - 1)->Init(path, context);
+				context->SceneActors.at(context->SceneActors.size() - 1)->InitPhysBody(path, context->space);
+				context->SceneActors.at(context->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
+			
 		}
 	}
+
+	using namespace luabridge;
+	try
+	{
+		/*lua_State* L = luaL_newstate();
+
+		std::string d = (path + "scripts/testplayer/mainscript.lua");
+
+
+
+		d = (path + "scripts/window.lua");
+		luaL_dofile(L, d.c_str());
+		luaL_openlibs(L);
+
+		lua_pcall(L, 0, 0, 0);
+
+		LuaRef SpawnProjectile = getGlobal(L, "SpawnProjectile");*/
+	}
+	catch (LuaException e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	
 }
 
 void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
@@ -190,7 +233,6 @@ void CTestPlayer::RegisterClassLUA(lua_State*& L)
 			.addFunction("AddChildRaw", &CTestPlayer::AddChildRaw)
 			.addFunction("GetChild", &CTestPlayer::GetChild)
 			.addFunction("MoveX", &CTestPlayer::MoveX)
-			.addFunction("MoveY", &CTestPlayer::MoveY)
 			.addFunction("ApplyLinearImpulse", &CTestPlayer::ApplyLinearImpulse)
 			.addFunction("GetLinearVelocity", &CTestPlayer::GetLinearVelocity)
 
@@ -282,7 +324,6 @@ void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
 
 		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
 		{
-			std::cout << 0 << std::endl;
 			context->AddActor
 			(
 				new CTestPlayer
@@ -291,11 +332,13 @@ void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
 					this->ShadowShape,
 					this->Size,
 					sf::Vector2f(this->Location.x, this->Location.y - 100),
+					this->WorldContext,
 					this->path
 				)
 			);
 			context->SceneActors.at(context->SceneActors.size() - 1)->Init(path, context);
 			context->SceneActors.at(context->SceneActors.size() - 1)->InitPhysBody(path, context->space);
+			context->SceneActors.at(context->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = true;
 
 		}
 
@@ -309,7 +352,6 @@ void CTestPlayer::HandleEvent(sf::Event event, Engine::Context* context)
 			m_moving_left = false;
 		}
 	}
-
 }
 
 CTestPlayer::~CTestPlayer()

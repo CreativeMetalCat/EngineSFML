@@ -82,7 +82,7 @@ namespace Engine
 
 		virtual void Init(std::string PATH, Context* context)override;
 
-		PhysicalMaterial(std::string name, std::string path);
+		PhysicalMaterial(std::string name, Context* WorldContext, std::string path);
 		~PhysicalMaterial();
 	};
 

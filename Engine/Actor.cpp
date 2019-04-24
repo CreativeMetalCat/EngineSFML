@@ -58,7 +58,7 @@ namespace Engine
 			//Register CActor in lua
 			getGlobalNamespace(L)
 				.beginClass<CActor>("CActor")
-				.addConstructor<void(*) (sf::Vector2f)>()
+				//.addConstructor<void(*) (sf::Vector2f)>()
 
 				.addProperty("Location", &CActor::GetActorLocation, &CActor::SetActorLocation)
 				.addProperty("PhysBodyInitialized", &CActor::GetPhysBodyInitialized, &CActor::SetPhysBodyInitialized)
@@ -196,7 +196,9 @@ namespace Engine
 
 	}
 
-	CActor::CActor(sf::Vector2f Location, std::string path) :CObject(path), Location(Location)
+	CActor::CActor(sf::Vector2f Location, Context* WorldContext, std::string path)
+		:CObject(WorldContext,path),
+		Location(Location)
 	{
 
 	}

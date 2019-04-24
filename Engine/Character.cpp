@@ -194,7 +194,9 @@ namespace Engine
 		}
 	}
 
-	Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :CActor(Location, path), Size(Size)
+	Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path) :
+		CActor(Location,WorldContext, path),
+		Size(Size)
 	{
 		this->ShadowShape = CollisionShape;
 		if (CollisionShape.getPointCount() > 8)

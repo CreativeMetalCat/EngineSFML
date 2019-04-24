@@ -235,24 +235,6 @@ void Game::Update(sf::Time dt)
 			GameContext->SceneActors.at(i)->Update(dt, &(*this->GameContext));
 		}
 	}
-	try
-	{
-		time += dt.asSeconds();
-		if (time > 1.f)
-		{
-			FMOD::Channel* ch;
-			int randI = (m_get_random_number(0, 3));
-
-			//GameContext->lowLevelSoundSystem->playSound(GameContext->Sounds->Sounds[randI]->GetSound(), 0, false, & ch);
-
-
-			time = 0.f;
-		}
-	}
-	catch (std::exception e)
-	{
-		std::cout << e.what() << std::endl;
-	}
 
 
 	ImGui::SFML::Update(window, dt);
@@ -331,7 +313,7 @@ void Game::Update(sf::Time dt)
 					{
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
-							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), path);
+							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), &(*this->GameContext), path);
 							sd->Init(path, &(*this->GameContext));
 							sd->InitPhysBody(path, this->GameContext->space);
 
@@ -353,7 +335,7 @@ void Game::Update(sf::Time dt)
 					{
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
-							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, this->DebugMass, "Wooden_Crate");
+							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, &(*this->GameContext), this->DebugMass, "Wooden_Crate");
 							po->Init(path, &(*this->GameContext));
 							po->InitPhysBody(path, this->GameContext->space);
 							GameContext->SceneActors.push_back(po);
@@ -389,7 +371,7 @@ void Game::Init()
 		s.setPoint(2, { 50,50 });
 		s.setPoint(3, { 0,50 });
 		
-		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, 100), path);
+		std::shared_ptr<Engine::Character> c = std::make_shared<Engine::Character>(s, sf::Vector2f(64, 64), sf::Vector2f(200, 100), &(*this->GameContext), path);
 
 		c->InitPhysBody(path, GameContext->space);
 		GameContext->SceneActors.push_back(c);
@@ -405,21 +387,20 @@ void Game::Init()
 		dev64_64.setPoint(3, { 0,64 });
 
 		
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), path);
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
 		player->InitPhysBody(path, GameContext->space);
 		player->ControlledByPlayer = true;
 		GameContext->SceneActors.push_back(player);
 
-
 		for (int i = 0; i < 19; i++)
 		{
-			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), path);
+			
+			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 400), &(*this->GameContext), path);
 			sd->Init(path, &(*this->GameContext));
 			sd->InitPhysBody(path, this->GameContext->space);
 
 			GameContext->SceneActors.push_back(sd);
 		}
-
 
 
 		if (!GameContext->SceneActors.empty())
@@ -431,11 +412,6 @@ void Game::Init()
 			}
 		}
 
-	
-		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit1", path + "sounds/Hit1.wav", path));
-		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit2", path + "sounds/Hit2.wav", path));
-		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit3", path + "sounds/Hit3.wav", path));
-		//Sounds->AddSoundResource(std::make_shared<Engine::Resources::Sound::CSoundResource>("Hit4", path + "sounds/Hit4.wav", path));
 
 		if (!GameContext->Sounds->Sounds.empty())
 		{

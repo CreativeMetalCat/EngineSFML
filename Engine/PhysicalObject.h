@@ -32,7 +32,7 @@ namespace Engine
 
 		virtual void InitPhysBody(std::string path, cpSpace*& world);
 
-		CPhysicalObject(sf::Vector2f position, std::string path, float Mass = 100.f, std::string MaterialName = "");
+		CPhysicalObject(sf::Vector2f position, std::string path, Context* WorldContext, float Mass = 100.f, std::string MaterialName = "");
 		~CPhysicalObject();
 	};
 }

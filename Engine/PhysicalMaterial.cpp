@@ -101,7 +101,7 @@ namespace Engine
 		}
 	}
 
-	PhysicalMaterial::PhysicalMaterial(std::string name, std::string path) :CObject(path), name(name)
+	PhysicalMaterial::PhysicalMaterial(std::string name, Context* WorldContext, std::string path) :CObject(WorldContext,path), name(name)
 	{
 
 	}

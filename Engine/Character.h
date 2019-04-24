@@ -51,7 +51,7 @@ namespace Engine
 		static void RegisterClassLUA(lua_State*& L);
 
 		void Update(sf::Time dt);
-		Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
+		Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
 		~Character();
 	};
 

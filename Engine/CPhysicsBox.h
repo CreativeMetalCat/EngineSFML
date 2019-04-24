@@ -23,7 +23,7 @@ public:
 
 	virtual void InitPhysBody(std::string path, cpSpace*& world)override;
 
-	CPhysicsBox(sf::Sprite sprite, sf::Vector2f Size,sf::Vector2f position, std::string path, float Mass = 100.f, std::string MaterialName = "");
+	CPhysicsBox(sf::Sprite sprite, sf::Vector2f Size,sf::Vector2f position, std::string path, Engine::Context* WorldContext, float Mass = 100.f, std::string MaterialName = "");
 	~CPhysicsBox();
 };
 
