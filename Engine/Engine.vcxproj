@@ -167,6 +167,7 @@
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="SolidBlock.cpp" />
     <ClCompile Include="SoundContainer.cpp" />
     <ClCompile Include="SoundResource.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="PhysicalObject.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TestProjectile.cpp" />
     <ClCompile Include="TextureContainer.cpp" />
     <ClCompile Include="TextureResource.cpp" />
   </ItemGroup>
@@ -186,6 +188,7 @@
     <ClInclude Include="Context.h" />
     <ClInclude Include="CPhysicsBox.h" />
     <ClInclude Include="Macros.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="SolidBlock.h" />
     <ClInclude Include="SoundContainer.h" />
     <ClInclude Include="SoundResource.h" />
@@ -197,6 +200,7 @@
     <ClInclude Include="PhysicalMaterial.h" />
     <ClInclude Include="PhysicalObject.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TestProjectile.h" />
     <ClInclude Include="TextureContainer.h" />
     <ClInclude Include="TextureResource.h" />
   </ItemGroup>

@@ -105,10 +105,7 @@ namespace Engine
 			//register other CActor's class
 			otherActor->RegisterClassLUA(L);
 
-			//Register b2Fixture in lua
-			getGlobalNamespace(L)
-				.beginClass<b2Fixture>("b2Fixture")
-				.endClass();
+		
 
 			//Register Vector2 in lua
 			getGlobalNamespace(L)
@@ -164,10 +161,7 @@ namespace Engine
 			//register other CActor's class
 			otherActor->RegisterClassLUA(L);
 
-			//Register b2Fixture in lua
-			getGlobalNamespace(L)
-				.beginClass<b2Fixture>("b2Fixture")
-				.endClass();
+		
 
 			//Register Vector2 in lua
 			getGlobalNamespace(L)

@@ -233,6 +233,21 @@ void Game::Update(sf::Time dt)
 		for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 		{
 			GameContext->SceneActors.at(i)->Update(dt);
+			if (GameContext->SceneActors.at(i)->LifeTimeEnded())
+			{
+				GameContext->SceneActors.at(i)->Release();
+
+				this->GameContext->SceneActors.erase
+				(
+					std::find
+					(
+						this->GameContext->SceneActors.begin(),
+						this->GameContext->SceneActors.end(),
+						GameContext->SceneActors.at(i)
+					)
+				);
+
+			}
 		}
 	}
 

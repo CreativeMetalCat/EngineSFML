@@ -85,6 +85,12 @@
     <ClCompile Include="CPhysicsBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestProjectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Object.h">
@@ -139,6 +145,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CPhysicsBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestProjectile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

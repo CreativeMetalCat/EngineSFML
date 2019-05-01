@@ -70,9 +70,12 @@ class Game
 
 			cpArbiterGetBodies(arb, &bodyA, &bodyB);
 
-			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
+			if (cpBodyGetUserData(bodyB) != nullptr && cpBodyGetUserData(bodyA) != nullptr)
+			{
+				static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
 
-			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
+				static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
+			}
 
 			//If objects are not sensors postSolve() &  preSolve() must be called
 			return cpTrue;

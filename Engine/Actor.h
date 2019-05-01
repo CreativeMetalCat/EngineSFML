@@ -2,9 +2,7 @@
 #include "Object.h"
 #include "Sprite.h"
 
-#ifndef BOX2D_H
-#include <Box2D.h>
-#endif
+
 
 #ifndef CHIPMUNK_H
 #include <chipmunk.h>
@@ -36,8 +34,22 @@ namespace Engine
 
 		std::vector<cpShape*>shapes;
 
+		float m_lifetime = 0.f;
 
+		float m_lived_time = 0.f;
 	public:
+
+		//0.f for infinite
+		float GetLifeTime()const { return m_lifetime; }
+
+		float GetLivedTime()const { return m_lifetime == 0.f ? 0.f : m_lived_time; }
+
+		bool LifeTimeEnded()const { return m_lifetime != 0.f ? (m_lived_time >= m_lifetime) : false; }
+
+
+
+		//0.f for infinite
+		void setLifeTime(float time) { m_lifetime = time; }
 
 		//Shape that will be used for the collision
 		//THIS SHOULD BE USED ONLY IF POLYGON SHAPE IS NOT WORKING (If this can not be used it's better to use ShadowShape)

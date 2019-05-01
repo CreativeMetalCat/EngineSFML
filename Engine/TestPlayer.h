@@ -5,6 +5,11 @@
 #ifndef  CLASS_CSOUNDSOURCE
 #include "SoundResource.h"
 #endif
+
+#ifndef CLASS_TESTPROJECTILE
+#include "TestProjectile.h"
+#endif // !CLASS_TESTPROJECTILE
+
 #define CLASS_CTESTPLAYER 4
 
 //Example player that moves using physics and has one sprite 
@@ -58,6 +63,7 @@ public:
 	//for testing
 	static void Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path);
 
+	void Shoot();
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
 	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);

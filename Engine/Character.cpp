@@ -58,19 +58,6 @@ namespace Engine
 				.addConstructor<void(*) (void)>()
 				.endClass();
 
-			getGlobalNamespace(L)
-				.beginClass<b2Vec2>("b2Vector")
-				.addData<float>("x", &b2Vec2::x)
-				.addData<float>("y", &b2Vec2::y)
-				.addConstructor<void(*) (void)>()
-				.endClass();
-
-			getGlobalNamespace(L)
-				.beginClass<b2Body>("b2Body")
-				.addFunction("GetLinearVelocity", &b2Body::GetLinearVelocity)
-				.addFunction("GetMass", &b2Body::GetMass)
-				.addFunction("ApplyImpulse", &b2Body::ApplyLinearImpulseToCenter)
-				.endClass();
 
 
 			LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");

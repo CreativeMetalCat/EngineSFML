@@ -152,7 +152,7 @@ void CTestPlayer::Update(sf::Time dt)
 				LuaRef SpawnPlayer = getGlobal(L, "SpawnPlayer");
 				if (SpawnPlayer.isFunction())
 				{
-					SpawnPlayer(this, this->GetSprite(), this->ShadowShape, this->Size, sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true, this->WorldContext, path);
+					//SpawnPlayer(this, this->GetSprite(), this->ShadowShape, this->Size, sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true, this->WorldContext, path);
 				}
 			}
 			catch (LuaException e)
@@ -168,8 +168,6 @@ void CTestPlayer::Update(sf::Time dt)
 		}
 	}
 
-	
-	
 }
 
 void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
@@ -195,10 +193,7 @@ void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 		//register other CActor's class
 		otherActor->RegisterClassLUA(L);
 
-		//Register b2Fixture in lua
-		getGlobalNamespace(L)
-			.beginClass<b2Fixture>("b2Fixture")
-			.endClass();
+		
 
 		//Register Vector2 in lua
 		getGlobalNamespace(L)
@@ -259,6 +254,8 @@ void CTestPlayer::RegisterClassLUA(lua_State*& L)
 
 			.addData<bool>("IsMovingX", &CTestPlayer::IsMovingX)
 			.addData<bool>("IsMovingY", &CTestPlayer::IsMovingY)
+			.addData<std::string>("Path",&CTestPlayer::path)
+			
 			
 
 			.endClass();
@@ -291,6 +288,69 @@ void CTestPlayer::Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, s
 	WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->InitPhysBody(path, WorldContext->space);
 	WorldContext->SceneActors.at(WorldContext->SceneActors.size() - 1)->As<CTestPlayer*>()->ControlledByPlayer = PlayerControlled;
 
+}
+
+void CTestPlayer::Shoot()
+{
+	using namespace luabridge;
+	lua_State* L = luaL_newstate();
+	std::string d = (path + "scripts/testplayer/mainscript.lua");
+	try
+	{
+
+		int status = luaL_dofile(L, d.c_str());
+		if (status != 0)
+		{
+			fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+		}
+		luaL_openlibs(L);
+
+		lua_pcall(L, 0, 0, 0);
+
+		//Register this class in lua
+		this->RegisterClassLUA(L);
+
+		//Register Vector2 in lua
+		getGlobalNamespace(L)
+			.beginClass<sf::Vector2f>("Vector2")
+			//add x,y and some functions possibly
+			.addData<float>("x", &sf::Vector2<float>::x)
+			.addData<float>("y", &sf::Vector2<float>::y)
+			.addConstructor<void(*) (void)>()
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<sf::Sprite>("Spite")
+
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<sf::ConvexShape>("ConvexShape")
+
+			.endClass();
+
+		getGlobalNamespace(L)
+			.beginClass<Engine::Context>("WorldContext")
+
+			.endClass();
+
+		Test::TestProjectile::RegisterClassLUA(L);
+
+		LuaRef LUAFire = getGlobal(L, "FireProjectile");
+		if (LUAFire.isFunction())
+		{
+			LUAFire(this,this->m_sprite,WorldContext);
+		}
+	}
+	catch (LuaException e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 }
 
 void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
@@ -365,7 +425,7 @@ void CTestPlayer::HandleEvent(sf::Event event)
 
 		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
 		{
-			Duplicate(this->GetSprite(),this->ShadowShape,this->Size,sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true,this->WorldContext,path);
+			//Duplicate(this->GetSprite(),this->ShadowShape,this->Size,sf::Vector2f(this->GetActorLocation().x, this->GetActorLocation().y - 100), true,this->WorldContext,path);
 		}
 
 		if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
@@ -376,6 +436,11 @@ void CTestPlayer::HandleEvent(sf::Event event)
 		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyReleased)
 		{
 			m_moving_left = false;
+		}
+		
+		if (event.key.code == sf::Keyboard::Space && event.type == sf::Event::EventType::KeyPressed)
+		{
+			Shoot();
 		}
 	}
 }
