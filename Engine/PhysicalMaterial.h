@@ -5,9 +5,7 @@
 #include "Object.h"
 #endif // !CLASS_OBJECT
 
-#ifndef BOX2D_H
-#include <Box2D.h>
-#endif
+
 
 #ifndef  LUABRIDGE_VERSION
 extern "C"

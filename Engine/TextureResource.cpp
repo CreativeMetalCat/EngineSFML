@@ -27,6 +27,8 @@ namespace Engine::Resources::Materials
 	{
 		if (NameOfFile != "")//if texture is nameless we skip it 
 		{
+			std::cout << this->Name << std::endl;
+			std::cout << path + NameOfFile << std::endl;
 			if (!m_texture.loadFromFile(path + NameOfFile))
 			{
 				std::cout << "Failed to load texture Name: " << this->Name << " Path to file" << path + NameOfFile << std::endl;;

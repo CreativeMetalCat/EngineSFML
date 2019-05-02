@@ -372,6 +372,7 @@ void Game::Init()
 {
 	try
 	{
+		TextureResources->Init(path);
 		ImGui::CreateContext();
 		ImGui::SFML::Init(window);
 
@@ -391,7 +392,7 @@ void Game::Init()
 		c->InitPhysBody(path, GameContext->space);
 		GameContext->SceneActors.push_back(c);
 
-		TextureResources->Init(path);
+		
 
 
 		sf::ConvexShape dev64_64;
@@ -486,7 +487,6 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 
 	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
 
-	
 	
 }
 
