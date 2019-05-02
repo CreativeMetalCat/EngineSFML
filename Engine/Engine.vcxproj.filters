@@ -19,10 +19,10 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{d7a729d1-1f63-4c3c-a5e8-39faeda8c3eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Headers">
+    <Filter Include="Engine\Header Files">
       <UniqueIdentifier>{5c5ff813-f20e-43cf-b458-e3446ccacc18}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Source">
+    <Filter Include="Engine\Source Files">
       <UniqueIdentifier>{77bd5858-1fc9-4798-b1b8-ab1bcf6eeb1e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -59,46 +59,49 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Context.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CPhysicsBox.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysicalMaterial.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysicalObject.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SoundContainer.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SoundResource.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TextureContainer.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TextureResource.cpp">
-      <Filter>Engine\Source</Filter>
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,55 +115,58 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Actor.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Character.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Context.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CPhysicsBox.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LUAClassRegisterFunctions.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Macros.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MainFuncLib.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PhysicalMaterial.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PhysicalObject.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Projectile.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoundContainer.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SoundResource.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sprite.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextureContainer.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextureResource.h">
-      <Filter>Engine\Headers</Filter>
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

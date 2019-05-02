@@ -25,6 +25,13 @@ using namespace std;
 //class that manages all of the operations in game
 class Game
 {
+
+	sf::Shader unshadowShader;
+	sf::Shader lightOverShapeShader;
+
+	sf::Texture penumbraTexture;
+
+	sf::Texture pointLightTexture;
 	//Draws everything on screen
 	void Render();
 

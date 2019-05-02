@@ -6,11 +6,17 @@
 #include "SoundResource.h"
 #endif
 
+#ifndef  CLASS_WEAPON
+#include "Weapon.h"
+#endif // ! CLASS_WEAPON
+
 #ifndef CLASS_TESTPROJECTILE
 #include "TestProjectile.h"
 #endif // !CLASS_TESTPROJECTILE
 
 #define CLASS_CTESTPLAYER 4
+
+
 
 //Example player that moves using physics and has one sprite 
 //Category: Test-Basic
@@ -27,6 +33,8 @@ class CTestPlayer : public Engine::Character
 	bool m_moving_left = false;
 
 	bool m_moving_right = false;
+
+	std::shared_ptr<Gameplay::Weapon>Weapon;
 public:
 	
 	bool ControlledByPlayer = false;

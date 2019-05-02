@@ -18,15 +18,11 @@ std::string PATH = "C:/Users/catgu/source/repos/Engine/x64/Debug/";
 std::string PATH = "./../";
 #endif // !DEBUG
 
-//a = &(*CActor);
+
 int main()
 {
-
-	
-
-
-
 	std::cout << PATH << std::endl;
+	
 	
 	lua_State* L = luaL_newstate();
 	try
@@ -154,6 +150,8 @@ int main()
 		game.Init();
 
 		game.Run();
+
+	
 	}
 	catch (LuaException e)
 	{

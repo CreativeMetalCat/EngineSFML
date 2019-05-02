@@ -155,7 +155,7 @@ namespace Engine
 		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
 
 		CActor(sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
-		~CActor();
+		virtual ~CActor();
 	};
 
 }

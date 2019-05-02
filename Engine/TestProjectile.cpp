@@ -168,6 +168,8 @@ namespace Test
 		
 		cpBodyDestroy(this->Body);
 		cpBodyFree(this->Body);
+
+	 
 		
 	}
 

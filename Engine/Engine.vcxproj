@@ -185,6 +185,7 @@
     <ClCompile Include="TestProjectile.cpp" />
     <ClCompile Include="TextureContainer.cpp" />
     <ClCompile Include="TextureResource.cpp" />
+    <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
@@ -207,6 +208,7 @@
     <ClInclude Include="TestProjectile.h" />
     <ClInclude Include="TextureContainer.h" />
     <ClInclude Include="TextureResource.h" />
+    <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

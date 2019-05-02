@@ -25,27 +25,13 @@ void Game::Render()
 	sf::Sprite LSprite;
 	window.clear(sf::Color::White);
 	
-	
-	sf::Shader unshadowShader;
-	sf::Shader lightOverShapeShader;
-
-
-
-	unshadowShader.loadFromFile(path + "ltbl/resources/unshadowShader.vert", path + "ltbl/resources/unshadowShader.frag");
-	lightOverShapeShader.loadFromFile(path + "ltbl/resources/lightOverShapeShader.vert", path + "ltbl/resources/lightOverShapeShader.frag");
-
-
-	sf::Texture penumbraTexture;
-	penumbraTexture.loadFromFile(path+"ltbl/resources/penumbraTexture.png");
-	penumbraTexture.setSmooth(true);
-
-	sf::Texture pointLightTexture;
-	pointLightTexture.loadFromFile(path + "ltbl/resources/pointLightTexture.png");
-	pointLightTexture.setSmooth(true);
 
 	ltbl::LightSystem ls;
 	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
 
+	std::vector< std::shared_ptr<ltbl::LightShape>>lightShapes;
+
+	std::vector< std::shared_ptr<ltbl::LightPointEmission>>pointLights;
 
 	if (!GameContext->SceneActors.empty())
 	{
@@ -55,101 +41,61 @@ void Game::Render()
 			GameContext->SceneActors.at(i)->Draw(window);
 			if (GameContext->SceneActors.at(i)->As<Engine::CSolidBlock*>())
 			{
-				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
+				lightShapes.push_back(std::make_shared<ltbl::LightShape>());
 
-				lightShape->_shape = GameContext->SceneActors.at(i)->As<Engine::CSolidBlock*>()->ShadowShape;
+				lightShapes.at(lightShapes.size()-1)->_shape = GameContext->SceneActors.at(i)->As<Engine::CSolidBlock*>()->ShadowShape;
 
-				lightShape->_renderLightOverShape = true;
-				lightShape->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
-				ls.addShape(lightShape);
+				lightShapes.at(lightShapes.size() - 1)->_renderLightOverShape = true;
+				lightShapes.at(lightShapes.size() - 1)->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
+				ls.addShape(lightShapes.at(lightShapes.size() - 1));
 
 			}
 			else if (GameContext->SceneActors.at(i)->As<CPhysicsBox*>())
 			{
-				std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
+				lightShapes.push_back(std::make_shared<ltbl::LightShape>());
 
-				lightShape->_shape = GameContext->SceneActors.at(i)->As<CPhysicsBox*>()->ShadowShape;
+				lightShapes.at(lightShapes.size() - 1)->_shape = GameContext->SceneActors.at(i)->As<CPhysicsBox*>()->ShadowShape;
 
-				lightShape->_renderLightOverShape = true;
-				lightShape->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
-				ls.addShape(lightShape);
+				lightShapes.at(lightShapes.size() - 1)->_renderLightOverShape = true;
+				lightShapes.at(lightShapes.size() - 1)->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
+				ls.addShape(lightShapes.at(lightShapes.size() - 1));
 			}
 
 		}
 	}
 
-	sf::ConvexShape shape1;
-
-	
-	shape1.setPointCount(4);
-	shape1.setPoint(0, sf::Vector2f(0, 0));
-	shape1.setPoint(1, sf::Vector2f(80, 0));
-	shape1.setPoint(2, sf::Vector2f(80, 80));
-	shape1.setPoint(3, sf::Vector2f(0, 80));
-	shape1.setPosition(100, 100);
-	shape1.setFillColor(sf::Color::Green);
-	window.draw(shape1);
-
-	sf::ConvexShape shape2;
-	shape2.setPointCount(4);
-	shape2.setPoint(0, sf::Vector2f(0, 0));
-	shape2.setPoint(1, sf::Vector2f(80, 0));
-	shape2.setPoint(2, sf::Vector2f(80, 80));
-	shape2.setPoint(3, sf::Vector2f(0, 80));
-	shape2.setPosition(100, 100);
-	shape2.setFillColor(sf::Color::Green);
-	window.draw(shape2);
-
 	sf::RenderStates lightRenderStates;
 
-	std::shared_ptr<ltbl::LightPointEmission> light = std::make_shared<ltbl::LightPointEmission>();
+	pointLights.push_back(std::make_shared<ltbl::LightPointEmission>());
 
+		
+
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(sf::Vector2f(100,100));//Позиция света.
+	pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
+	pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 	
-
-	light->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
-	light->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
-	light->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
-	light->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	light->_emissionSprite.setPosition(sf::Vector2f(100,100));//Позиция света.
-	light->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
-	light->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
-	
-	ls.addLight(light);
+	ls.addLight(pointLights.at(pointLights.size() - 1));
 
 
-	std::shared_ptr<ltbl::LightPointEmission> light1 = std::make_shared<ltbl::LightPointEmission>();
+	pointLights.push_back(std::make_shared<ltbl::LightPointEmission>());
 
 
 
-	light1->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
-	light1->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
-	light1->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
-	light1->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	light1->_emissionSprite.setPosition(GameContext->SceneActors.at(1)->GetActorLocation());//Позиция света.
-	light1->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
-	light1->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 
-	ls.addLight(light1);
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(GameContext->SceneActors.at(1)->GetActorLocation());//Позиция света.
+	pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
+	pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 
-	std::shared_ptr<ltbl::LightShape> lightShape = std::make_shared<ltbl::LightShape>();
-	lightShape->_shape.setPointCount(4);
-	lightShape->_shape.setPoint(0, sf::Vector2f(0, 0));
-	lightShape->_shape.setPoint(1, sf::Vector2f(80, 0));
-	lightShape->_shape.setPoint(2, sf::Vector2f(80, 80));
-	lightShape->_shape.setPoint(3, sf::Vector2f(0, 80));
-	lightShape->_renderLightOverShape = false;
-	lightShape->_shape.setPosition(100, 100);
-	ls.addShape(lightShape);
+	ls.addLight(pointLights.at(pointLights.size() - 1));
 
-	std::shared_ptr<ltbl::LightShape> lightShape2 = std::make_shared<ltbl::LightShape>();
-	lightShape2->_shape.setPointCount(4);
-	lightShape2->_shape.setPoint(0, sf::Vector2f(0, 0));
-	lightShape2->_shape.setPoint(1, sf::Vector2f(80, 0));
-	lightShape2->_shape.setPoint(2, sf::Vector2f(80, 80));
-	lightShape2->_shape.setPoint(3, sf::Vector2f(0, 80));
-	lightShape2->_renderLightOverShape = false;
-	lightShape2->_shape.setPosition(100, 300);
-	ls.addShape(lightShape2);
 
 	sf::View view = window.getDefaultView();
 
@@ -176,6 +122,15 @@ void Game::Render()
 	ImGui::SFML::Render(window);
 	window.display();
 
+	for (auto& lightShape : lightShapes)
+	{
+		ls.removeShape(lightShape);
+	}
+
+	for (auto& pointLight : pointLights)
+	{
+		ls.removeLight(pointLight);
+	}
 	
 }
 
@@ -236,7 +191,7 @@ void Game::Update(sf::Time dt)
 			if (GameContext->SceneActors.at(i)->LifeTimeEnded())
 			{
 				GameContext->SceneActors.at(i)->Release();
-
+				GameContext->SceneActors.at(i).~shared_ptr();
 				this->GameContext->SceneActors.erase
 				(
 					std::find
@@ -246,6 +201,7 @@ void Game::Update(sf::Time dt)
 						GameContext->SceneActors.at(i)
 					)
 				);
+
 
 			}
 		}
@@ -372,6 +328,17 @@ void Game::Init()
 {
 	try
 	{
+
+		unshadowShader.loadFromFile(path + "ltbl/resources/unshadowShader.vert", path + "ltbl/resources/unshadowShader.frag");
+		lightOverShapeShader.loadFromFile(path + "ltbl/resources/lightOverShapeShader.vert", path + "ltbl/resources/lightOverShapeShader.frag");
+
+		penumbraTexture.loadFromFile(path + "ltbl/resources/penumbraTexture.png");
+		penumbraTexture.setSmooth(true);
+
+
+		pointLightTexture.loadFromFile(path + "ltbl/resources/pointLightTexture.png");
+		pointLightTexture.setSmooth(true);
+
 		TextureResources->Init(path);
 		ImGui::CreateContext();
 		ImGui::SFML::Init(window);

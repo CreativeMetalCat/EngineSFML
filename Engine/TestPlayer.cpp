@@ -20,12 +20,12 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 	if (m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite.getTexture()->getSize().y; }
 
 	this->m_sprite.setScale(scale);
-
+	Weapon = std::make_shared<Gameplay::Weapon>("scripts/weapons/weapon.lua", this->WorldContext, this->path);
 }
 
 void CTestPlayer::Init(std::string path)
 {
-
+	Weapon->Init(path);
 	this->path = path;
 
 	sf::Vector2f scale;
@@ -297,49 +297,51 @@ void CTestPlayer::Shoot()
 	std::string d = (path + "scripts/testplayer/mainscript.lua");
 	try
 	{
-
-		int status = luaL_dofile(L, d.c_str());
-		if (status != 0)
+		Weapon->Shoot(this->m_sprite, this->Location, 0);
 		{
-			fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
-		}
-		luaL_openlibs(L);
+			//int status = luaL_dofile(L, d.c_str());
+			//if (status != 0)
+			//{
+			//	fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+			//}
+			//luaL_openlibs(L);
 
-		lua_pcall(L, 0, 0, 0);
+			//lua_pcall(L, 0, 0, 0);
 
-		//Register this class in lua
-		this->RegisterClassLUA(L);
+			////Register this class in lua
+			//this->RegisterClassLUA(L);
 
-		//Register Vector2 in lua
-		getGlobalNamespace(L)
-			.beginClass<sf::Vector2f>("Vector2")
-			//add x,y and some functions possibly
-			.addData<float>("x", &sf::Vector2<float>::x)
-			.addData<float>("y", &sf::Vector2<float>::y)
-			.addConstructor<void(*) (void)>()
-			.endClass();
+			////Register Vector2 in lua
+			//getGlobalNamespace(L)
+			//	.beginClass<sf::Vector2f>("Vector2")
+			//	//add x,y and some functions possibly
+			//	.addData<float>("x", &sf::Vector2<float>::x)
+			//	.addData<float>("y", &sf::Vector2<float>::y)
+			//	.addConstructor<void(*) (void)>()
+			//	.endClass();
 
-		getGlobalNamespace(L)
-			.beginClass<sf::Sprite>("Spite")
+			//getGlobalNamespace(L)
+			//	.beginClass<sf::Sprite>("Spite")
 
-			.endClass();
+			//	.endClass();
 
-		getGlobalNamespace(L)
-			.beginClass<sf::ConvexShape>("ConvexShape")
+			//getGlobalNamespace(L)
+			//	.beginClass<sf::ConvexShape>("ConvexShape")
 
-			.endClass();
+			//	.endClass();
 
-		getGlobalNamespace(L)
-			.beginClass<Engine::Context>("WorldContext")
+			//getGlobalNamespace(L)
+			//	.beginClass<Engine::Context>("WorldContext")
 
-			.endClass();
+			//	.endClass();
 
-		Test::TestProjectile::RegisterClassLUA(L);
+			//Test::TestProjectile::RegisterClassLUA(L);
 
-		LuaRef LUAFire = getGlobal(L, "FireProjectile");
-		if (LUAFire.isFunction())
-		{
-			LUAFire(this,this->m_sprite,WorldContext);
+			//LuaRef LUAFire = getGlobal(L, "FireProjectile");
+			//if (LUAFire.isFunction())
+			//{
+			//	LUAFire(this,this->m_sprite,WorldContext);
+			//}
 		}
 	}
 	catch (LuaException e)
