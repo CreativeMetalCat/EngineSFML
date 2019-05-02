@@ -16,7 +16,6 @@ extern "C"
 //#include "MainFuncLib.h"
 #include <SFML/Graphics.hpp>
 
-
 #define CLASS_OBJECT 1
 
 #ifndef DEPRECATED_WARING
@@ -29,41 +28,52 @@ extern "C"
 #define DEPRECATED_ERROR [[deprecated]]
 #endif // !DEPRECATED_ERROR
 
+#include "Context.h"
 
-//base of the base
-class CObject
+namespace Engine
 {
-protected:
-	
-public:
-	std::string path;
-	//ID of parent for checking
-	//default is CObject
-	static const int ParentClassID = CLASS_OBJECT;
-
-	//ID of class for Casting
-	//ID MUST be defined in the beggining of the file with class
-	//default is CObject
-	static const int ClassID = CLASS_OBJECT;
-
-	
-	int GetClassID()const { return ClassID; }
-
-	//Made for easier usage
-	//Uses dynamic_cast as of now
-	template<class T = CObject*> T As()
+	//base of the base
+	class CObject
 	{
-		return dynamic_cast<T>(this);
-	}
+	protected:
 
-	//Create LUA class from this for usage in LUA
-	static void RegisterClassLUA(lua_State *&L);
+	public:
+		Context* WorldContext;
 
-	virtual void Init(std::string path){}
+		std::string path;
+		//ID of parent for checking
+		//default is CObject
+		static const int ParentClassID = CLASS_OBJECT;
 
-	virtual void Update(sf::Time) {}
-	CObject(std::string path);
-	~CObject();
-};
+		//ID of class for Casting
+		//ID MUST be defined in the beggining of the file with class
+		//default is CObject
+		static const int ClassID = CLASS_OBJECT;
 
 
+		virtual int GetClassID()const { return ClassID; }
+
+		//Made for easier usage
+		//Uses dynamic_cast as of now
+		template<class T = CObject *> T As()
+		{
+			return dynamic_cast<T>(this);
+		}
+
+		//Create LUA class from this for usage in LUA
+		static void RegisterClassLUA(lua_State*& L);
+
+		virtual void Init(std::string path) {}
+
+		virtual void Update(sf::Time) {}
+
+		virtual void HandleEvent(sf::Event event) {}
+
+		CObject(Context* WorldContext,std::string path);
+
+		virtual void Release() {}
+		~CObject();
+	};
+
+
+}
