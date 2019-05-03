@@ -35,6 +35,10 @@ class CTestPlayer : public Engine::Character
 	bool m_moving_right = false;
 
 	std::shared_ptr<Gameplay::Weapon>Weapon;
+
+	float m_angle = 0.f;
+
+	sf::Vector2f m_point;
 public:
 	
 	bool ControlledByPlayer = false;

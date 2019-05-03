@@ -27,7 +27,7 @@ void Game::Render()
 	
 
 	ltbl::LightSystem ls;
-	ls.create(sf::FloatRect(-1000.0f, -1000.0f, 1000.0f, 1000.0f), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
+	ls.create(sf::FloatRect(-window.getSize().x, -window.getSize().y , window.getSize().x , window.getSize().y ), window.getSize(), penumbraTexture, unshadowShader, lightOverShapeShader);
 
 	std::vector< std::shared_ptr<ltbl::LightShape>>lightShapes;
 
@@ -99,10 +99,11 @@ void Game::Render()
 
 	sf::View view = window.getDefaultView();
 
-	view.setCenter(sf::Vector2f(1024 * 0.5f, 720 * 0.5f));
+	view.setCenter(sf::Vector2f(window.getSize().x * 0.5f, window.getSize().y * 0.5f));
+	
 
 	ls.render(view, unshadowShader, lightOverShapeShader);
-
+	
 	
 	LSprite.setTexture(ls.getLightingTexture());
 	lightRenderStates.blendMode = sf::BlendMultiply;
@@ -328,7 +329,7 @@ void Game::Init()
 {
 	try
 	{
-
+		
 		unshadowShader.loadFromFile(path + "ltbl/resources/unshadowShader.vert", path + "ltbl/resources/unshadowShader.frag");
 		lightOverShapeShader.loadFromFile(path + "ltbl/resources/lightOverShapeShader.vert", path + "ltbl/resources/lightOverShapeShader.frag");
 

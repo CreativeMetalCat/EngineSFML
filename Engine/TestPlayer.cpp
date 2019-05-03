@@ -1,5 +1,5 @@
 #include "TestPlayer.h"
-
+#include <math.h>  
 
 
 void CTestPlayer::SetSpriteTexture(sf::Texture & t)
@@ -21,6 +21,8 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 
 	this->m_sprite.setScale(scale);
 	Weapon = std::make_shared<Gameplay::Weapon>("scripts/weapons/weapon.lua", this->WorldContext, this->path);
+
+	m_point = { 64.f,0.f };
 	
 }
 
@@ -86,6 +88,10 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 void CTestPlayer::Draw(sf::RenderWindow& window)
 {
 	window.draw(m_sprite);
+	sf::VertexArray va;
+	va.append(sf::Vertex(m_point + this->Location, sf::Color::Red));
+	window.draw(va);
+
 }
 
 void CTestPlayer::Update(sf::Time dt)
@@ -303,52 +309,7 @@ void CTestPlayer::Shoot()
 	std::string d = (path + "scripts/testplayer/mainscript.lua");
 	try
 	{
-		Weapon->Shoot(this->m_sprite, this->Location, 0);
-		{
-			//int status = luaL_dofile(L, d.c_str());
-			//if (status != 0)
-			//{
-			//	fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
-			//}
-			//luaL_openlibs(L);
-
-			//lua_pcall(L, 0, 0, 0);
-
-			////Register this class in lua
-			//this->RegisterClassLUA(L);
-
-			////Register Vector2 in lua
-			//getGlobalNamespace(L)
-			//	.beginClass<sf::Vector2f>("Vector2")
-			//	//add x,y and some functions possibly
-			//	.addData<float>("x", &sf::Vector2<float>::x)
-			//	.addData<float>("y", &sf::Vector2<float>::y)
-			//	.addConstructor<void(*) (void)>()
-			//	.endClass();
-
-			//getGlobalNamespace(L)
-			//	.beginClass<sf::Sprite>("Spite")
-
-			//	.endClass();
-
-			//getGlobalNamespace(L)
-			//	.beginClass<sf::ConvexShape>("ConvexShape")
-
-			//	.endClass();
-
-			//getGlobalNamespace(L)
-			//	.beginClass<Engine::Context>("WorldContext")
-
-			//	.endClass();
-
-			//Test::TestProjectile::RegisterClassLUA(L);
-
-			//LuaRef LUAFire = getGlobal(L, "FireProjectile");
-			//if (LUAFire.isFunction())
-			//{
-			//	LUAFire(this,this->m_sprite,WorldContext);
-			//}
-		}
+		Weapon->Shoot(this->m_sprite, m_point + this->GetActorLocation(), m_angle);
 	}
 	catch (LuaException e)
 	{
@@ -417,6 +378,19 @@ void CTestPlayer::HandleEvent(sf::Event event)
 {
 	if (ControlledByPlayer)
 	{
+
+		if (event.type == sf::Event::MouseMoved)
+		{
+			sf::Vector2f mousePos = sf::Vector2f(event.mouseMove.x, event.mouseMove.y);
+
+			m_angle = cpvtoangle(cpvsub(cpv(mousePos.x, mousePos.y), cpv(this->GetActorLocation().x, this->GetActorLocation().y)));
+			m_angle *= (180 / CP_PI);
+
+			sf::Transform t;
+
+			t.rotate(m_angle, 0, 0);
+			m_point = t.transformPoint({ 64.f,0.f });
+		}
 		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
 		{
 			m_moving_left = true;

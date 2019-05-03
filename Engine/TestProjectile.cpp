@@ -2,7 +2,7 @@
 
 namespace Test
 {
-
+	
 	TestProjectile::TestProjectile(sf::Sprite sprite, sf::Vector2f Size, sf::Vector2f Location, Engine::Context* WorldContext, std::string path):
 		Engine::CProjectile(Location,WorldContext,path),
 		m_sprite(sprite),
@@ -171,6 +171,16 @@ namespace Test
 
 	 
 		
+	}
+
+	void TestProjectile::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
+	{
+		
+	}
+
+	void TestProjectile::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
+	{
+
 	}
 
 	TestProjectile::~TestProjectile()

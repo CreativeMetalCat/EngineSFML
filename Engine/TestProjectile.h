@@ -42,6 +42,14 @@ namespace Test
 
 		virtual void Release()override;
 
+		//PATH - Path to main folder and usually used to access scripts
+		//Defined by window.lua
+		virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
+
+		//PATH - Path to main folder and usually used to access scripts
+		//Defined by window.lua
+		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
+
 		TestProjectile(sf::Sprite sprite, sf::Vector2f Size, sf::Vector2f Location, Engine::Context* WorldContext, std::string path = "./../");
 
 		~TestProjectile();
