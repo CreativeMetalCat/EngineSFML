@@ -90,6 +90,16 @@ namespace Gameplay
 		LuaShoot.~LuaRef();
 	}
 
+	void Weapon::Update(sf::Time dt)
+	{
+		luabridge::LuaRef LuaUpdate = luabridge::getGlobal(this->m_weaponLua, "Update");
+		if (!LuaUpdate.isNil() && LuaUpdate.isFunction())
+		{
+			LuaUpdate(this,dt.asSeconds());
+		}
+		LuaUpdate.~LuaRef();
+	}
+
 	Weapon::~Weapon()
 	{
 		lua_close(this->m_weaponLua);

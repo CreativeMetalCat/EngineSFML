@@ -72,6 +72,7 @@ public:
 	static void Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path);
 
 	void Shoot();
+
 	//PATH - Path to main folder and usually used to access scripts
 	//Defined by window.lua
 	virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);

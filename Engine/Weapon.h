@@ -24,6 +24,8 @@ namespace Gameplay
 		virtual void Init(std::string path)override;
 
 		virtual void Shoot(sf::Sprite sprite,sf::Vector2f Location, float angle);
+		
+		virtual void Update(sf::Time dt)override;
 
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);

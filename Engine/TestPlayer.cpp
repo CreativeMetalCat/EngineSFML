@@ -21,6 +21,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 
 	this->m_sprite.setScale(scale);
 	Weapon = std::make_shared<Gameplay::Weapon>("scripts/weapons/weapon.lua", this->WorldContext, this->path);
+	
 }
 
 void CTestPlayer::Init(std::string path)
@@ -89,6 +90,11 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 void CTestPlayer::Update(sf::Time dt)
 {
+	if (this->Weapon != nullptr)
+	{
+		this->Weapon->Update(dt);
+	}
+
 	if (Body != nullptr)
 	{
 
@@ -354,6 +360,8 @@ void CTestPlayer::Shoot()
 		std::cout << e.what() << std::endl;
 	}
 }
+
+
 
 void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 {
