@@ -3,6 +3,14 @@
 
 namespace Engine
 {
+	void CActor::DestroyActor()
+	{
+		this->m_pending_kill = true;
+	}
+	bool CActor::GetIsValid() const
+	{
+		return m_pending_kill;
+	}
 	cpShape* CActor::GetShape(int i)
 	{
 		if (i >= shapes.size() || i < 0) { return nullptr; }
@@ -188,6 +196,20 @@ namespace Engine
 			std::cout << e.what() << std::endl;
 		}
 
+	}
+
+	void CActor::Release()
+	{
+		cpSpaceRemoveBody(WorldContext->space, this->Body);
+		for (auto& shape : this->shapes)
+		{
+			cpSpaceRemoveShape(WorldContext->space, shape);
+			cpShapeDestroy(shape);
+			cpShapeFree(shape);
+		}
+
+		cpBodyDestroy(this->Body);
+		cpBodyFree(this->Body);
 	}
 
 	CActor::CActor(sf::Vector2f Location, Context* WorldContext, std::string path)

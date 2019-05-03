@@ -189,7 +189,7 @@ void Game::Update(sf::Time dt)
 		for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
 		{
 			GameContext->SceneActors.at(i)->Update(dt);
-			if (GameContext->SceneActors.at(i)->LifeTimeEnded())
+			if (GameContext->SceneActors.at(i)->IsPendingKill())
 			{
 				GameContext->SceneActors.at(i)->Release();
 				GameContext->SceneActors.at(i).~shared_ptr();

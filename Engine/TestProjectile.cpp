@@ -1,5 +1,10 @@
 #include "TestProjectile.h"
 
+#ifndef CLASS_PHYSICSBOX
+//copy made for type cheking
+#define CLASS_PHYSICSBOX 18
+#endif // !CLASS_PHYSICSBOX
+
 namespace Test
 {
 	
@@ -168,14 +173,14 @@ namespace Test
 		
 		cpBodyDestroy(this->Body);
 		cpBodyFree(this->Body);
-
-	 
-		
 	}
 
 	void TestProjectile::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 	{
-		
+		if (otherActor->GetClassID() == CLASS_PHYSICSBOX)
+		{
+			otherActor->DestroyActor();
+		}
 	}
 
 	void TestProjectile::OnEndCollision(cpArbiter*& arb, CActor* otherActor)

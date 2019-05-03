@@ -37,6 +37,8 @@ namespace Engine
 		float m_lifetime = 0.f;
 
 		float m_lived_time = 0.f;
+
+		bool m_pending_kill = false;
 	public:
 
 		//0.f for infinite
@@ -46,7 +48,14 @@ namespace Engine
 
 		bool LifeTimeEnded()const { return m_lifetime != 0.f ? (m_lived_time >= m_lifetime) : false; }
 
+		bool IsPendingKill()const { return m_lifetime == 0.f ? m_pending_kill : (LifeTimeEnded() || m_pending_kill); }
 
+		//Use this to safely mark object for destruction
+		virtual void DestroyActor();
+
+		
+
+		virtual bool GetIsValid()const;
 
 		//0.f for infinite
 		void setLifeTime(float time) { m_lifetime = time; }
@@ -61,7 +70,7 @@ namespace Engine
 
 		int GetClassID()const { return ClassID; }
 
-		cpShape* GetShape(int i);
+		cpShape* GetShape(int i = 0);
 
 		//LUA file that will be used
 		void SetCollisionScriptFileName(std::string CollisionScriptFileName) { this->CollisionScriptFileName = CollisionScriptFileName; }
@@ -153,6 +162,8 @@ namespace Engine
 		//PATH - Path to main folder and usually used to access scripts
 		//Defined by window.lua
 		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
+
+		virtual void Release()override;
 
 		CActor(sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
 		virtual ~CActor();
