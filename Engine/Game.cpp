@@ -346,7 +346,84 @@ void Game::Init()
 
 		this->window.setFramerateLimit(60.f);
 
+		
+		//create lua state that will be used to load map
+		lua_State* L = luaL_newstate();
 
+		std::string d = (path + "maps/test/demo.map");
+
+		luaL_dofile(L, d.c_str());
+		luaL_openlibs(L);
+
+		lua_pcall(L, 0, 0, 0);
+
+
+		luabridge::LuaRef actorsTable = luabridge::getGlobal(L, "map");
+		if (!actorsTable.isNil() && actorsTable.isTable())
+		{
+			//in lua firts index of the array is 1
+			for (int i = 1; i <= actorsTable.length(); i++)
+			{
+				//we store actors as tables in .map files
+				if (!actorsTable[i].isNil() && actorsTable[i].isTable())
+				{
+					std::string textureName;
+					sf::ConvexShape cs;
+					sf::Vector2f size;
+					sf::Vector2f pos;
+					if (actorsTable[i]["type_id"] == CLASS_SOLIDBLOCK)
+					{
+						std::cout << "Solid" << std::endl;
+					}
+					if (!actorsTable[i]["texture_name"].isNil())
+					{
+						textureName = actorsTable[i]["texture_name"].cast<std::string>();
+					}
+					if (!actorsTable[i]["shadow_shape"].isNil() && actorsTable[i]["shadow_shape"].isTable())
+					{
+						cs.setPointCount(actorsTable[i]["shadow_shape"]["point_count"].cast<int>());
+
+						for (int u = 1; u <= actorsTable[i]["shadow_shape"]["point_count"].cast<int>(); u++)
+						{
+							cs.setPoint
+							(u - 1u,
+								sf::Vector2f
+									(	actorsTable[i]["shadow_shape"][u]["x"].cast<int>(),
+										actorsTable[i]["shadow_shape"][u]["y"].cast<int>()
+									)
+							);
+
+						}
+					}
+					if (!actorsTable[i]["size"].isNil() && actorsTable[i]["size"].isTable())
+					{
+						size.x = actorsTable[i]["size"]["x"].cast<float>();
+						size.y = actorsTable[i]["size"]["y"].cast<float>();
+					}
+					if (!actorsTable[i]["location"].isNil() && actorsTable[i]["location"].isTable())
+					{
+						pos.x = actorsTable[i]["location"]["x"].cast<float>();
+						pos.y = actorsTable[i]["location"]["y"].cast<float>();
+					}
+
+					std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName(textureName)->GetTexture()), cs, size, pos, &(*this->GameContext), path);
+					sd->Init(path);
+					sd->InitPhysBody(path, this->GameContext->space);
+
+					GameContext->SceneActors.push_back(sd);
+				}
+				else
+				{
+					std::cout << "LUA Error: Found broken filed! Table " << "map" << " File:" << d << std::endl;
+				}
+			}
+		}
+		else
+		{
+			std::cout << "LUA Error: Found broken table! File:"<< d << std::endl;
+		}
+		//close lua state
+		//lua_close(L);
 		
 		sf::ConvexShape s;
 		s.setPointCount(4);
@@ -417,6 +494,10 @@ void Game::Init()
 		
 	}
 	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	catch (luabridge::LuaException e)
 	{
 		std::cout << e.what() << std::endl;
 	}

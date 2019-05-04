@@ -4,6 +4,8 @@
 //Actor that has one texture(sprite) and static physical body
 //Category: Basic
 
+#define CLASS_SOLIDBLOCK 21
+
 namespace Engine
 {
 	class CSolidBlock : public Engine::CActor
@@ -14,6 +16,14 @@ namespace Engine
 
 
 	public:
+
+		//ID of class for Casting
+		//ID MUST be defined in the beggining of the file with class
+		//default is CObject
+		static const int ClassID = CLASS_SOLIDBLOCK;
+
+
+		virtual int GetClassID()const { return ClassID; }
 
 		void SetSprite(sf::Sprite s) { this->m_sprite = s; }
 
