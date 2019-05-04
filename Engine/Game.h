@@ -120,6 +120,11 @@ class Game
 
 	bool isUsingMenu = false;
 	
+	//part of LoadMap
+	void UnloadMap();
+
+	//Part of the LoadMap
+	void LoadMapFromFile(std::string name);
 public:
 	std::shared_ptr<Engine::Context>GameContext;
 
@@ -137,6 +142,9 @@ public:
 
 	//No Get/Set due to SFML restrictions
 	sf::RenderWindow window;
+
+	//Clear data for the current map and load new one
+	void LoadMap(std::string name);
 
 	/*
 	Path to all files relative to bin
