@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "CPhysicsBox.h"
-
+#include "FuncElevator.h"
 
 
 using namespace std;
@@ -572,6 +572,10 @@ void Game::Init()
 		player->InitPhysBody(path, GameContext->space);
 		player->ControlledByPlayer = true;
 		GameContext->SceneActors.push_back(player);
+
+		std::shared_ptr<Test::FuncElevator>elev = std::make_shared<Test::FuncElevator>(sf::Sprite(TextureResources->GetTextureByName("dev64_brown")->GetTexture()),sf::Vector2f(64, 64), sf::Vector2f(600, 384), &(*this->GameContext), path);
+		elev->InitPhysBody(path, GameContext->space);
+		GameContext->SceneActors.push_back(elev);
 
 		for (int i = 0; i < 19; i++)
 		{

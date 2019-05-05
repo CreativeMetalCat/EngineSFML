@@ -186,10 +186,6 @@ namespace Engine
 		Size(Size)
 	{
 		this->ShadowShape = CollisionShape;
-		if (CollisionShape.getPointCount() > 8)
-		{
-			std::cout << "Waring: Characters collision point count is greater than limit of the physics engine. This can result in unexpected behaviour" << std::endl;
-		}
 
 		CollisionRectangle.width = Size.x;
 		CollisionRectangle.height = Size.y;
