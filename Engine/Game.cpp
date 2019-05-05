@@ -183,6 +183,31 @@ void Game::Update(sf::Time dt)
 
 	cpSpaceStep(GameContext->space, 1 / dt.asSeconds());
 
+	if (GameContext->MapAction.GetCurrentAction() == Engine::MapLoading::MapAction::Load)
+	{
+		if (GameContext->MapAction.GetCurrentMapName() != "")
+		{
+			this->LoadMapFromFile(GameContext->MapAction.GetCurrentMapName());
+			GameContext->MapAction.m_loaded = true;
+			GameContext->MapAction.m_current_action = Engine::MapLoading::MapAction::None;
+		}
+	}
+	else if(GameContext->MapAction.GetCurrentAction() == Engine::MapLoading::MapAction::UnLoad)
+	{
+		if (GameContext->MapAction.m_loaded)
+		{
+			this->UnloadMap();
+			GameContext->MapAction.m_current_action = Engine::MapLoading::MapAction::None;
+		}
+	}
+	else if (GameContext->MapAction.GetCurrentAction() == Engine::MapLoading::MapAction::Change)
+	{
+		if (GameContext->MapAction.GetCurrentMapName() != "")
+		{
+			this->LoadMap(GameContext->MapAction.GetCurrentMapName());
+			GameContext->MapAction.m_current_action = Engine::MapLoading::MapAction::None;
+		}
+	}
 
 	if (!GameContext->SceneActors.empty())
 	{
@@ -327,6 +352,28 @@ void Game::Update(sf::Time dt)
 
 void Game::UnloadMap()
 {
+	cpSpaceStep(GameContext->space, 0.f);
+
+	if (!GameContext->SceneActors.empty())
+	{
+		for (size_t i = 0; i < GameContext->SceneActors.size(); i++)
+		{
+
+			GameContext->SceneActors.at(i)->Release();
+			GameContext->SceneActors.at(i).~shared_ptr();
+			this->GameContext->SceneActors.erase
+			(
+				std::find
+				(
+					this->GameContext->SceneActors.begin(),
+					this->GameContext->SceneActors.end(),
+					GameContext->SceneActors.at(i)
+				)
+			);
+		}
+	}
+	
+	GameContext->MapAction.m_loaded = false;
 }
 
 void Game::LoadMapFromFile(std::string name)
@@ -462,6 +509,8 @@ void Game::LoadMapFromFile(std::string name)
 		{
 			std::cout << "LUA Error: Found broken table! File:" << d << std::endl;
 		}
+
+		this->GameContext->MapAction.m_loaded = true;
 	}
 	catch (std::exception e)
 	{
@@ -496,7 +545,11 @@ void Game::Init()
 
 		this->window.setFramerateLimit(60.f);
 
-		LoadMap("test/demo.map");
+		this->GameContext->MapAction.m_current_action = Engine::MapLoading::MapAction::Load;
+		this->GameContext->MapAction.m_name = "test/demo.map";
+		this->GameContext->MapAction.m_loaded = false;
+
+		//LoadMap("test/demo.map");
 		
 		sf::ConvexShape s;
 		s.setPointCount(4);

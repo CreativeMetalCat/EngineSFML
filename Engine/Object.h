@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+
+#ifndef lua_h
 extern "C"
 {
 # include "lua.h"
@@ -12,9 +14,14 @@ extern "C"
 # include "lualib.h"
 }
 #include <LuaBridge/LuaBridge.h>
+#endif
+
+#ifndef SFML_GRAPHICS_HPP
+#include <SFML/Graphics.hpp>
+#endif
 
 //#include "MainFuncLib.h"
-#include <SFML/Graphics.hpp>
+
 
 #define CLASS_OBJECT 1
 

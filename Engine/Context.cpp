@@ -1,8 +1,11 @@
 #include "Context.h"
 
 
+
+
 namespace Engine
 {
+
 	Context::Context(std::string path):path(path)
 	{
 
@@ -37,8 +40,27 @@ namespace Engine
 
 	}
 
-
 	Context::~Context()
 	{
 	}
+}
+
+void Engine::MapLoading::MapActionData::SetNewMap(std::string name)
+{
+	if (name != m_name && !this->m_loaded)
+	{
+		this->m_name = name;
+		this->m_loaded = false;
+		this->m_current_action = MapAction::Load;
+	}
+	else if (name != m_name && this->m_loaded)
+	{
+		this->m_name = name;
+		this->m_loaded = false;
+		this->m_current_action = MapAction::Change;
+	}
+}
+
+Engine::MapLoading::MapActionData::MapActionData(std::string Name):m_name(Name)
+{
 }
