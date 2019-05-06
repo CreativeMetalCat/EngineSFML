@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "CPhysicsBox.h"
 #include "FuncElevator.h"
-
+#include "CTrigger.h"
 
 using namespace std;
 
@@ -99,7 +99,7 @@ void Game::Render()
 
 	sf::View view = window.getDefaultView();
 
-	view.setCenter(sf::Vector2f(window.getSize().x * 0.5f, window.getSize().y * 0.5f));
+	view.setCenter(GameContext->ViewCeneter.x, GameContext->ViewCeneter.y);
 	
 
 	ls.render(view, unshadowShader, lightOverShapeShader);
@@ -619,6 +619,11 @@ void Game::Init()
 		player->ControlledByPlayer = true;
 		GameContext->SceneActors.push_back(player);
 
+		
+		std::shared_ptr<Engine::CTrigger> trigger = std::make_shared<Engine::CTrigger>("scripts/testtrigger.lua",sf::Vector2f(64.f, 64.f), sf::Vector2f(64.f, 256.f), &(*this->GameContext), path);
+		trigger->InitPhysBody(path, GameContext->space);
+		GameContext->SceneActors.push_back(trigger);
+
 		for (int i = 0; i < 19; i++)
 		{
 			
@@ -699,7 +704,8 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 {
 	
 	GameContext = std::make_shared<Engine::Context>(path);
-	
+	GameContext->ViewCeneter.x = videoMode.width / 2;
+	GameContext->ViewCeneter.y = videoMode.height / 2;
 	
 	cpCollisionHandler*handler = cpSpaceAddDefaultCollisionHandler(GameContext->space);
 	handler->beginFunc = &Game::OnBeginCollision;

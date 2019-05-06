@@ -12,7 +12,9 @@
 #ifndef CHIPMUNK_H
 #include <chipmunk.h>
 #endif
-
+#ifndef SFML_GRAPHICS_HPP
+#include <SFML/Graphics.hpp>
+#endif
 namespace Engine
 {
 	namespace MapLoading
@@ -59,6 +61,9 @@ namespace Engine
 	{
 		std::string path;
 	public:
+
+		sf::Vector2f ViewCeneter;
+
 		MapLoading::MapActionData MapAction; 
 
 		//part of LoadMap

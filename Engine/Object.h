@@ -16,9 +16,7 @@ extern "C"
 #include <LuaBridge/LuaBridge.h>
 #endif
 
-#ifndef SFML_GRAPHICS_HPP
-#include <SFML/Graphics.hpp>
-#endif
+
 
 //#include "MainFuncLib.h"
 
@@ -36,6 +34,10 @@ extern "C"
 #endif // !DEPRECATED_ERROR
 
 #include "Context.h"
+
+#ifndef SFML_GRAPHICS_HPP
+#include <SFML/Graphics.hpp>
+#endif
 
 namespace Engine
 {

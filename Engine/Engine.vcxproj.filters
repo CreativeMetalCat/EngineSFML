@@ -109,6 +109,9 @@
     <ClCompile Include="FuncRotating.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SolidBlock.h">
@@ -178,6 +181,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FuncRotating.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTrigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

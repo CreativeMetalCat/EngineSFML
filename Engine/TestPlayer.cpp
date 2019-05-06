@@ -96,6 +96,7 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 void CTestPlayer::Update(sf::Time dt)
 {
+	
 	if (this->Weapon != nullptr)
 	{
 		this->Weapon->Update(dt);
@@ -135,7 +136,7 @@ void CTestPlayer::Update(sf::Time dt)
 				lua_pcall(L, 0, 0, 0);
 
 				CTestPlayer::RegisterClassLUA(L);
-
+				
 				//Register Vector2 in lua
 				getGlobalNamespace(L)
 					.beginClass<sf::Vector2f>("Vector2")
