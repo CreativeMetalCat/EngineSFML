@@ -74,7 +74,7 @@ void Game::Render()
 	pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
 	pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
 	pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(sf::Vector2f(100,100));//Позиция света.
+	pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(sf::Vector2f(600,300));//Позиция света.
 	pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
 	pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 	
@@ -378,6 +378,7 @@ void Game::UnloadMap()
 
 void Game::LoadMapFromFile(std::string name)
 {
+	
 	try
 	{
 		//create lua state that will be used to load map
@@ -404,11 +405,9 @@ void Game::LoadMapFromFile(std::string name)
 					sf::ConvexShape cs;
 					sf::Vector2f size;
 					sf::Vector2f pos;
-					float mass = 100.f;
-					std::string material_name = "";
+					
 					if (actorsTable[i]["type_id"] == CLASS_SOLIDBLOCK)
 					{
-						std::cout << "Solid" << std::endl;
 
 						if (!actorsTable[i]["texture_name"].isNil())
 						{
@@ -450,6 +449,9 @@ void Game::LoadMapFromFile(std::string name)
 					}
 					else if (actorsTable[i]["type_id"] == CLASS_PHYSICSBOX)
 					{
+
+						float mass = 100.f;
+						std::string material_name = "";
 						std::cout << "Solid" << std::endl;
 
 						if (!actorsTable[i]["texture_name"].isNil())
@@ -497,6 +499,50 @@ void Game::LoadMapFromFile(std::string name)
 
 						GameContext->SceneActors.push_back(sd);
 
+					}
+					else if (actorsTable[i]["type_id"] == CLASS_FUNCELEVATOR)
+					{
+						sf::Vector2f endLocation = sf::Vector2f(0, 0);
+						if (!actorsTable[i]["texture_name"].isNil())
+						{
+							textureName = actorsTable[i]["texture_name"].cast<std::string>();
+						}
+						if (!actorsTable[i]["shadow_shape"].isNil() && actorsTable[i]["shadow_shape"].isTable())
+						{
+							cs.setPointCount(actorsTable[i]["shadow_shape"]["point_count"].cast<int>());
+
+							for (int u = 1; u <= actorsTable[i]["shadow_shape"]["point_count"].cast<int>(); u++)
+							{
+								cs.setPoint
+								(u - 1u,
+									sf::Vector2f
+									(actorsTable[i]["shadow_shape"][u]["x"].cast<int>(),
+										actorsTable[i]["shadow_shape"][u]["y"].cast<int>()
+									)
+								);
+
+							}
+						}
+						if (!actorsTable[i]["size"].isNil() && actorsTable[i]["size"].isTable())
+						{
+							size.x = actorsTable[i]["size"]["x"].cast<float>();
+							size.y = actorsTable[i]["size"]["y"].cast<float>();
+						}
+						if (!actorsTable[i]["location"].isNil() && actorsTable[i]["location"].isTable())
+						{
+							pos.x = actorsTable[i]["location"]["x"].cast<float>();
+							pos.y = actorsTable[i]["location"]["y"].cast<float>();
+						}
+						if (!actorsTable[i]["end_location"].isNil() && actorsTable[i]["end_location"].isTable())
+						{
+							endLocation.x = actorsTable[i]["end_location"]["x"].cast<float>();
+							endLocation.y = actorsTable[i]["end_location"]["y"].cast<float>();
+						}
+
+						std::shared_ptr<Test::FuncElevator>elev = std::make_shared<Test::FuncElevator>(endLocation, sf::Sprite(TextureResources->GetTextureByName(textureName)->GetTexture()),size, pos, &(*this->GameContext), path);
+						elev->Init(path);
+						elev->InitPhysBody(path, GameContext->space);
+						GameContext->SceneActors.push_back(elev);
 					}
 				}
 				else
@@ -572,10 +618,6 @@ void Game::Init()
 		player->InitPhysBody(path, GameContext->space);
 		player->ControlledByPlayer = true;
 		GameContext->SceneActors.push_back(player);
-
-		std::shared_ptr<Test::FuncElevator>elev = std::make_shared<Test::FuncElevator>(sf::Sprite(TextureResources->GetTextureByName("dev64_brown")->GetTexture()),sf::Vector2f(64, 64), sf::Vector2f(600, 384), &(*this->GameContext), path);
-		elev->InitPhysBody(path, GameContext->space);
-		GameContext->SceneActors.push_back(elev);
 
 		for (int i = 0; i < 19; i++)
 		{

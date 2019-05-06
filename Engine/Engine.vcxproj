@@ -167,6 +167,7 @@
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="CPhysicsBox.cpp" />
     <ClCompile Include="FuncElevator.cpp" />
+    <ClCompile Include="FuncRotating.cpp" />
     <ClCompile Include="imgui-SFML.cpp" />
     <ClCompile Include="imgui.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Context.h" />
     <ClInclude Include="CPhysicsBox.h" />
     <ClInclude Include="FuncElevator.h" />
+    <ClInclude Include="FuncRotating.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="SolidBlock.h" />
