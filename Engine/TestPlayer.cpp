@@ -28,17 +28,28 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 
 void CTestPlayer::Init(std::string path)
 {
-	Weapon->Init(path);
-	this->path = path;
+	try
+	{
+		Weapon->Init(path);
+		this->path = path;
 
-	sf::Vector2f scale;
+		sf::Vector2f scale;
 
-	if (this->m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->m_sprite.getTexture()->getSize().x; }
+		if (this->m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->m_sprite.getTexture()->getSize().x; }
 
-	if (this->m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->m_sprite.getTexture()->getSize().y; }
+		if (this->m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->m_sprite.getTexture()->getSize().y; }
 
-	this->m_sprite.setScale(scale);
+		this->m_sprite.setScale(scale);
 
+		/*if (this->testShader.loadFromFile(path + "shaders/testshader.vert", path + "shaders/testshader.frag"))
+		{
+			std::cout << "success\n";
+		}*/
+	}
+	catch (std::exception e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	//this->sprite.setOrigin(this->sprite.getLocalBounds().width / 2, this->sprite.getLocalBounds().height / 2);
 }
 
@@ -46,6 +57,7 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 {
 	try
 	{
+		//this->Init(path);
 		std::vector<cpVect>points;
 		for (int i = 0; i < ShadowShape.getPointCount(); i++)
 		{
@@ -87,11 +99,16 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 
 void CTestPlayer::Draw(sf::RenderWindow& window)
 {
-	window.draw(m_sprite);
+	if (WorldContext->ShaderResources->GetShaderByName("test") != nullptr)
+	{
+
+		WorldContext->ShaderResources->GetShaderByName("test")->Shader.setUniform("texture", this->m_sprite.getTexture());
+		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("test")->Shader);
+	}
+	//window.draw(m_sprite);
 	sf::VertexArray va;
 	va.append(sf::Vertex(m_point + this->Location, sf::Color::Red));
 	window.draw(va);
-
 }
 
 void CTestPlayer::Update(sf::Time dt)

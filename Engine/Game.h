@@ -132,7 +132,7 @@ public:
 	//they can be used for testing or something else
 	std::unique_ptr < Engine::Resources::Sound::CSoundContainer> Sounds;
 
-	std::unique_ptr<Engine::Resources::Materials::CTextureContainer> TextureResources;
+	/*std::unique_ptr<Engine::Resources::Materials::CTextureContainer> TextureResources;*/
 
 	//Init widnow etc.
 	void Init();

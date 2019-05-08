@@ -40,7 +40,8 @@ class CTestPlayer : public Engine::Character
 
 	sf::Vector2f m_point;
 public:
-	
+
+
 	bool ControlledByPlayer = false;
 	//ID of class for Casting
 	//ID MUST be defined in the beggining of the file with class

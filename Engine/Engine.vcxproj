@@ -175,6 +175,8 @@
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="ShaderResource.cpp" />
+    <ClCompile Include="ShaderResourceContainer.cpp" />
     <ClCompile Include="SolidBlock.cpp" />
     <ClCompile Include="SoundContainer.cpp" />
     <ClCompile Include="SoundResource.cpp" />
@@ -200,6 +202,8 @@
     <ClInclude Include="FuncRotating.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="ShaderResource.h" />
+    <ClInclude Include="ShaderResourceContainer.h" />
     <ClInclude Include="SolidBlock.h" />
     <ClInclude Include="SoundContainer.h" />
     <ClInclude Include="SoundResource.h" />
