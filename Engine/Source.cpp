@@ -1,5 +1,5 @@
 #include "Game.h"
-
+#include <filesystem>
 
 int SCREENWIDTH = 1024;
 int SCREENHEIGHT = 720;
@@ -9,6 +9,9 @@ using namespace luabridge;
 //delete this before releasing or any check outside of this machine
 #define DEBUG
 
+
+
+
 #ifdef DEBUG
 std::string PATH = "C:/Users/catgu/source/repos/Engine/x64/Debug/";
 #else
@@ -16,18 +19,12 @@ std::string PATH = "./../";
 #endif // !DEBUG
 
 
-
-//a = &(*CActor);
 int main()
 {
+	std::cout << PATH << std::endl;
 	
-
-
-
+	
 	lua_State* L = luaL_newstate();
-
-	
-	
 	try
 	{
 		std::string d = (PATH + "scripts/TexturesPaths.lua");
@@ -48,7 +45,7 @@ int main()
 		SCREENWIDTH = wSize["width"].cast<int>();
 		SCREENHEIGHT = wSize["height"].cast<int>();
 		
-		PATH = wTable["mainPath"].cast<std::string>();
+		//PATH = wTable["mainPath"].cast<std::string>();
 		
 
 		std::string title = wTable["title"].cast<std::string>();
@@ -58,7 +55,6 @@ int main()
 		Game game(title, sf::VideoMode(SCREENWIDTH, SCREENHEIGHT), PATH);
 		
 		//-----------------------------------------------------------------
-
 
 		d = (PATH + "scripts/TexturesPaths.lua");
 
@@ -106,8 +102,6 @@ int main()
 		
 		//----------------------------------------------------------------------------------
 
-
-
 		d = (PATH + "scripts/SoundPaths.lua");
 
 		status = luaL_dofile(L, d.c_str());
@@ -153,6 +147,8 @@ int main()
 		game.Init();
 
 		game.Run();
+
+	
 	}
 	catch (LuaException e)
 	{
@@ -163,5 +159,6 @@ int main()
 	{
 		std::cout << e.what() << std::endl;
 	}
+	
 	std::cin.get();
 }

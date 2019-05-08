@@ -2,9 +2,7 @@
 #include "Object.h"
 #include "Sprite.h"
 
-#ifndef BOX2D_H
-#include <Box2D.h>
-#endif
+
 
 #ifndef CHIPMUNK_H
 #include <chipmunk.h>
@@ -36,11 +34,43 @@ namespace Engine
 
 		std::vector<cpShape*>shapes;
 
+		float m_lifetime = 0.f;
 
+		float m_lived_time = 0.f;
+
+		bool m_pending_kill = false;
 	public:
+
+		//0.f for infinite
+		float GetLifeTime()const { return m_lifetime; }
+
+		float GetLivedTime()const { return m_lifetime == 0.f ? 0.f : m_lived_time; }
+
+		bool LifeTimeEnded()const { return m_lifetime != 0.f ? (m_lived_time >= m_lifetime) : false; }
+
+		bool IsPendingKill()const { return m_lifetime == 0.f ? m_pending_kill : (LifeTimeEnded() || m_pending_kill); }
+
+		//Use this to safely mark object for destruction
+		virtual void DestroyActor();
+
+		
+
+		virtual bool GetIsValid()const;
+
+		//0.f for infinite
+		void setLifeTime(float time) { m_lifetime = time; }
+
+		//Shape that will be used for the collision
+		//THIS SHOULD BE USED ONLY IF POLYGON SHAPE IS NOT WORKING (If this can not be used it's better to use ShadowShape)
+		//there is no way to properly check if collision is good for the polygon shape at runtime and change
+		sf::FloatRect CollisionRectangle;
+
+		//Shape that will be used for making shadows in game
+		sf::ConvexShape ShadowShape;
+
 		int GetClassID()const { return ClassID; }
 
-		cpShape* GetShape(int i);
+		cpShape* GetShape(int i = 0);
 
 		//LUA file that will be used
 		void SetCollisionScriptFileName(std::string CollisionScriptFileName) { this->CollisionScriptFileName = CollisionScriptFileName; }
@@ -118,10 +148,9 @@ namespace Engine
 
 		//void SetActorLocation(float x, float y) { Location.x = x; Location.y = y; }
 
-		virtual void Draw(sf::RenderWindow& window)
-		{
+		virtual void Draw(sf::RenderWindow& window) {}
 
-		}
+		virtual void InitPhysBody(std::string path, cpSpace*& world) {}
 
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
@@ -134,8 +163,10 @@ namespace Engine
 		//Defined by window.lua
 		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
 
-		CActor(sf::Vector2f Location, std::string path = "./../");
-		~CActor();
+		virtual void Release()override;
+
+		CActor(sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
+		virtual ~CActor();
 	};
 
 }

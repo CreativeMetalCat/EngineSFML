@@ -58,19 +58,6 @@ namespace Engine
 				.addConstructor<void(*) (void)>()
 				.endClass();
 
-			getGlobalNamespace(L)
-				.beginClass<b2Vec2>("b2Vector")
-				.addData<float>("x", &b2Vec2::x)
-				.addData<float>("y", &b2Vec2::y)
-				.addConstructor<void(*) (void)>()
-				.endClass();
-
-			getGlobalNamespace(L)
-				.beginClass<b2Body>("b2Body")
-				.addFunction("GetLinearVelocity", &b2Body::GetLinearVelocity)
-				.addFunction("GetMass", &b2Body::GetMass)
-				.addFunction("ApplyImpulse", &b2Body::ApplyLinearImpulseToCenter)
-				.endClass();
 
 
 			LuaRef LuaSetActorLocation = getGlobal(L, "SetActorLocation");
@@ -194,12 +181,11 @@ namespace Engine
 		}
 	}
 
-	Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path) :CActor(Location, path), Size(Size), ShadowShape(CollisionShape)
+	Character::Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path) :
+		CActor(Location,WorldContext, path),
+		Size(Size)
 	{
-		if (CollisionShape.getPointCount() > 8)
-		{
-			std::cout << "Waring: Characters collision point count is greater than limit of the physics engine. This can result in unexpected behaviour" << std::endl;
-		}
+		this->ShadowShape = CollisionShape;
 
 		CollisionRectangle.width = Size.x;
 		CollisionRectangle.height = Size.y;

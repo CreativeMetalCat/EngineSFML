@@ -22,15 +22,6 @@ namespace Engine
 
 		bool IsMovingY = false;
 
-
-		//Shape that will be used for making shadows in game
-		sf::ConvexShape ShadowShape;
-
-		//Shape that will be used for the collision
-		//THIS SHOULD BE USED ONLY IF POLYGON SHAPE IS NOT WORKING (If this can not be used it's better to use ShadowShape)
-		//there is no way to properly check if collision is good for the polygon shape at runtime and change
-		sf::FloatRect CollisionRectangle;
-
 		//LUA script file that will be used for movement
 		//it is not obligatory to use LUA script
 		void SetMovementScriptFileName(std::string f) { MovementScriptFileName = f; }
@@ -60,7 +51,7 @@ namespace Engine
 		static void RegisterClassLUA(lua_State*& L);
 
 		void Update(sf::Time dt);
-		Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path = "./../");
+		Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
 		~Character();
 	};
 

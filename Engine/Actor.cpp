@@ -3,6 +3,14 @@
 
 namespace Engine
 {
+	void CActor::DestroyActor()
+	{
+		this->m_pending_kill = true;
+	}
+	bool CActor::GetIsValid() const
+	{
+		return m_pending_kill;
+	}
 	cpShape* CActor::GetShape(int i)
 	{
 		if (i >= shapes.size() || i < 0) { return nullptr; }
@@ -58,7 +66,7 @@ namespace Engine
 			//Register CActor in lua
 			getGlobalNamespace(L)
 				.beginClass<CActor>("CActor")
-				.addConstructor<void(*) (sf::Vector2f)>()
+				//.addConstructor<void(*) (sf::Vector2f)>()
 
 				.addProperty("Location", &CActor::GetActorLocation, &CActor::SetActorLocation)
 				.addProperty("PhysBodyInitialized", &CActor::GetPhysBodyInitialized, &CActor::SetPhysBodyInitialized)
@@ -105,10 +113,7 @@ namespace Engine
 			//register other CActor's class
 			otherActor->RegisterClassLUA(L);
 
-			//Register b2Fixture in lua
-			getGlobalNamespace(L)
-				.beginClass<b2Fixture>("b2Fixture")
-				.endClass();
+		
 
 			//Register Vector2 in lua
 			getGlobalNamespace(L)
@@ -164,10 +169,7 @@ namespace Engine
 			//register other CActor's class
 			otherActor->RegisterClassLUA(L);
 
-			//Register b2Fixture in lua
-			getGlobalNamespace(L)
-				.beginClass<b2Fixture>("b2Fixture")
-				.endClass();
+		
 
 			//Register Vector2 in lua
 			getGlobalNamespace(L)
@@ -196,7 +198,23 @@ namespace Engine
 
 	}
 
-	CActor::CActor(sf::Vector2f Location, std::string path) :CObject(path), Location(Location)
+	void CActor::Release()
+	{
+		cpSpaceRemoveBody(WorldContext->space, this->Body);
+		for (auto& shape : this->shapes)
+		{
+			cpSpaceRemoveShape(WorldContext->space, shape);
+			cpShapeDestroy(shape);
+			cpShapeFree(shape);
+		}
+
+		cpBodyDestroy(this->Body);
+		cpBodyFree(this->Body);
+	}
+
+	CActor::CActor(sf::Vector2f Location, Context* WorldContext, std::string path)
+		:CObject(WorldContext,path),
+		Location(Location)
 	{
 
 	}

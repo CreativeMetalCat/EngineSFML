@@ -25,6 +25,13 @@ using namespace std;
 //class that manages all of the operations in game
 class Game
 {
+
+	sf::Shader unshadowShader;
+	sf::Shader lightOverShapeShader;
+
+	sf::Texture penumbraTexture;
+
+	sf::Texture pointLightTexture;
 	//Draws everything on screen
 	void Render();
 
@@ -37,23 +44,29 @@ class Game
 
 	std::string path;
 
-	std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
+	//std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 
 	
 
 	float time = 0.f;
 
-	FMOD::Sound* test_sound;
-
 	bool ShowGravityUI = false;
+
+	bool ShowDebugSpawner = false;
+
+	float DebugMass = 100.f;
+
+	bool SpawnPhys = false;
 
 	bool m = false;
 
-	cpSpace*space;
+	//cpSpace*space;
 
 	bool mLeft = false;
 
 	bool mRight = false;
+
+	
 
 	static cpBool OnBeginCollision(cpArbiter* arb, cpSpace* space, cpDataPointer userData)
 	{
@@ -64,9 +77,12 @@ class Game
 
 			cpArbiterGetBodies(arb, &bodyA, &bodyB);
 
-			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
+			if (cpBodyGetUserData(bodyB) != nullptr && cpBodyGetUserData(bodyA) != nullptr)
+			{
+				static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB)));
 
-			static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
+				static_cast<Engine::CActor*>(cpBodyGetUserData(bodyB))->OnBeginCollision(arb, static_cast<Engine::CActor*>(cpBodyGetUserData(bodyA)));
+			}
 
 			//If objects are not sensors postSolve() &  preSolve() must be called
 			return cpTrue;
@@ -100,10 +116,17 @@ class Game
 
 
 	//FMOD::System* lowLevelSoundSystem = NULL;
+	int texture_id = 0;
 
+	bool isUsingMenu = false;
 	
+	//part of LoadMap
+	void UnloadMap();
+
+	//Part of the LoadMap
+	void LoadMapFromFile(std::string name);
 public:
-	std::shared_ptr<Context>GameContext;
+	std::shared_ptr<Engine::Context>GameContext;
 
 	//array of "Engine"-default sounds 
 	//they can be used for testing or something else
@@ -119,6 +142,9 @@ public:
 
 	//No Get/Set due to SFML restrictions
 	sf::RenderWindow window;
+
+	//Clear data for the current map and load new one
+	void LoadMap(std::string name);
 
 	/*
 	Path to all files relative to bin

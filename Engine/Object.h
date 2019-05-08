@@ -5,6 +5,8 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 
+
+#ifndef lua_h
 extern "C"
 {
 # include "lua.h"
@@ -12,9 +14,12 @@ extern "C"
 # include "lualib.h"
 }
 #include <LuaBridge/LuaBridge.h>
+#endif
+
+
 
 //#include "MainFuncLib.h"
-#include <SFML/Graphics.hpp>
+
 
 #define CLASS_OBJECT 1
 
@@ -30,6 +35,10 @@ extern "C"
 
 #include "Context.h"
 
+#ifndef SFML_GRAPHICS_HPP
+#include <SFML/Graphics.hpp>
+#endif
+
 namespace Engine
 {
 	//base of the base
@@ -38,6 +47,8 @@ namespace Engine
 	protected:
 
 	public:
+		Context* WorldContext;
+
 		std::string path;
 		//ID of parent for checking
 		//default is CObject
@@ -61,13 +72,13 @@ namespace Engine
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
 
-		virtual void Init(std::string path, Context* context) {}
+		virtual void Init(std::string path) {}
 
-		virtual void Update(sf::Time, Context* context) {}
+		virtual void Update(sf::Time) {}
 
-		virtual void HandleEvent(sf::Event event, Context* context) {}
+		virtual void HandleEvent(sf::Event event) {}
 
-		CObject(std::string path);
+		CObject(Context* WorldContext,std::string path);
 
 		virtual void Release() {}
 		~CObject();

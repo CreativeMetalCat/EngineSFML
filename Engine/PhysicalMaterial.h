@@ -5,9 +5,7 @@
 #include "Object.h"
 #endif // !CLASS_OBJECT
 
-#ifndef BOX2D_H
-#include <Box2D.h>
-#endif
+
 
 #ifndef  LUABRIDGE_VERSION
 extern "C"
@@ -80,9 +78,9 @@ namespace Engine
 
 		static void RegisterClassLUA(lua_State*& L);
 
-		virtual void Init(std::string PATH, Context* context)override;
+		virtual void Init(std::string PATH)override;
 
-		PhysicalMaterial(std::string name, std::string path);
+		PhysicalMaterial(std::string name, Context* WorldContext, std::string path);
 		~PhysicalMaterial();
 	};
 
