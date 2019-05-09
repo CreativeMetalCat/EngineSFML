@@ -39,6 +39,8 @@ class CTestPlayer : public Engine::Character
 	float m_angle = 0.f;
 
 	sf::Vector2f m_point;
+
+	float m_shader_dt=0.0f;
 public:
 
 

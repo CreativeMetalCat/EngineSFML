@@ -101,8 +101,8 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 {
 	if (WorldContext->ShaderResources->GetShaderByName("test") != nullptr)
 	{
-
-		WorldContext->ShaderResources->GetShaderByName("test")->Shader.setUniform("texture", this->m_sprite.getTexture());
+		WorldContext->ShaderResources->GetShaderByName("test")->Shader.setUniform("texture",sf::Shader::CurrentTexture);
+		WorldContext->ShaderResources->GetShaderByName("test")->Shader.setUniform("alpha", 0.5f);
 		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("test")->Shader);
 	}
 	//window.draw(m_sprite);
@@ -113,6 +113,7 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 void CTestPlayer::Update(sf::Time dt)
 {
+	m_shader_dt += 0.01f;
 	
 	if (this->Weapon != nullptr)
 	{
