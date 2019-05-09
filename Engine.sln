@@ -5,6 +5,12 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{4C258472-DC8B-4E8F-A269-C21373408C1D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{3F31FEFB-E43D-4C12-A5A9-B609F7C82121}"
+	ProjectSection(SolutionItems) = preProject
+		x64\Debug\shaders\testshader.frag = x64\Debug\shaders\testshader.frag
+		x64\Debug\shaders\testshader.vert = x64\Debug\shaders\testshader.vert
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

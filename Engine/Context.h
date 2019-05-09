@@ -1,5 +1,7 @@
 #pragma once
 #include "SoundContainer.h"
+#include "TextureContainer.h"
+#include "ShaderResourceContainer.h"
 
 #ifndef _FMOD_HPP
 #include <fmod.hpp>
@@ -73,6 +75,10 @@ namespace Engine
 		void LoadMapFromFile(std::string name) { MapAction.SetNewMap(name); }
 
 		std::unique_ptr<Engine::Resources::Sound::CSoundContainer> Sounds;
+
+		std::unique_ptr<Engine::Resources::Materials::CTextureContainer> TextureResources;
+
+		std::unique_ptr<Engine::Resources::Materials::CShaderContainer> ShaderResources;
 
 		std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 

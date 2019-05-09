@@ -10,6 +10,8 @@ namespace Engine
 	{
 
 		Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
+		TextureResources = std::make_unique<Resources::Materials::CTextureContainer>(path);
+		ShaderResources = std::make_unique<Resources::Materials::CShaderContainer>(path);
 
 		FMOD_RESULT res;
 		res = FMOD::System_Create(&lowLevelSoundSystem);

@@ -25,6 +25,15 @@
     <Filter Include="Engine\Source Files">
       <UniqueIdentifier>{77bd5858-1fc9-4798-b1b8-ab1bcf6eeb1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Resources">
+      <UniqueIdentifier>{551966f1-75f1-487d-affa-1e2d7b7980f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Resources\Header Files">
+      <UniqueIdentifier>{911c94bb-63c4-4b46-8297-e2827d312eb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Resources\Source Files">
+      <UniqueIdentifier>{f603d191-7f9e-4c82-96e0-bd2a4ceb2049}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -85,19 +94,7 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoundContainer.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SoundResource.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureContainer.cpp">
-      <Filter>Engine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextureResource.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
@@ -110,6 +107,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureResource.cpp">
+      <Filter>Engine\Resources\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureContainer.cpp">
+      <Filter>Engine\Resources\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundResource.cpp">
+      <Filter>Engine\Resources\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundContainer.cpp">
+      <Filter>Engine\Resources\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResource.cpp">
+      <Filter>Engine\Resources\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderResourceContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,19 +174,7 @@
     <ClInclude Include="Projectile.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SoundContainer.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SoundResource.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureContainer.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureResource.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
@@ -184,6 +187,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureResource.h">
+      <Filter>Engine\Resources\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureContainer.h">
+      <Filter>Engine\Resources\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundContainer.h">
+      <Filter>Engine\Resources\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundResource.h">
+      <Filter>Engine\Resources\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResource.h">
+      <Filter>Engine\Resources\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderResourceContainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

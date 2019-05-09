@@ -279,11 +279,11 @@ void Game::Update(sf::Time dt)
 		
 		
 		ImGui::Begin("Object Spawner");
-		for (size_t i = 0; i < TextureResources->Textures.size(); i++)
+		for (size_t i = 0; i < GameContext->TextureResources->Textures.size(); i++)
 		{
 			ImGuiStyle style;
 			style.FrameBorderSize = 0.f;
-			if (ImGui::ImageButton(sf::Sprite(TextureResources->Textures[i]->m_texture)))
+			if (ImGui::ImageButton(sf::Sprite(GameContext->TextureResources->Textures[i]->m_texture)))
 			{
 				texture_id = i;
 			}			
@@ -295,7 +295,7 @@ void Game::Update(sf::Time dt)
 		{
 			
 			
-			if (texture_id > -1 && texture_id < TextureResources->Textures.size())
+			if (texture_id > -1 && texture_id < GameContext->TextureResources->Textures.size())
 			{
 				if (!SpawnPhys)
 				{
@@ -310,7 +310,7 @@ void Game::Update(sf::Time dt)
 					{
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
-							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), &(*this->GameContext), path);
+							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(GameContext->TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), &(*this->GameContext), path);
 							sd->Init(path);
 							sd->InitPhysBody(path, this->GameContext->space);
 
@@ -332,7 +332,7 @@ void Game::Update(sf::Time dt)
 					{
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
-							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, &(*this->GameContext), this->DebugMass, "Wooden_Crate");
+							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(GameContext->TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, &(*this->GameContext), this->DebugMass, "Wooden_Crate");
 							po->Init(path);
 							po->InitPhysBody(path, this->GameContext->space);
 							GameContext->SceneActors.push_back(po);
@@ -440,7 +440,7 @@ void Game::LoadMapFromFile(std::string name)
 							pos.y = actorsTable[i]["location"]["y"].cast<float>();
 						}
 
-						std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName(textureName)->GetTexture()), cs, size, pos, &(*this->GameContext), path);
+						std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(GameContext->TextureResources->GetTextureByName(textureName)->GetTexture()), cs, size, pos, &(*this->GameContext), path);
 						sd->Init(path);
 						sd->InitPhysBody(path, this->GameContext->space);
 
@@ -493,7 +493,7 @@ void Game::LoadMapFromFile(std::string name)
 							material_name = actorsTable[i]["material_name"].cast<std::string>();
 						}
 
-						std::shared_ptr<CPhysicsBox> sd = std::make_shared<CPhysicsBox>(sf::Sprite(TextureResources->GetTextureByName(textureName)->GetTexture()), size, pos, path, &(*this->GameContext), mass, material_name);
+						std::shared_ptr<CPhysicsBox> sd = std::make_shared<CPhysicsBox>(sf::Sprite(GameContext->TextureResources->GetTextureByName(textureName)->GetTexture()), size, pos, path, &(*this->GameContext), mass, material_name);
 						sd->Init(path);
 						sd->InitPhysBody(path, this->GameContext->space);
 
@@ -539,7 +539,7 @@ void Game::LoadMapFromFile(std::string name)
 							endLocation.y = actorsTable[i]["end_location"]["y"].cast<float>();
 						}
 
-						std::shared_ptr<Test::FuncElevator>elev = std::make_shared<Test::FuncElevator>(endLocation, sf::Sprite(TextureResources->GetTextureByName(textureName)->GetTexture()),size, pos, &(*this->GameContext), path);
+						std::shared_ptr<Test::FuncElevator>elev = std::make_shared<Test::FuncElevator>(endLocation, sf::Sprite(GameContext->TextureResources->GetTextureByName(textureName)->GetTexture()),size, pos, &(*this->GameContext), path);
 						elev->Init(path);
 						elev->InitPhysBody(path, GameContext->space);
 						GameContext->SceneActors.push_back(elev);
@@ -585,7 +585,7 @@ void Game::Init()
 		pointLightTexture.loadFromFile(path + "ltbl/resources/pointLightTexture.png");
 		pointLightTexture.setSmooth(true);
 
-		TextureResources->Init(path);
+		GameContext->TextureResources->Init(path);
 		ImGui::CreateContext();
 		ImGui::SFML::Init(window);
 
@@ -614,7 +614,7 @@ void Game::Init()
 		dev64_64.setPoint(3, { 0,64 });
 
 		
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_orange")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
 		player->InitPhysBody(path, GameContext->space);
 		player->ControlledByPlayer = true;
 		GameContext->SceneActors.push_back(player);
@@ -627,7 +627,7 @@ void Game::Init()
 		for (int i = 0; i < 19; i++)
 		{
 			
-			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 384), &(*this->GameContext), path);
+			std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_blue")->GetTexture()), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(i * 64, 384), &(*this->GameContext), path);
 			sd->Init(path);
 			sd->InitPhysBody(path, this->GameContext->space);
 
@@ -643,6 +643,9 @@ void Game::Init()
 				GameContext->SceneActors.at(i)->Init(path);
 			}
 		}
+
+		GameContext->ShaderResources->Init(path);
+
 
 
 		if (!GameContext->Sounds->Sounds.empty())
@@ -711,7 +714,6 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 	handler->beginFunc = &Game::OnBeginCollision;
 	handler->separateFunc = &Game::OnEndCollision;
 
-	TextureResources = std::make_unique<Engine::Resources::Materials::CTextureContainer>(path);
 
 	Sounds = std::make_unique<Engine::Resources::Sound::CSoundContainer>(path);
 
@@ -721,6 +723,6 @@ Game::Game(std::string WindowName, sf::VideoMode videoMode,std::string path) :wi
 
 Game::~Game()
 {
-	TextureResources.release();
+	GameContext->TextureResources.release();
 	cpSpaceFree(GameContext->space);
 }

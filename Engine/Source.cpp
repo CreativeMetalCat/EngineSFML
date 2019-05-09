@@ -54,6 +54,7 @@ int main()
 
 		Game game(title, sf::VideoMode(SCREENWIDTH, SCREENHEIGHT), PATH);
 		
+		game.GameContext->ShaderResources->AddShaderResource(std::make_shared<Engine::Resources::Materials::CShaderResource>("test","shaders/testshader.vert", "shaders/testshader.frag",PATH));
 		//-----------------------------------------------------------------
 
 		d = (PATH + "scripts/TexturesPaths.lua");
@@ -88,7 +89,7 @@ int main()
 
 						bool repeated = textureData["repeated"].cast<bool>();
 
-						game.TextureResources->AddTextureResource(std::make_shared<Engine::Resources::Materials::CTextureResource>(name, pathToFile, smooth, repeated, PATH));
+						game.GameContext->TextureResources->AddTextureResource(std::make_shared<Engine::Resources::Materials::CTextureResource>(name, pathToFile, smooth, repeated, PATH));
 					}
 					else 
 					{

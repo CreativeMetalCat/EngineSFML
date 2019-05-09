@@ -39,8 +39,11 @@ class CTestPlayer : public Engine::Character
 	float m_angle = 0.f;
 
 	sf::Vector2f m_point;
+
+	float m_shader_dt=0.0f;
 public:
-	
+
+
 	bool ControlledByPlayer = false;
 	//ID of class for Casting
 	//ID MUST be defined in the beggining of the file with class
