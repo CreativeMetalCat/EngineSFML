@@ -160,10 +160,12 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Character.cpp" />
+    <ClCompile Include="CLight.cpp" />
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="CPhysicsBox.cpp" />
     <ClCompile Include="CTrigger.cpp" />
@@ -174,6 +176,7 @@
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="ShaderResource.cpp" />
     <ClCompile Include="ShaderResourceContainer.cpp" />
@@ -195,12 +198,14 @@
   <ItemGroup>
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Character.h" />
+    <ClInclude Include="CLight.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="CPhysicsBox.h" />
     <ClInclude Include="CTrigger.h" />
     <ClInclude Include="FuncElevator.h" />
     <ClInclude Include="FuncRotating.h" />
     <ClInclude Include="Macros.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="ShaderResource.h" />
     <ClInclude Include="ShaderResourceContainer.h" />

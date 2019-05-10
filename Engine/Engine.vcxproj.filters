@@ -34,10 +34,20 @@
     <Filter Include="Engine\Resources\Source Files">
       <UniqueIdentifier>{f603d191-7f9e-4c82-96e0-bd2a4ceb2049}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Light">
+      <UniqueIdentifier>{3726c9e7-e959-4271-a820-e43f91927670}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Light\Header Files">
+      <UniqueIdentifier>{207b4fe5-3121-48e6-9fbb-dd2219ac330a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Light\Source Files">
+      <UniqueIdentifier>{dc925b30-8c02-4ad4-bfe9-a68a1ca895dc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="ClassDiagram1.cd" />
+    <None Include="ClassDiagram2.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -127,6 +137,12 @@
     <ClCompile Include="ShaderResourceContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CLight.cpp">
+      <Filter>Engine\Light\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Engine\Light\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SolidBlock.h">
@@ -206,6 +222,12 @@
     </ClInclude>
     <ClInclude Include="ShaderResourceContainer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLight.h">
+      <Filter>Engine\Light\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Engine\Light\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

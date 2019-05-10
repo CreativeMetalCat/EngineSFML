@@ -2,7 +2,8 @@
 #include "CPhysicsBox.h"
 #include "FuncElevator.h"
 #include "CTrigger.h"
-
+#include "CLight.h"
+#include "PointLight.h"
 using namespace std;
 
 #ifndef _RANDOM_
@@ -60,41 +61,44 @@ void Game::Render()
 				lightShapes.at(lightShapes.size() - 1)->_shape.setPosition(GameContext->SceneActors.at(i)->GetActorLocation());
 				ls.addShape(lightShapes.at(lightShapes.size() - 1));
 			}
+			else if (GameContext->SceneActors.at(i)->As<Engine::Light::CPointLight*>())
+			{
+				pointLights.push_back(GameContext->SceneActors.at(i)->As<Engine::Light::CPointLight*>()->PointLight);
+
+				ls.addLight(pointLights.at(pointLights.size() - 1));
+			}
 
 		}
 	}
 
 	sf::RenderStates lightRenderStates;
 
-	pointLights.push_back(std::make_shared<ltbl::LightPointEmission>());
+	//pointLights.push_back(std::make_shared<ltbl::LightPointEmission>());
 
-		
+	//	
 
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(sf::Vector2f(600,300));//Позиция света.
-	pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
-	pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
-	
-	ls.addLight(pointLights.at(pointLights.size() - 1));
-
-
-	pointLights.push_back(std::make_shared<ltbl::LightPointEmission>());
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(sf::Vector2f(600,300));//Позиция света.
+	//pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
+	//pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
+	//
+	//ls.addLight(pointLights.at(pointLights.size() - 1));
 
 
+	//pointLights.push_back(std::make_shared<ltbl::LightPointEmission>());
 
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
+	//pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(GameContext->SceneActors.at(1)->GetActorLocation());//Позиция света.
+	//pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
+	//pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
 
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setOrigin(sf::Vector2f(pointLightTexture.getSize().x * 0.5f, pointLightTexture.getSize().y * 0.5f));//Устанавливаем источник света в середину текстуры свечения.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setTexture(pointLightTexture);// Сама текстура свечения.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setScale(sf::Vector2f(10, 10));// Размер области свечения.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setColor(sf::Color::White);// Цвет света.
-	pointLights.at(pointLights.size() - 1)->_emissionSprite.setPosition(GameContext->SceneActors.at(1)->GetActorLocation());//Позиция света.
-	pointLights.at(pointLights.size() - 1)->_sourceRadius = 10;//Радиус источника света.По умолчанию 1.
-	pointLights.at(pointLights.size() - 1)->_shadowOverExtendMultiplier = 1;// Умножитель отбрасываемой тени(в столько раз увеличиться тень). 
-
-	ls.addLight(pointLights.at(pointLights.size() - 1));
+	//ls.addLight(pointLights.at(pointLights.size() - 1));
 
 
 	sf::View view = window.getDefaultView();
@@ -624,6 +628,9 @@ void Game::Init()
 		trigger->InitPhysBody(path, GameContext->space);
 		GameContext->SceneActors.push_back(trigger);
 
+
+		std::shared_ptr<Engine::Light::CPointLight> light = std::make_shared<Engine::Light::CPointLight>(1.f, 30.f, sf::Color::White, this->pointLightTexture, sf::Vector2f(30, 30), sf::Vector2f(300, 300), &(*this->GameContext), this->path);
+		GameContext->SceneActors.push_back(light);
 		for (int i = 0; i < 19; i++)
 		{
 			
