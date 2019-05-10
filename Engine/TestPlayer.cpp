@@ -99,13 +99,17 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 
 void CTestPlayer::Draw(sf::RenderWindow& window)
 {
-	if (WorldContext->ShaderResources->GetShaderByName("test") != nullptr)
+	/*if (WorldContext->ShaderResources->GetShaderByName("normal") != nullptr)
 	{
-		WorldContext->ShaderResources->GetShaderByName("test")->Shader.setUniform("texture",sf::Shader::CurrentTexture);
-		WorldContext->ShaderResources->GetShaderByName("test")->Shader.setUniform("alpha", 0.5f);
-		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("test")->Shader);
-	}
-	//window.draw(m_sprite);
+		WorldContext->ShaderResources->GetShaderByName("normal")->Shader.setUniform("texture",this->m_sprite.getTexture());
+		WorldContext->ShaderResources->GetShaderByName("normal")->Shader.setUniform("reflectMap", this->WorldContext->TextureResources->GetTextureByName("dev_64x64_refl")->m_texture);
+		WorldContext->ShaderResources->GetShaderByName("normal")->Shader.setUniform("normalMap", this->WorldContext->TextureResources->GetTextureByName("dev_64x64_normal")->m_texture);
+		WorldContext->ShaderResources->GetShaderByName("normal")->Shader.setUniform("specularMap", this->WorldContext->TextureResources->GetTextureByName("dev_64x64_spec")->m_texture);
+		WorldContext->ShaderResources->GetShaderByName("normal")->Shader.setUniform("reflectOffset", this->Location);
+
+		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("normal")->Shader);
+	}*/
+	window.draw(m_sprite);
 	sf::VertexArray va;
 	va.append(sf::Vertex(m_point + this->Location, sf::Color::Red));
 	window.draw(va);

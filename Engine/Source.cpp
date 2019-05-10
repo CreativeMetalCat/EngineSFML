@@ -55,6 +55,8 @@ int main()
 		Game game(title, sf::VideoMode(SCREENWIDTH, SCREENHEIGHT), PATH);
 		
 		game.GameContext->ShaderResources->AddShaderResource(std::make_shared<Engine::Resources::Materials::CShaderResource>("test","shaders/testshader.vert", "shaders/testshader.frag",PATH));
+		game.GameContext->ShaderResources->AddShaderResource(std::make_shared<Engine::Resources::Materials::CShaderResource>("normal", "shaders/normal.vert", "shaders/normal.frag", PATH));
+
 		//-----------------------------------------------------------------
 
 		d = (PATH + "scripts/TexturesPaths.lua");
