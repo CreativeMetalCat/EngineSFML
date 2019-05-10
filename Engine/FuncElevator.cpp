@@ -66,7 +66,7 @@ namespace Test
 
 				}
 				this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
-				this->StartMovement();
+				//this->StartMovement();
 			}
 		}
 		catch (std::exception e)

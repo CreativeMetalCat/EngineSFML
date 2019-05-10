@@ -116,9 +116,6 @@
     <ClCompile Include="FuncRotating.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CTrigger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextureResource.cpp">
       <Filter>Engine\Resources\Source Files</Filter>
     </ClCompile>
@@ -142,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
       <Filter>Engine\Light\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ElevatorTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTrigger.cpp">
+      <Filter>Engine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,9 +205,6 @@
     <ClInclude Include="FuncRotating.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CTrigger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextureResource.h">
       <Filter>Engine\Resources\Header Files</Filter>
     </ClInclude>
@@ -228,6 +228,12 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Engine\Light\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTrigger.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ElevatorTrigger.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

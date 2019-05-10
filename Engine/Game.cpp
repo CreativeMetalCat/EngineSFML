@@ -4,6 +4,7 @@
 #include "CTrigger.h"
 #include "CLight.h"
 #include "PointLight.h"
+#include "ElevatorTrigger.h"
 using namespace std;
 
 #ifndef _RANDOM_
@@ -409,6 +410,7 @@ void Game::LoadMapFromFile(std::string name)
 					sf::ConvexShape cs;
 					sf::Vector2f size;
 					sf::Vector2f pos;
+					std::string Name;
 					
 					if (actorsTable[i]["type_id"] == CLASS_SOLIDBLOCK)
 					{
@@ -416,6 +418,10 @@ void Game::LoadMapFromFile(std::string name)
 						if (!actorsTable[i]["texture_name"].isNil())
 						{
 							textureName = actorsTable[i]["texture_name"].cast<std::string>();
+						}
+						if (!actorsTable[i]["name"].isNil())
+						{
+							Name = actorsTable[i]["name"].cast<std::string>();
 						}
 						if (!actorsTable[i]["shadow_shape"].isNil() && actorsTable[i]["shadow_shape"].isTable())
 						{
@@ -445,6 +451,7 @@ void Game::LoadMapFromFile(std::string name)
 						}
 
 						std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(GameContext->TextureResources->GetTextureByName(textureName)->GetTexture()), cs, size, pos, &(*this->GameContext), path);
+						sd->Name = Name;
 						sd->Init(path);
 						sd->InitPhysBody(path, this->GameContext->space);
 
@@ -461,6 +468,10 @@ void Game::LoadMapFromFile(std::string name)
 						if (!actorsTable[i]["texture_name"].isNil())
 						{
 							textureName = actorsTable[i]["texture_name"].cast<std::string>();
+						}
+						if (!actorsTable[i]["name"].isNil())
+						{
+							Name = actorsTable[i]["name"].cast<std::string>();
 						}
 						if (!actorsTable[i]["shadow_shape"].isNil() && actorsTable[i]["shadow_shape"].isTable())
 						{
@@ -498,6 +509,7 @@ void Game::LoadMapFromFile(std::string name)
 						}
 
 						std::shared_ptr<CPhysicsBox> sd = std::make_shared<CPhysicsBox>(sf::Sprite(GameContext->TextureResources->GetTextureByName(textureName)->GetTexture()), size, pos, path, &(*this->GameContext), mass, material_name);
+						sd->Name = Name;
 						sd->Init(path);
 						sd->InitPhysBody(path, this->GameContext->space);
 
@@ -510,6 +522,10 @@ void Game::LoadMapFromFile(std::string name)
 						if (!actorsTable[i]["texture_name"].isNil())
 						{
 							textureName = actorsTable[i]["texture_name"].cast<std::string>();
+						}
+						if (!actorsTable[i]["name"].isNil())
+						{
+							Name = actorsTable[i]["name"].cast<std::string>();
 						}
 						if (!actorsTable[i]["shadow_shape"].isNil() && actorsTable[i]["shadow_shape"].isTable())
 						{
@@ -544,6 +560,7 @@ void Game::LoadMapFromFile(std::string name)
 						}
 
 						std::shared_ptr<Test::FuncElevator>elev = std::make_shared<Test::FuncElevator>(endLocation, sf::Sprite(GameContext->TextureResources->GetTextureByName(textureName)->GetTexture()),size, pos, &(*this->GameContext), path);
+						elev->Name = Name;
 						elev->Init(path);
 						elev->InitPhysBody(path, GameContext->space);
 						GameContext->SceneActors.push_back(elev);
@@ -624,7 +641,7 @@ void Game::Init()
 		GameContext->SceneActors.push_back(player);
 
 		
-		std::shared_ptr<Engine::CTrigger> trigger = std::make_shared<Engine::CTrigger>("scripts/testtrigger.lua",sf::Vector2f(64.f, 64.f), sf::Vector2f(64.f, 256.f), &(*this->GameContext), path);
+		std::shared_ptr<CElevatorTrigger> trigger = std::make_shared<CElevatorTrigger>("elev",sf::Vector2f(64.f, 64.f), sf::Vector2f(576.f, 320.f), &(*this->GameContext), path);
 		trigger->InitPhysBody(path, GameContext->space);
 		GameContext->SceneActors.push_back(trigger);
 

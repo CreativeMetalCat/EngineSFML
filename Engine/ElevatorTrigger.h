@@ -1,13 +1,12 @@
 #pragma once
-#include "Actor.h"
-namespace Engine
-{
-	class CTrigger : public CActor
+#include "CTrigger.h"
+
+	class CElevatorTrigger : public Engine::CTrigger
 	{
 	public:
-		
-		sf::Vector2f Size;
-		CTrigger(std::string CollisionScriptFileName,sf::Vector2f Size,sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
+		std::string targetName = "";
+
+		CElevatorTrigger(std::string targetName, sf::Vector2f Size, sf::Vector2f Location, Engine::Context* WorldContext, std::string path);
 
 		virtual void Init(std::string path)override;
 
@@ -22,6 +21,6 @@ namespace Engine
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
 
-		~CTrigger();
+		~CElevatorTrigger();
 	};
-}
+

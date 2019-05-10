@@ -68,6 +68,8 @@ namespace Engine
 		//Shape that will be used for making shadows in game
 		sf::ConvexShape ShadowShape;
 
+		std::string Name = "";
+
 		int GetClassID()const { return ClassID; }
 
 		cpShape* GetShape(int i = 0);
