@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Character.h"
+#include "SpritesheetAnimation.h"
 
 #ifndef  CLASS_CSOUNDSOURCE
 #include "SoundResource.h"
@@ -42,7 +43,7 @@ class CTestPlayer : public Engine::Character
 
 	float m_shader_dt=0.0f;
 public:
-
+	std::shared_ptr<Engine::Animation::SpritesheetAnimation>Anim;
 
 	bool ControlledByPlayer = false;
 	//ID of class for Casting

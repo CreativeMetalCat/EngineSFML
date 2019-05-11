@@ -43,6 +43,15 @@
     <Filter Include="Engine\Light\Source Files">
       <UniqueIdentifier>{dc925b30-8c02-4ad4-bfe9-a68a1ca895dc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Animation">
+      <UniqueIdentifier>{48563a86-9f0f-4acb-811c-9588cd6c3aa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Animation\Header Files">
+      <UniqueIdentifier>{88c697a9-b037-40ec-b919-206d0aa107ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Animation\Source Files">
+      <UniqueIdentifier>{ac64f253-5d37-4196-bdc4-41ba4aaf1ac6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -146,6 +155,12 @@
     <ClCompile Include="CTrigger.cpp">
       <Filter>Engine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteAnimation.cpp">
+      <Filter>Engine\Animation\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpritesheetAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SolidBlock.h">
@@ -233,6 +248,12 @@
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ElevatorTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimation.h">
+      <Filter>Engine\Animation\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpritesheetAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

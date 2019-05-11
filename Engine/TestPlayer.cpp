@@ -11,7 +11,10 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 	Character(CollisionShape, Size, Location,WorldContext, path),
 	m_sprite(sprite)
 {
-
+	
+	Anim = std::make_shared<Engine::Animation::SpritesheetAnimation>(sf::Vector2f(64.f,64.f), sprite);
+	Anim->Animations.push_back(Engine::Animation::SpritesheetAnimationPattern("anim", { {0,0},{1,0} }));
+	Anim->CurrentAnimationName = "anim";
 
 	sf::Vector2f scale;
 
@@ -117,6 +120,8 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 void CTestPlayer::Update(sf::Time dt)
 {
+	Anim->Update(dt);
+	this->m_sprite = Anim->GetSprite();
 	m_shader_dt += 0.01f;
 	
 	if (this->Weapon != nullptr)
