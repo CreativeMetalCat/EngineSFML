@@ -646,6 +646,7 @@ void Game::Init()
 		
 		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_anim")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
 		player->Anim = GameContext->SpritesheetAnimations.at(0);
+		player->Anim->CurrentAnimationName = "anim";
 		player->InitPhysBody(path, GameContext->space);
 		player->ControlledByPlayer = true;
 		GameContext->SceneActors.push_back(player);
