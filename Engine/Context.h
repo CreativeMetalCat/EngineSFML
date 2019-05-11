@@ -2,6 +2,7 @@
 #include "SoundContainer.h"
 #include "TextureContainer.h"
 #include "ShaderResourceContainer.h"
+#include "SpritesheetAnimation.h"
 
 #ifndef _FMOD_HPP
 #include <fmod.hpp>
@@ -79,6 +80,8 @@ namespace Engine
 		std::unique_ptr<Engine::Resources::Materials::CTextureContainer> TextureResources;
 
 		std::unique_ptr<Engine::Resources::Materials::CShaderContainer> ShaderResources;
+
+		std::vector<std::shared_ptr<Engine::Animation::SpritesheetAnimation>>SpritesheetAnimations;
 
 		std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 

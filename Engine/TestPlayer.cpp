@@ -12,9 +12,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::
 	m_sprite(sprite)
 {
 	
-	Anim = std::make_shared<Engine::Animation::SpritesheetAnimation>(sf::Vector2f(64.f,64.f), sprite);
-	Anim->Animations.push_back(Engine::Animation::SpritesheetAnimationPattern("anim", { {0,0},{1,0} }));
-	Anim->CurrentAnimationName = "anim";
+	
 
 	sf::Vector2f scale;
 

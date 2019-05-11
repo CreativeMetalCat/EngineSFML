@@ -57,6 +57,7 @@ int main()
 		game.GameContext->ShaderResources->AddShaderResource(std::make_shared<Engine::Resources::Materials::CShaderResource>("test","shaders/testshader.vert", "shaders/testshader.frag",PATH));
 		game.GameContext->ShaderResources->AddShaderResource(std::make_shared<Engine::Resources::Materials::CShaderResource>("normal", "shaders/normal.vert", "shaders/normal.frag", PATH));
 
+		
 		//-----------------------------------------------------------------
 
 		d = (PATH + "scripts/TexturesPaths.lua");
@@ -147,6 +148,11 @@ int main()
 		}
 
 		//----------------------------------------------------------------------------------
+
+		std::shared_ptr<Engine::Animation::SpritesheetAnimation> Anim = std::make_shared<Engine::Animation::SpritesheetAnimation>(sf::Vector2f(64.f, 64.f), "dev64_anim");
+		Anim->Animations.push_back(Engine::Animation::SpritesheetAnimationPattern("anim", { {0,0},{1,0} }));
+		Anim->CurrentAnimationName = "anim";
+		game.GameContext->SpritesheetAnimations.push_back(Anim);
 		game.Init();
 
 		game.Run();

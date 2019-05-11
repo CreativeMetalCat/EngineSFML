@@ -22,9 +22,9 @@ namespace Engine::Animation
 		Indices.~vector();
 	}
 
-	SpritesheetAnimation::SpritesheetAnimation(sf::Vector2f frameSize, sf::Sprite sprite):
+	SpritesheetAnimation::SpritesheetAnimation(sf::Vector2f frameSize, std::string spriteName):
 		m_frameSize(frameSize),
-		m_sprite(sprite),
+		m_spriteName(spriteName),
 		m_frame({ 0, 0 }, { static_cast<int>(frameSize.x),static_cast<int>(frameSize.y) })
 	{
 

@@ -33,19 +33,22 @@ namespace Engine::Animation
 	class SpritesheetAnimation :
 		public SpriteAnimation
 	{
+	public:
 		sf::Sprite m_sprite;
 
 		//current textureRect
 		sf::IntRect m_frame;
 		//size of frame height(y) and width(x)
 		sf::Vector2f m_frameSize;
-	public:
+
+		std::string m_spriteName;
+	
 
 		std::string CurrentAnimationName = "";
 
 		std::vector<SpritesheetAnimationPattern>Animations;
 
-		SpritesheetAnimation(sf::Vector2f frameSize, sf::Sprite sprite);
+		SpritesheetAnimation(sf::Vector2f frameSize, std::string spriteName);
 
 		const sf::IntRect GetTextureRect() { return m_frame; }
 			
