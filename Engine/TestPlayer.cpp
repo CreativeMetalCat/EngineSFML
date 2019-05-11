@@ -7,20 +7,20 @@ void CTestPlayer::SetSpriteTexture(sf::Texture & t)
 }
 
 
-CTestPlayer::CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location,Engine::Context* WorldContext, std::string path) :
+CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location,Engine::Context* WorldContext, std::string path) :
 	Character(CollisionShape, Size, Location,WorldContext, path),
-	m_sprite(sprite)
+	m_sprite(std::make_shared<Engine::Sprite>(sprite,texture_name))
 {
 	
 	
-
+	
 	sf::Vector2f scale;
 
-	if (m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite.getTexture()->getSize().x; }
+	if (m_sprite->GetSprite().getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite->GetSprite().getTexture()->getSize().x; }
 
-	if (m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite.getTexture()->getSize().y; }
+	if (m_sprite->GetSprite().getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite->GetSprite().getTexture()->getSize().y; }
 
-	this->m_sprite.setScale(scale);
+	m_sprite->GetSprite().setScale(scale);
 	Weapon = std::make_shared<Gameplay::Weapon>("scripts/weapons/weapon.lua", this->WorldContext, this->path);
 
 	m_point = { 64.f,0.f };
@@ -36,11 +36,11 @@ void CTestPlayer::Init(std::string path)
 
 		sf::Vector2f scale;
 
-		if (this->m_sprite.getTexture()->getSize().x != 0) { scale.x = Size.x / this->m_sprite.getTexture()->getSize().x; }
+		if (m_sprite->GetSprite().getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite->GetSprite().getTexture()->getSize().x; }
 
-		if (this->m_sprite.getTexture()->getSize().y != 0) { scale.y = Size.y / this->m_sprite.getTexture()->getSize().y; }
+		if (m_sprite->GetSprite().getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite->GetSprite().getTexture()->getSize().y; }
 
-		this->m_sprite.setScale(scale);
+		m_sprite->GetSprite().setScale(scale);
 
 		/*if (this->testShader.loadFromFile(path + "shaders/testshader.vert", path + "shaders/testshader.frag"))
 		{
@@ -110,7 +110,7 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("normal")->Shader);
 	}*/
-	window.draw(m_sprite);
+	window.draw(m_sprite->GetSprite());
 	sf::VertexArray va;
 	va.append(sf::Vertex(m_point + this->Location, sf::Color::Red));
 	window.draw(va);
@@ -119,8 +119,9 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 void CTestPlayer::Update(sf::Time dt)
 {
 	Anim->Update(dt);
-	this->m_sprite = Anim->GetSprite();
-	m_shader_dt += 0.01f;
+	m_sprite->m_sprite = Anim->GetSprite();
+	m_sprite->SetTextureName(Anim->m_spriteName);
+	m_shader_dt += dt.asSeconds();
 	
 	if (this->Weapon != nullptr)
 	{
@@ -134,7 +135,7 @@ void CTestPlayer::Update(sf::Time dt)
 		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
 		this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
-		m_sprite.setPosition(this->GetActorLocation());
+		m_sprite->GetSprite().setPosition(this->GetActorLocation());
 	}
 
 	if (m_moving_left || m_moving_right)
@@ -308,13 +309,14 @@ void CTestPlayer::RegisterClassLUA(lua_State*& L)
 	}
 }
 
-void CTestPlayer::Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path)
+void CTestPlayer::Duplicate(sf::Sprite sprite, std::string texture_name, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path)
 {
 	WorldContext->AddActor
 	(
 		new CTestPlayer
 		(
 			sprite,
+			texture_name,
 			CollisionShape,
 			Size,
 			newLocation,
@@ -335,7 +337,7 @@ void CTestPlayer::Shoot()
 	std::string d = (path + "scripts/testplayer/mainscript.lua");
 	try
 	{
-		Weapon->Shoot(this->m_sprite, m_point + this->GetActorLocation(), m_angle);
+		Weapon->Shoot(this->m_sprite->GetSprite(), m_point + this->GetActorLocation(), m_angle);
 	}
 	catch (LuaException e)
 	{

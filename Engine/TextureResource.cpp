@@ -27,12 +27,33 @@ namespace Engine::Resources::Materials
 	{
 		if (NameOfFile != "")//if texture is nameless we skip it 
 		{
-			if (!m_texture.loadFromFile(path + NameOfFile))
+			if (!m_texture.loadFromFile(path + NameOfFile+".png"))
 			{
 				std::cout << "Failed to load texture Name: " << this->Name << " Path to file" << path + NameOfFile << std::endl;;
 			}
 			m_texture.setSmooth(m_smooth);
 			m_texture.setRepeated(m_repeated);
+
+			if (!m_texture_normal.loadFromFile(path + NameOfFile+"_normal" + ".png"))
+			{
+				std::cout << "Failed to load normal texture Name: " << this->Name << " Path to file" << path + NameOfFile << std::endl;;
+			}
+			m_texture_normal.setSmooth(m_smooth);
+			m_texture_normal.setRepeated(m_repeated);
+
+			if (!m_texture_reflection.loadFromFile(path + NameOfFile + "_relfection" + ".png"))
+			{
+				std::cout << "Failed to load reflection texture Name: " << this->Name << " Path to file" << path + NameOfFile << std::endl;;
+			}
+			m_texture_reflection.setSmooth(m_smooth);
+			m_texture_reflection.setRepeated(m_repeated);
+
+			if (!m_texture_specular.loadFromFile(path + NameOfFile+"_specular" + ".png"))
+			{
+				std::cout << "Failed to load specular texture Name: " << this->Name << " Path to file" << path + NameOfFile << std::endl;;
+			}
+			m_texture_specular.setSmooth(m_smooth);
+			m_texture_specular.setRepeated(m_repeated);
 		}
 	}
 

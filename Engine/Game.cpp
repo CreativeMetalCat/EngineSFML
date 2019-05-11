@@ -638,13 +638,13 @@ void Game::Init()
 		{
 			for (size_t i = 0; i < GameContext->SpritesheetAnimations.size(); i++)
 			{
-				//path must be given here due to limitations of the chipmunk2D engine
+				
 				GameContext->SpritesheetAnimations.at(i)->m_sprite = sf::Sprite(sf::Sprite(GameContext->TextureResources->GetTextureByName(GameContext->SpritesheetAnimations.at(i)->m_spriteName)->GetTexture()));
 			}
 		}
 
 		
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_anim")->GetTexture()), s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_anim")->GetTexture()),"dev64_orange", s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
 		player->Anim = GameContext->SpritesheetAnimations.at(0);
 		player->Anim->CurrentAnimationName = "anim";
 		player->InitPhysBody(path, GameContext->space);

@@ -1,5 +1,6 @@
 #pragma once
 #include "SpriteAnimation.h"
+
 namespace Engine::Animation
 {
 	class SpritesheetAnimationPattern
@@ -41,6 +42,8 @@ namespace Engine::Animation
 		//size of frame height(y) and width(x)
 		sf::Vector2f m_frameSize;
 
+		//name of the texture that animation uses
+		//MUST BE CHANGED EACH TIME SPRITE IS CHANGED
 		std::string m_spriteName;
 	
 

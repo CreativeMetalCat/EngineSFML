@@ -15,6 +15,7 @@
 #include "TestProjectile.h"
 #endif // !CLASS_TESTPROJECTILE
 
+#include "Sprite.h"
 #define CLASS_CTESTPLAYER 4
 
 
@@ -24,7 +25,7 @@
 class CTestPlayer : public Engine::Character
 {
 
-	sf::Sprite m_sprite;
+	std::shared_ptr<Engine::Sprite> m_sprite;
 
 	FMOD::Channel* m_footstep_sound_channel;
 
@@ -53,16 +54,18 @@ public:
 
 	int GetClassID()const { return  CLASS_CTESTPLAYER; }
 
-	void SetSprite(sf::Sprite s) { this->m_sprite = s; }
+	void SetSprite(Engine::Sprite* s) { this->m_sprite = std::shared_ptr<Engine::Sprite>(s); }
 
-	sf::Sprite GetSprite()const { return m_sprite; }
+	sf::Sprite GetSprite()const { return (*m_sprite).GetSprite(); }
+
+	std::shared_ptr<Engine::Sprite> GetSpritePtr() { return m_sprite; }
 
 	void SetSpriteTexture(sf::Texture & texture);
 
 	//Size and Location will also be used to define size of the sprite
 	//Scales image inside of this funtion
 	//AND does the same in the Init
-	CTestPlayer(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Engine::Context* WorldContext, std::string path = "./../");
+	CTestPlayer(sf::Sprite sprite, std::string texture_name, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Engine::Context* WorldContext, std::string path = "./../");
 
 	virtual void Init(std::string path)override;
 
@@ -77,7 +80,7 @@ public:
 
 	//creates copy of this play at given location
 	//for testing
-	static void Duplicate(sf::Sprite sprite, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path);
+	static void Duplicate(sf::Sprite sprite, std::string texture_name, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f newLocation,bool PlayerControlled, Engine::Context* WorldContext,std::string path);
 
 	void Shoot();
 

@@ -16,6 +16,18 @@ namespace Engine::Resources::Materials
 		//to ensure that object will get proper pointer you can use object itself
 		sf::Texture m_texture;
 
+		//to ensure that object will get proper pointer you can use object itself
+		//Normal map of the texture
+		sf::Texture m_texture_normal;
+
+		//to ensure that object will get proper pointer you can use object itself
+		//reflection map of the texture
+		sf::Texture m_texture_reflection;
+
+		//to ensure that object will get proper pointer you can use object itself
+		//specular map of the texture
+		sf::Texture m_texture_specular;
+
 		//name of the texture that will be used 
 		std::string Name;
 
