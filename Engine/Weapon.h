@@ -12,6 +12,8 @@ namespace Gameplay
 
 		std::string m_luaScriptName = "scripts/weapons/weapon.lua";
 	public:
+		FMOD::Channel* m_shoot_sound_channel;
+
 		//ID of class for Casting
 		//ID MUST be defined in the beggining of the file with class
 		//default is CObject
@@ -28,6 +30,8 @@ namespace Gameplay
 		virtual void Shoot(sf::Sprite sprite,sf::Vector2f Location, float angle);
 		
 		virtual void Update(sf::Time dt)override;
+
+		
 
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);

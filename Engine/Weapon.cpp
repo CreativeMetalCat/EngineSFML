@@ -36,6 +36,7 @@ namespace Gameplay
 				.addFunction("Init", &Weapon::Init)
 
 				.addData<std::string>("Path", &Weapon::path,false)
+				.addData<FMOD::Channel*>("ShootSoundChannel",&Weapon::m_shoot_sound_channel)
 
 				.endClass();
 		}
@@ -77,8 +78,14 @@ namespace Gameplay
 			.endClass();
 
 		getGlobalNamespace(this->m_weaponLua)
-			.beginClass<Engine::Context>("WorldContext")
+			.beginClass<FMOD::Channel>("SoundChannel")
 
+			.endClass();
+
+		getGlobalNamespace(this->m_weaponLua)
+			.beginClass<Engine::Context>("WorldContext")
+			
+			.addFunction("PlaySoundByName",&Engine::Context::PlaySoundByName)
 			.endClass();
 
 		LuaRef LuaShoot = getGlobal(this->m_weaponLua, "Shoot");

@@ -96,6 +96,13 @@ namespace Engine
 
 		void Init(std::string path);
 
+		FMOD::Channel* PlaySoundByName(std::string name)
+		{
+			FMOD::Channel* channel;
+			lowLevelSoundSystem->playSound(Sounds->GetSoundByName(name)->m_sound, 0, false, &channel);
+			return channel;
+		}
+
 		void AddActor(CActor* actor)
 		{
 			
