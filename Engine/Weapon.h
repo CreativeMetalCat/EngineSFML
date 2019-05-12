@@ -19,6 +19,8 @@ namespace Gameplay
 
 		virtual int GetClassID()const { return ClassID; }
 
+		std::shared_ptr<Engine::Sprite> weaponSprite;
+
 		Weapon(std::string luaScriptName, Engine::Context* WorldContext, std::string path = "./../");
 
 		virtual void Init(std::string path)override;
@@ -29,6 +31,7 @@ namespace Gameplay
 
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
+
 		~Weapon();
 	};
 }

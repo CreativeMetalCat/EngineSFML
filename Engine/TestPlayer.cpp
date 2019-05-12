@@ -22,6 +22,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexS
 
 	m_sprite->GetSprite().setScale(scale);
 	Weapon = std::make_shared<Gameplay::Weapon>("scripts/weapons/weapon.lua", this->WorldContext, this->path);
+	
 
 	m_point = { 64.f,0.f };
 	
@@ -31,6 +32,8 @@ void CTestPlayer::Init(std::string path)
 {
 	try
 	{
+		Weapon->weaponSprite = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("dev64_green")->GetTexture()), "dev64_green");
+
 		Weapon->Init(path);
 		this->path = path;
 
@@ -111,6 +114,12 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("normal")->Shader);
 	}*/
 	window.draw(m_sprite->GetSprite());
+
+	if (Weapon != nullptr)
+	{
+		window.draw(Weapon->weaponSprite->m_sprite);
+	}
+
 	sf::VertexArray va;
 	va.append(sf::Vertex(m_point + this->Location, sf::Color::Red));
 	window.draw(va);
@@ -119,6 +128,10 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 void CTestPlayer::Update(sf::Time dt)
 {
 	Anim->Update(dt);
+
+	Weapon->weaponSprite->m_sprite.setPosition(this->Location);
+	Weapon->weaponSprite->m_sprite.setRotation(m_angle);
+
 	m_sprite->m_sprite = Anim->GetSprite();
 	m_sprite->SetTextureName(Anim->m_spriteName);
 	m_shader_dt += dt.asSeconds();
@@ -164,7 +177,7 @@ void CTestPlayer::Update(sf::Time dt)
 				CTestPlayer::RegisterClassLUA(L);
 				
 				//Register Vector2 in lua
-				getGlobalNamespace(L)
+				luabridge::getGlobalNamespace(L)
 					.beginClass<sf::Vector2f>("Vector2")
 					//add x,y and some functions possibly
 					.addData<float>("x", &sf::Vector2<float>::x)
@@ -172,17 +185,17 @@ void CTestPlayer::Update(sf::Time dt)
 					.addConstructor<void(*) (void)>()
 					.endClass();
 
-				getGlobalNamespace(L)
+				luabridge::getGlobalNamespace(L)
 					.beginClass<sf::Sprite>("Spite")
 
 					.endClass();
 
-				getGlobalNamespace(L)
+				luabridge::getGlobalNamespace(L)
 					.beginClass<sf::ConvexShape>("ConvexShape")
 
 					.endClass();
 
-				getGlobalNamespace(L)
+				luabridge::getGlobalNamespace(L)
 					.beginClass<Engine::Context>("WorldContext")
 
 					.endClass();
@@ -235,7 +248,7 @@ void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 		
 
 		//Register Vector2 in lua
-		getGlobalNamespace(L)
+		luabridge::getGlobalNamespace(L)
 			.beginClass<sf::Vector2f>("Vector2")
 			//add x,y and some functions possibly
 			.addData<float>("x", &sf::Vector2<float>::x)
@@ -244,7 +257,7 @@ void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 			.endClass();
 
 
-		getGlobalNamespace(L)
+		luabridge::getGlobalNamespace(L)
 			.beginClass<cpArbiter>("cpArbiter")
 
 			.endClass();
@@ -273,7 +286,7 @@ void CTestPlayer::RegisterClassLUA(lua_State*& L)
 	try
 	{
 		//Register CActor in lua
-		getGlobalNamespace(L)
+		luabridge::getGlobalNamespace(L)
 			.beginClass<CTestPlayer>("CTestPlayer")
 			//.addConstructor<void(*) (sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, std::string path)>()
 
@@ -376,7 +389,7 @@ void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 		otherActor->RegisterClassLUA(L);
 
 		//Register Vector2 in lua
-		getGlobalNamespace(L)
+		luabridge::getGlobalNamespace(L)
 			.beginClass<sf::Vector2f>("Vector2")
 			//add x,y and some functions possibly
 			.addData<float>("x", &sf::Vector2<float>::x)
@@ -384,7 +397,7 @@ void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 			.addConstructor<void(*) (void)>()
 			.endClass();
 
-		getGlobalNamespace(L)
+		luabridge::getGlobalNamespace(L)
 			.beginClass<cpArbiter>("cpArbiter")
 
 			.endClass();
