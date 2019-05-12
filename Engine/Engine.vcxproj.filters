@@ -156,6 +156,9 @@
     <ClCompile Include="SpritesheetAnimation.cpp">
       <Filter>Engine\Animation\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteArrayAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SolidBlock.h">
@@ -250,6 +253,9 @@
     </ClInclude>
     <ClInclude Include="SpritesheetAnimation.h">
       <Filter>Engine\Animation\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteArrayAnimation.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -643,6 +643,17 @@ void Game::Init()
 			}
 		}
 
+		if (!GameContext->SpriteArrayAnimations.empty())
+		{
+			for (size_t i = 0; i < GameContext->SpriteArrayAnimations.size(); i++)
+			{
+				for (auto name : GameContext->SpriteArrayAnimations.at(i)->m_sprite_names)
+				{
+					GameContext->SpriteArrayAnimations.at(i)->m_sprite_array.push_back(sf::Sprite(GameContext->TextureResources->GetTextureByName(GameContext->SpritesheetAnimations.at(i)->m_spriteName)->GetTexture()));
+				}
+			}
+		}
+
 		
 		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_anim")->GetTexture()),"dev64_orange", s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
 		player->Anim = GameContext->SpritesheetAnimations.at(0);

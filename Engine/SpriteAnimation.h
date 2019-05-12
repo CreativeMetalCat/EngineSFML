@@ -24,6 +24,8 @@ namespace Engine::Animation
 			return dynamic_cast<T>(this);
 		}
 
+		virtual sf::Sprite GetSprite()const = 0;
+
 		virtual void Release() = 0;
 
 		~SpriteAnimation();

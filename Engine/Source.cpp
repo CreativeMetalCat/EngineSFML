@@ -197,6 +197,10 @@ int main()
 
 								patterns.push_back(Engine::Animation::SpritesheetAnimationPattern(pattern_name, {}));
 
+								bool repeated = (!animData["patterns"][u]["repeated"].isNil()) ? animData["patterns"][u]["repeated"].cast<bool>() : false;
+
+								float frame_duration = (!animData["patterns"][u]["frame_duration"].isNil()) ? animData["patterns"][u]["frame_duration"].cast<float>() : 1.f;
+
 								LuaRef indicies = animData["patterns"][u]["indicies"];
 								if (!indicies.isNil() && indicies.isTable())
 								{
@@ -206,9 +210,10 @@ int main()
 										patterns.at(patterns.size() - 1).Indices.push_back(sf::Vector2i(indicies[o]["x"].cast<int>(), indicies[o]["y"].cast<int>()));
 									}
 								}
+
+								patterns.at(patterns.size() - 1).IsRepated = repeated;
+								patterns.at(patterns.size() - 1).FrameDuration = frame_duration;
 							}
-
-
 						}
 
 						game.GameContext->SpritesheetAnimations.push_back(std::make_shared< Engine::Animation::SpritesheetAnimation>(size, texture_name));
@@ -225,6 +230,43 @@ int main()
 			}
 		}
 
+		animationsTable = getGlobal(L, "arrayAnimations");
+
+		if (!animationsTable.isNil())
+		{
+			if (animationsTable.isTable())
+			{
+				//In LUA first array index is 1 while in c/c++ it's zero
+				for (int i = 1; i <= animationsTable.length(); i++)
+				{
+					LuaRef animData = animationsTable[i];
+					//if there is a mistake in table we skip this field and continue
+					if (!animData.isNil())
+					{
+						std::string name = animData["name"].isNil() ? "" : animData["name"].cast<std::string>();
+
+						bool repeated = (!animData["repeated"].isNil()) ? animData["repeated"].cast<bool>() : false;
+
+						float frame_duration = (!animData["frame_duration"].isNil()) ? animData["frame_duration"].cast<float>() : 1.f;
+
+						std::vector<std::string>textureNames;
+
+						if (!animData["texture_names"].isNil() &&animData["texture_names"].isTable())
+						{
+							//In LUA first array index is 1 while in c/c++ it's zero
+							for (int u = 1; u <= animData["texture_names"].length(); u++)
+							{
+								textureNames.push_back(animData["texture_names"][u]);
+							}
+						}
+						std::shared_ptr<Engine::Animation::SpriteArrayAnimation> arrAnim = std::make_shared<Engine::Animation::SpriteArrayAnimation>(name,repeated,frame_duration, textureNames);
+
+						game.GameContext->SpriteArrayAnimations.push_back(arrAnim);
+					}
+				}
+			}
+
+		}
 		//----------------------------------------------------------------------------------
 
 		std::shared_ptr<Engine::Animation::SpritesheetAnimation> Anim = std::make_shared<Engine::Animation::SpritesheetAnimation>(sf::Vector2f(64.f, 64.f), "dev64_anim");

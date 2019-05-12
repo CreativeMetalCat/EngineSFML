@@ -180,6 +180,7 @@
     <ClCompile Include="SoundContainer.cpp" />
     <ClCompile Include="SoundResource.cpp" />
     <ClCompile Include="SpriteAnimation.cpp" />
+    <ClCompile Include="SpriteArrayAnimation.cpp" />
     <ClCompile Include="SpritesheetAnimation.cpp" />
     <ClCompile Include="TestPlayer.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="SoundContainer.h" />
     <ClInclude Include="SoundResource.h" />
     <ClInclude Include="SpriteAnimation.h" />
+    <ClInclude Include="SpriteArrayAnimation.h" />
     <ClInclude Include="SpritesheetAnimation.h" />
     <ClInclude Include="TestPlayer.h" />
     <ClInclude Include="Game.h" />

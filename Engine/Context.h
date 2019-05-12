@@ -3,6 +3,7 @@
 #include "TextureContainer.h"
 #include "ShaderResourceContainer.h"
 #include "SpritesheetAnimation.h"
+#include "SpriteArrayAnimation.h"
 
 #ifndef _FMOD_HPP
 #include <fmod.hpp>
@@ -15,6 +16,7 @@
 #ifndef CHIPMUNK_H
 #include <chipmunk.h>
 #endif
+
 #ifndef SFML_GRAPHICS_HPP
 #include <SFML/Graphics.hpp>
 #endif
@@ -82,6 +84,8 @@ namespace Engine
 		std::unique_ptr<Engine::Resources::Materials::CShaderContainer> ShaderResources;
 
 		std::vector<std::shared_ptr<Engine::Animation::SpritesheetAnimation>>SpritesheetAnimations;
+
+		std::vector<std::shared_ptr<Engine::Animation::SpriteArrayAnimation>>SpriteArrayAnimations;
 
 		std::vector<std::shared_ptr<Engine::CActor>>SceneActors;
 

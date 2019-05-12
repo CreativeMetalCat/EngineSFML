@@ -58,7 +58,7 @@ namespace Engine::Animation
 		sf::Vector2f GetFrameSize()const { return m_frameSize; }		
 
 		
-		sf::Sprite GetSprite()const { return m_sprite; }
+		sf::Sprite GetSprite()const override { return m_sprite; }
 
 		virtual void Init(std::string path);
 
