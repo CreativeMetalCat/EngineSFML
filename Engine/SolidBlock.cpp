@@ -50,6 +50,7 @@ namespace Engine
 						cpSpaceAddShape(world, shapes[i]);
 						//Prevent from bouncing 
 						cpShapeSetElasticity(shapes[i], 0.0f);
+
 					}
 
 				}

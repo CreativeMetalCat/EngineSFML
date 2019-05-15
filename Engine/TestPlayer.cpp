@@ -71,6 +71,7 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 		this->Body = cpBodyNew(100.f, cpMomentForBox(100.f, CollisionRectangle.width, CollisionRectangle.height));
 		if (this->Body != nullptr)
 		{
+			
 			//perform here actions that can happen only after body init
 
 
@@ -81,7 +82,7 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 			cpBodySetUserData(Body, this);
 
 			cpBodySetPosition(this->Body, cpv(this->GetActorLocation().x , this->GetActorLocation().y));
-
+			
 			for (int i = 0; i < shapes.size(); i++)
 			{
 				if (shapes.at(i) != nullptr)
@@ -89,11 +90,16 @@ void CTestPlayer::InitPhysBody(std::string path, cpSpace*& world)
 					cpSpaceAddShape(world, shapes[i]);
 					//Prevent from bouncing 
 					cpShapeSetElasticity(shapes[i], 0.0f);
+
+					cpShapeSetMass(shapes[i], 100.f);
+
+
 				}
 
 			}
 			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
 		}
+		
 	}
 	catch (std::exception e)
 	{
@@ -141,6 +147,8 @@ void CTestPlayer::Update(sf::Time dt)
 		this->Weapon->Update(dt);
 	}
 
+	
+
 	if (Body != nullptr)
 	{
 
@@ -150,7 +158,6 @@ void CTestPlayer::Update(sf::Time dt)
 
 		m_sprite->GetSprite().setPosition(this->GetActorLocation());
 	}
-
 	if (m_moving_left || m_moving_right)
 	{
 		m_passed_footstep_time += dt.asSeconds();
@@ -224,6 +231,13 @@ void CTestPlayer::Update(sf::Time dt)
 
 void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 {
+	/*std::cout << "Body: Y:" << cpBodyGetPosition(this->Body).y << "X: " << cpBodyGetPosition(this->Body).x << std::endl;
+	std::cout <<"Feet: Y:"<< cpBodyGetPosition(this->FeetBody).y << "X: "<< cpBodyGetPosition(this->FeetBody).x <<std::endl;*/
+	cpBody* bodyA;
+	cpBody* bodyB;
+	cpArbiterGetBodies(arb, &bodyA, &bodyB);
+
+
 	using namespace luabridge;
 	lua_State* L = luaL_newstate();
 	std::string d = (path + "scripts/character.lua");
@@ -245,7 +259,7 @@ void CTestPlayer::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
 		//register other CActor's class
 		otherActor->RegisterClassLUA(L);
 
-		
+
 
 		//Register Vector2 in lua
 		luabridge::getGlobalNamespace(L)
@@ -364,9 +378,12 @@ void CTestPlayer::Shoot()
 }
 
 
-
 void CTestPlayer::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
 {
+	cpBody* bodyA;
+	cpBody* bodyB;
+	cpArbiterGetBodies(arb, &bodyA, &bodyB);
+
 	using namespace luabridge;
 	lua_State* L = luaL_newstate();
 	std::string d = (path + "scripts/character.lua");
@@ -435,12 +452,16 @@ void CTestPlayer::HandleEvent(sf::Event event)
 		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
 		{
 			m_moving_left = true;
-			this->MoveX(-1);
+			float vel = -1.f - this->GetLinearVelocity().x;
+			float impulse = cpBodyGetMass(this->Body) * vel;
+			this->ApplyLinearImpulse(cpv(vel, 0), cpv(CollisionRectangle.width / 2, CollisionRectangle.height / 2));
 		}
 		if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyPressed)
 		{
 			m_moving_right = true;
-			this->MoveX(1);
+			float vel = 1.f - this->GetLinearVelocity().x;
+			float impulse = cpBodyGetMass(this->Body) * vel;
+			this->ApplyLinearImpulse(cpv(vel, 0), cpv(CollisionRectangle.width / 2, CollisionRectangle.height / 2));
 
 		}
 		if (event.key.code == sf::Keyboard::W && event.type == sf::Event::EventType::KeyPressed)
@@ -455,12 +476,21 @@ void CTestPlayer::HandleEvent(sf::Event event)
 
 		if (event.key.code == sf::Keyboard::D && event.type == sf::Event::EventType::KeyReleased)
 		{
-			m_moving_right = false;
+			if (m_moving_right)
+			{
+				m_moving_right = false;
+				cpBodySetVelocity(this->Body, cpv(cpBodyGetVelocity(this->Body).x *0.01f /*m_isOnTheGround ? 0.f : 0.05f*/, cpBodyGetVelocity(this->Body).y));
+			}
 		}
 
 		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyReleased)
 		{
-			m_moving_left = false;
+			if (m_moving_left)
+			{
+				m_moving_left = false;
+				cpBodySetVelocity(this->Body, cpv(cpBodyGetVelocity(this->Body).x*0.01f /*m_isOnTheGround ? 0.f : 0.05f*/, cpBodyGetVelocity(this->Body).y));
+			}
+			
 		}
 		
 		if (event.key.code == sf::Keyboard::Space && event.type == sf::Event::EventType::KeyPressed)

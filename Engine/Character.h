@@ -16,7 +16,11 @@ namespace Engine
 		sf::Vector2f Size;
 
 
+		bool m_isOnTheGround = false;
+
+		cpConstraint* FeetJoint = nullptr;
 	public:
+		bool GetIsOnTheGround();
 
 		bool IsMovingX = false;
 
@@ -49,6 +53,13 @@ namespace Engine
 
 		//Create LUA class from this for usage in LUA
 		static void RegisterClassLUA(lua_State*& L);
+
+		//PATH - Path to main folder and usually used to access scripts
+		//Defined by window.lua
+		virtual void OnBeginCollision(cpArbiter*& arb, CActor* otherActor);
+
+		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
+
 
 		void Update(sf::Time dt);
 		Character(sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path = "./../");

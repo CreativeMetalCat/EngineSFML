@@ -152,23 +152,23 @@ namespace Test
 				}
 			}
 		}
-		if (!m_arrived)
+		if (Body != nullptr)
 		{
-			if (Body != nullptr)
-			{
 
 
 
-				this->Location.x = cpBodyGetPosition(this->GetBody()).x;
-				this->Location.y = cpBodyGetPosition(this->GetBody()).y;
+			this->Location.x = cpBodyGetPosition(this->GetBody()).x;
+			this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
-				m_sprite.setPosition(this->GetActorLocation());
-				this->m_sprite.setOrigin(sf::Vector2f(this->CollisionRectangle.width / 2, this->CollisionRectangle.height / 2));
-				//rotation actions
-				this->m_sprite.setRotation(cpBodyGetAngle(this->Body));
-				this->m_sprite.setOrigin({ 0.f,0.f });
+			m_sprite.setPosition(this->GetActorLocation());
+			this->m_sprite.setOrigin(sf::Vector2f(this->CollisionRectangle.width / 2, this->CollisionRectangle.height / 2));
+			//rotation actions
+			this->m_sprite.setRotation(cpBodyGetAngle(this->Body));
+			this->m_sprite.setOrigin({ 0.f,0.f });
 
-			}
+		}
+		if (!m_arrived&&m_moving)
+		{	
 			m_passed_sound_time += dt.asSeconds();
 			if (m_passed_sound_time >= m_sound_time)
 			{

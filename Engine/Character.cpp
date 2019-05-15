@@ -2,18 +2,31 @@
 
 namespace Engine
 {
+
+	bool Character::GetIsOnTheGround()
+	{
+		
+		cpSegmentQueryInfo info;
+		;
+		return cpSpaceSegmentQueryFirst(WorldContext->space, cpv(this->Location.x + CollisionRectangle.width / 2.f, this->Location.y+CollisionRectangle.height+1.f), cpv(this->Location.x + CollisionRectangle.width / 2, this->Location.y + CollisionRectangle.height + 2.f), 1.f, cpShapeFilterNew(0, 4294967295, 4294967295), &info);
+		//=cpShapeSegmentQuery(shapes[0], cpv(this->Location.x + CollisionRectangle.width / 2, this->Location.y), cpv(this->Location.x + CollisionRectangle.width / 2, this->Location.y + CollisionRectangle.height + 2.f), 1.f, &info);
+		
+	}
 	void Character::MoveX(float value)
 	{
 
 
 		float vel = (value * this->GetMaxVelocity().x) - this->GetLinearVelocity().x;
-		float impulse = cpBodyGetMass(this->Body) * vel / 10;
+		float impulse = cpBodyGetMass(this->Body) * vel ;
 		this->ApplyLinearImpulse(cpv(vel, 0), cpv(CollisionRectangle.width / 2, CollisionRectangle.height / 2));
 	}
 
 	void Character::Jump()
 	{
-		this->ApplyLinearImpulse(cpv(0, -15), cpv(0, 0));
+		if (GetIsOnTheGround())
+		{
+			this->ApplyLinearImpulse(cpv(0, -15.f), cpv(0, 0));
+		}
 	}
 
 	void Character::StopXMovement()
@@ -100,7 +113,8 @@ namespace Engine
 				points.push_back(cpv(ShadowShape.getPoint(i).x, ShadowShape.getPoint(i).x));
 			}
 
-			this->Body = cpBodyNew(100.f, cpMomentForBox(100.f, CollisionRectangle.width, CollisionRectangle.height));
+			this->Body = cpBodyNew(100.f, cpMomentForBox(100.f, CollisionRectangle.width, CollisionRectangle.height));	
+
 			if (this->Body != nullptr)
 			{
 				//perform here actions that can happen only after body init
@@ -125,7 +139,9 @@ namespace Engine
 
 
 				this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
-			}
+			}	
+			
+			this->SetActorLocation(sf::Vector2f(cpBodyGetPosition(Body).x, cpBodyGetPosition(Body).y));
 		}
 		catch (std::exception e)
 		{
@@ -169,6 +185,16 @@ namespace Engine
 		{
 			std::cout << "Failed to register class in LUA " << e.what() << std::endl;
 		}
+	}
+
+	void Character::OnBeginCollision(cpArbiter*& arb, CActor* otherActor)
+	{
+	
+	}
+
+	void Character::OnEndCollision(cpArbiter*& arb, CActor* otherActor)
+	{
+
 	}
 
 	void Character::Update(sf::Time dt)
