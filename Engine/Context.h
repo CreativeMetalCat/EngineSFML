@@ -92,6 +92,12 @@ namespace Engine
 
 		FMOD::System* lowLevelSoundSystem = NULL;
 
+		//sounds like music that do not stop when main sounds stop
+		FMOD::ChannelGroup* BackgroungSounds;
+
+		//sounds like footsteps
+		FMOD::ChannelGroup* MainSounds;
+
 		cpSpace* space;
 
 		void Init(std::string path);
@@ -99,7 +105,15 @@ namespace Engine
 		FMOD::Channel* PlaySoundByName(std::string name)
 		{
 			FMOD::Channel* channel;
-			lowLevelSoundSystem->playSound(Sounds->GetSoundByName(name)->m_sound, 0, false, &channel);
+			lowLevelSoundSystem->playSound(Sounds->GetSoundByName(name)->m_sound, MainSounds, false, &channel);
+			return channel;
+		}
+
+		FMOD::Channel* PlayBackgroundSoundByName(std::string name)
+		{
+			FMOD::Channel* channel;
+			auto s = Sounds->GetSoundByName(name);
+			lowLevelSoundSystem->playSound(Sounds->GetSoundByName(name)->m_sound, BackgroungSounds, false, &channel);
 			return channel;
 		}
 

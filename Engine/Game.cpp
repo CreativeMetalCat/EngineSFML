@@ -315,7 +315,7 @@ void Game::Update(sf::Time dt)
 					{
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
-							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(GameContext->TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(64, 64), sf::Vector2f(rects[i].left, rects[i].top), &(*this->GameContext), path);
+							std::shared_ptr<Engine::CSolidBlock> sd = std::make_shared<Engine::CSolidBlock>(sf::Sprite(GameContext->TextureResources->Textures[texture_id]->m_texture), dev64_64, sf::Vector2f(GameContext->TextureResources->Textures[texture_id]->m_texture.getSize().x, GameContext->TextureResources->Textures[texture_id]->m_texture.getSize().y), sf::Vector2f(rects[i].left, rects[i].top), &(*this->GameContext), path);
 							sd->Init(path);
 							sd->InitPhysBody(path, this->GameContext->space);
 
@@ -337,7 +337,7 @@ void Game::Update(sf::Time dt)
 					{
 						if (rects[i].contains(sf::Vector2f(ImGui::GetMousePos().x, ImGui::GetMousePos().y)))
 						{
-							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(GameContext->TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(64, 64),sf::Vector2f(rects[i].left, rects[i].top),path, &(*this->GameContext), this->DebugMass, "Wooden_Crate");
+							std::shared_ptr<CPhysicsBox> po = std::make_shared<CPhysicsBox>(sf::Sprite(GameContext->TextureResources->Textures[texture_id]->m_texture), sf::Vector2f(GameContext->TextureResources->Textures[texture_id]->m_texture.getSize().x, GameContext->TextureResources->Textures[texture_id]->m_texture.getSize().y),sf::Vector2f(rects[i].left, rects[i].top),path, &(*this->GameContext), this->DebugMass, "Wooden_Crate");
 							po->Init(path);
 							po->InitPhysBody(path, this->GameContext->space);
 							GameContext->SceneActors.push_back(po);
@@ -712,7 +712,7 @@ void Game::Init()
 				}
 			}
 		}
-		
+		GameContext->PlayBackgroundSoundByName("Industrial_Day_2Mid");
 		
 	}
 	catch (std::exception e)

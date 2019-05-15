@@ -11,6 +11,7 @@ namespace Gameplay
 		lua_State* m_weaponLua;
 
 		std::string m_luaScriptName = "scripts/weapons/weapon.lua";
+
 	public:
 		FMOD::Channel* m_shoot_sound_channel;
 
@@ -20,6 +21,8 @@ namespace Gameplay
 		static const int ClassID = CLASS_WEAPON;
 
 		virtual int GetClassID()const { return ClassID; }
+
+		sf::Sprite GetSprite()const { return (*weaponSprite).GetSprite(); }
 
 		std::shared_ptr<Engine::Sprite> weaponSprite;
 

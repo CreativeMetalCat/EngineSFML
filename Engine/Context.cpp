@@ -40,6 +40,8 @@ namespace Engine
 		space = cpSpaceNew();
 		cpSpaceSetGravity(space, gravity);
 
+		lowLevelSoundSystem->createChannelGroup("MainSounds", &MainSounds);
+		lowLevelSoundSystem->createChannelGroup("BackgroungSounds", &BackgroungSounds);
 	}
 
 	Context::~Context()

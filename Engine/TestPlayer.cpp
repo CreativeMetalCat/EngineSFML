@@ -32,8 +32,8 @@ void CTestPlayer::Init(std::string path)
 {
 	try
 	{
-		Weapon->weaponSprite = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("dev64_green")->GetTexture()), "dev64_green");
-
+		Weapon->weaponSprite = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("sniperrifle")->GetTexture()), "sniperrifle");
+		
 		Weapon->Init(path);
 		this->path = path;
 
@@ -448,9 +448,27 @@ void CTestPlayer::HandleEvent(sf::Event event)
 
 			t.rotate(m_angle, 0, 0);
 			m_point = t.transformPoint({ 64.f,0.f });
+
+			/*if (fabsf(m_angle) >= 90)
+			{
+				Weapon->weaponSprite->m_sprite.setScale(-fabsf(Weapon->weaponSprite->m_sprite.getScale().x), Weapon->weaponSprite->m_sprite.getScale().y);
+			}
+			if (fabsf(m_angle) <= 90)
+			{
+				Weapon->weaponSprite->m_sprite.setScale(fabsf(Weapon->weaponSprite->m_sprite.getScale().x), Weapon->weaponSprite->m_sprite.getScale().y);
+			}*/
+			if (fabsf(m_angle) >= 90)
+			{
+				Weapon->weaponSprite->m_sprite.setScale(Weapon->weaponSprite->m_sprite.getScale().x, -fabsf(Weapon->weaponSprite->m_sprite.getScale().y));
+			}
+			if (fabsf(m_angle) <= 90)
+			{
+				Weapon->weaponSprite->m_sprite.setScale(Weapon->weaponSprite->m_sprite.getScale().x, fabsf(Weapon->weaponSprite->m_sprite.getScale().y));
+			}
 		}
 		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
 		{
+			
 			m_moving_left = true;
 			float vel = -1.f - this->GetLinearVelocity().x;
 			float impulse = cpBodyGetMass(this->Body) * vel;
