@@ -242,9 +242,12 @@ void Game::Update(sf::Time dt)
 	ImGui::SFML::Update(window, dt);
 	if (ShowGravityUI)
 	{
-		ImGui::Begin("Debug Menu");
-
-		ImGui::BeginChild("Gravity Settings", ImVec2(350, 100));
+		ImGui::SetNextWindowPos(ImVec2(100, 300), ImGuiCond_::ImGuiCond_Always);
+		bool open = true;
+		ImGui::Begin("Debug Menu",&open, ImGuiWindowFlags_::ImGuiWindowFlags_NoMove);
+	
+		
+		ImGui::BeginChild("Gravity Settings");
 
 		cpVect gravity = cpSpaceGetGravity(GameContext->space);
 
@@ -259,7 +262,7 @@ void Game::Update(sf::Time dt)
 		{
 			cpSpaceSetGravity(GameContext->space, cpv(gravX / 100000.f, gravY / 100000.f));
 		}
-
+	
 		ImGui::EndChild();
 
 		ImGui::BeginChild("Character Output Data");
@@ -655,7 +658,7 @@ void Game::Init()
 		}
 
 		
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("dev64_anim")->GetTexture()),"dev64_orange", s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
+		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("body1")->GetTexture()),"body1", s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
 		player->Anim = GameContext->SpritesheetAnimations.at(0);
 		player->Anim->CurrentAnimationName = "anim";
 		player->InitPhysBody(path, GameContext->space);

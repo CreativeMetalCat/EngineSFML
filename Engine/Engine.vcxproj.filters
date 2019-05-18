@@ -159,6 +159,9 @@
     <ClCompile Include="SpriteArrayAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SkeleatlAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SolidBlock.h">
@@ -255,6 +258,9 @@
       <Filter>Engine\Animation\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SpriteArrayAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeleatlAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,18 +9,26 @@ void CTestPlayer::SetSpriteTexture(sf::Texture & t)
 
 CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexShape CollisionShape, sf::Vector2f Size, sf::Vector2f Location,Engine::Context* WorldContext, std::string path) :
 	Character(CollisionShape, Size, Location,WorldContext, path),
-	m_sprite(std::make_shared<Engine::Sprite>(sprite,texture_name))
+	m_sprite_body(std::make_shared<Engine::Sprite>(sprite,texture_name))
 {
 	
-	
-	
+	m_sprite_body_lower = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("bodylower1")->GetTexture()), "bodylower1");
+
+	m_sprite_face = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("face")->GetTexture()), "face");
+
+	m_sprite_head = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("head")->GetTexture()), "head");
+
+	m_sprite_hand_s = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("hand_start")->GetTexture()), "hand_start");
+
+	m_sprite_hand_e = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("hand_end")->GetTexture()), "hand_end");
+
 	sf::Vector2f scale;
 
-	if (m_sprite->GetSprite().getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite->GetSprite().getTexture()->getSize().x; }
+	/*if (m_sprite->GetSprite().getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite->GetSprite().getTexture()->getSize().x; }
 
 	if (m_sprite->GetSprite().getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite->GetSprite().getTexture()->getSize().y; }
 
-	m_sprite->GetSprite().setScale(scale);
+	m_sprite->GetSprite().setScale(scale);*/
 	Weapon = std::make_shared<Gameplay::Weapon>("scripts/weapons/weapon.lua", this->WorldContext, this->path);
 	
 
@@ -39,11 +47,11 @@ void CTestPlayer::Init(std::string path)
 
 		sf::Vector2f scale;
 
-		if (m_sprite->GetSprite().getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite->GetSprite().getTexture()->getSize().x; }
+		//if (m_sprite->GetSprite().getTexture()->getSize().x != 0) { scale.x = Size.x / m_sprite->GetSprite().getTexture()->getSize().x; }
 
-		if (m_sprite->GetSprite().getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite->GetSprite().getTexture()->getSize().y; }
+		//if (m_sprite->GetSprite().getTexture()->getSize().y != 0) { scale.y = Size.y / m_sprite->GetSprite().getTexture()->getSize().y; }
 
-		m_sprite->GetSprite().setScale(scale);
+		//m_sprite->GetSprite().setScale(scale);
 
 		/*if (this->testShader.loadFromFile(path + "shaders/testshader.vert", path + "shaders/testshader.frag"))
 		{
@@ -119,7 +127,18 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 		window.draw(m_sprite, &WorldContext->ShaderResources->GetShaderByName("normal")->Shader);
 	}*/
-	window.draw(m_sprite->GetSprite());
+	window.draw(m_sprite_body_lower->GetSprite());
+
+	window.draw(m_sprite_body->GetSprite());
+
+	window.draw(m_sprite_head->GetSprite());
+
+	window.draw(m_sprite_face->GetSprite());
+
+	window.draw(m_sprite_hand_e->GetSprite());
+
+	window.draw(m_sprite_hand_s->GetSprite());
+	
 
 	if (Weapon != nullptr)
 	{
@@ -136,10 +155,11 @@ void CTestPlayer::Update(sf::Time dt)
 	Anim->Update(dt);
 
 	Weapon->weaponSprite->m_sprite.setPosition(this->Location);
+
 	Weapon->weaponSprite->m_sprite.setRotation(m_angle);
 
-	m_sprite->m_sprite = Anim->GetSprite();
-	m_sprite->SetTextureName(Anim->m_spriteName);
+	/*m_sprite->m_sprite = Anim->GetSprite();
+	m_sprite->SetTextureName(Anim->m_spriteName);*/
 	m_shader_dt += dt.asSeconds();
 	
 	if (this->Weapon != nullptr)
@@ -152,11 +172,38 @@ void CTestPlayer::Update(sf::Time dt)
 	if (Body != nullptr)
 	{
 
+		s += points[ind].z + dt.asSeconds();
+
+		if (m_sprite_body->m_sprite.getRotation() >= points[ind].x)
+		{
+			ind += 1;
+			if (ind > points.size()-1) { ind = 0; s = 0.f; }
+		}
+	
+		//else if(ind < 0.f) { ind -= dt.asSeconds(); }
+
+		
 		cpBodySetAngle(Body, 0);
+
 		this->Location.x = cpBodyGetPosition(this->GetBody()).x;
+
 		this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
-		m_sprite->GetSprite().setPosition(this->GetActorLocation());
+		m_sprite_body->GetSprite().setPosition(this->GetActorLocation());
+
+		m_sprite_body->GetSprite().setRotation(s/*points[ind].x*/);
+
+		m_sprite_body_lower->GetSprite().setPosition(this->GetActorLocation() + sf::Vector2f(0, 20.f));
+
+		m_sprite_head->GetSprite().setPosition(this->GetActorLocation() - sf::Vector2f(0, 53.f));
+
+		m_sprite_face->GetSprite().setPosition(this->GetActorLocation() - sf::Vector2f(-5.f, 53.f));
+
+		m_sprite_hand_e->GetSprite().setPosition(this->GetActorLocation() + sf::Vector2f(25.f, 0.f));
+
+		m_sprite_hand_s->GetSprite().setPosition(this->GetActorLocation());
+
+		m_sprite_hand_s->GetSprite().setRotation(m_angle);
 	}
 	if (m_moving_left || m_moving_right)
 	{
@@ -364,7 +411,7 @@ void CTestPlayer::Shoot()
 	std::string d = (path + "scripts/testplayer/mainscript.lua");
 	try
 	{
-		Weapon->Shoot(this->m_sprite->GetSprite(), m_point + this->GetActorLocation(), m_angle);
+		Weapon->Shoot(this->m_sprite_head->GetSprite(), m_point + this->GetActorLocation(), m_angle);
 	}
 	catch (LuaException e)
 	{

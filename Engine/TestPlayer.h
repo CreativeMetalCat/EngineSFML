@@ -25,7 +25,7 @@
 class CTestPlayer : public Engine::Character
 {
 
-	std::shared_ptr<Engine::Sprite> m_sprite;
+	
 
 	FMOD::Channel* m_footstep_sound_channel;
 
@@ -43,8 +43,26 @@ class CTestPlayer : public Engine::Character
 	sf::Vector2f m_point;
 
 	float m_shader_dt=0.0f;
+
+	int ind = 0;
+
+	float s = 0.f;
+
+	std::vector <sf::Vector3f> points = { {0,0,2.5f},{90,0,2.5f} };
 public:
 	std::shared_ptr<Engine::Animation::SpritesheetAnimation>Anim;
+
+	std::shared_ptr<Engine::Sprite> m_sprite_body;
+
+	std::shared_ptr<Engine::Sprite> m_sprite_body_lower;
+
+	std::shared_ptr<Engine::Sprite> m_sprite_head;
+
+	std::shared_ptr<Engine::Sprite> m_sprite_face;
+
+	std::shared_ptr<Engine::Sprite> m_sprite_hand_s;
+
+	std::shared_ptr<Engine::Sprite> m_sprite_hand_e;
 
 	bool ControlledByPlayer = false;
 	//ID of class for Casting
@@ -54,11 +72,11 @@ public:
 
 	int GetClassID()const { return  CLASS_CTESTPLAYER; }
 
-	void SetSprite(Engine::Sprite* s) { this->m_sprite = std::shared_ptr<Engine::Sprite>(s); }
+	/*void SetSprite(Engine::Sprite* s) { this->m_sprite = std::shared_ptr<Engine::Sprite>(s); }
 
 	sf::Sprite GetSprite()const { return (*m_sprite).GetSprite(); }
 
-	std::shared_ptr<Engine::Sprite> GetSpritePtr() { return m_sprite; }
+	std::shared_ptr<Engine::Sprite> GetSpritePtr() { return m_sprite; }*/
 
 	void SetSpriteTexture(sf::Texture & texture);
 
