@@ -29,19 +29,22 @@ namespace Engine::Animation::Skeletal
 		PassedTime += dt.asSeconds();
 		if (PassedTime > Duration[currentId])
 		{
+			bone.Location = EndLocation[currentId];
 			if (currentId + 1u < Duration.size())
 			{
 				currentId++;
 				this->TransformVector = EndLocation[currentId] - bone.Location;
-				m_pixelPerSecondSpeed = Duration[currentId] / cpvlength(cpv((cpFloat)this->TransformVector.x, (cpFloat)this->TransformVector.y));
-				
+				m_pixelPerSecondSpeed = cpvlength(cpv((cpFloat)this->TransformVector.x, (cpFloat)this->TransformVector.y)) / Duration[currentId];
+
 				m_direction.x = cosf(cpvtoangle(cpv((cpFloat)this->TransformVector.x, (cpFloat)this->TransformVector.y)));
 				m_direction.y = sinf(cpvtoangle(cpv((cpFloat)this->TransformVector.x, (cpFloat)this->TransformVector.y)));
-			}
+
+				PassedTime = 0.f;
+			}			
 		}
-		if (this->EndLocation[currentId] != bone.Location)
+		if (!(roundf(this->EndLocation[currentId].x) == roundf(bone.Location.x) && roundf(this->EndLocation[currentId].y) == roundf(bone.Location.y)))
 		{
-			bone.Location += (m_pixelPerSecondSpeed /** dt.asSeconds()*/) * m_direction;
+			bone.Location += (m_pixelPerSecondSpeed * dt.asSeconds())* m_direction;
 		}
 	}
 	void CSkeletalMeshAnimation::Start(std::vector<Bone>& Bones)

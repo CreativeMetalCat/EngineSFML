@@ -13,7 +13,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexS
 {
 	std::vector< Engine::Animation::Skeletal::BoneAnimation>boneAnims;
 
-	boneAnims.push_back(Engine::Animation::Skeletal::BoneAnimation("neck", { {0.f,0.f},{50.f,0.f},{0.f,-90.f},{-50.f,0.f} }, { { 0.f ,0.f,0.f ,0.f} }, { {5.f,9.f,5.f,9.f} }));
+	boneAnims.push_back(Engine::Animation::Skeletal::BoneAnimation("neck", { {10.f,-50.f},{-10.f,-50.f},{10.f,-50.f},{0.f,-50.f} }, { { 0.f ,0.f,0.f ,0.f} }, { {2.f,2.f,2.f,2.f} }));
 
 	sk_anim0 = std::make_shared< Engine::Animation::Skeletal::CSkeletalMeshAnimation>(boneAnims, "anim0", 5.f);
 
@@ -21,7 +21,7 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexS
 
 	std::vector<Engine::Animation::Skeletal::Bone> bones;
 	bones.push_back(Engine::Animation::Skeletal::Bone(sf::Vector2f(1.42f, -80.f), sf::Vector2f(1, 1), 0.f, "spine", "root"));
-	bones.push_back(Engine::Animation::Skeletal::Bone(sf::Vector2f(0.f, 25.25f), sf::Vector2f(1, 1), 0.f, "neck", "spine"));
+	bones.push_back(Engine::Animation::Skeletal::Bone(sf::Vector2f(0.f, -50.0f), sf::Vector2f(1, 1), 0.f, "neck", "spine"));
 
 	Skeleton = std::make_shared<Engine::Animation::Skeletal::CSkeletalMesh>("Body", bones);
 
@@ -211,8 +211,6 @@ void CTestPlayer::Update(sf::Time dt)
 		this->Location.y = cpBodyGetPosition(this->GetBody()).y;
 
 		m_sprite_body->GetSprite().setPosition(this->GetActorLocation());
-
-		m_sprite_body->GetSprite().setRotation(s/*points[ind].x*/);
 
 		m_sprite_body_lower->GetSprite().setPosition(this->GetActorLocation() + sf::Vector2f(0, 20.f));
 
@@ -535,10 +533,35 @@ void CTestPlayer::HandleEvent(sf::Event event)
 			if (fabsf(m_angle) >= 90)
 			{
 				Weapon->weaponSprite->m_sprite.setScale(Weapon->weaponSprite->m_sprite.getScale().x, -fabsf(Weapon->weaponSprite->m_sprite.getScale().y));
+
+				m_sprite_body->GetSprite().setScale(-fabsf(m_sprite_body->GetSprite().getScale().x), m_sprite_body->GetSprite().getScale().y);
+
+				m_sprite_body_lower->GetSprite().setScale(-fabsf(m_sprite_body_lower->GetSprite().getScale().x), m_sprite_body_lower->GetSprite().getScale().y);
+
+				m_sprite_face->GetSprite().setScale(-fabsf(m_sprite_body->GetSprite().getScale().x), m_sprite_face->GetSprite().getScale().y);
+
+				m_sprite_head->GetSprite().setScale(-fabsf(m_sprite_head->GetSprite().getScale().x), m_sprite_head->GetSprite().getScale().y);
+
+				m_sprite_hand_s->GetSprite().setScale(-fabsf(m_sprite_hand_s->GetSprite().getScale().x), m_sprite_hand_s->GetSprite().getScale().y);
+
+				m_sprite_hand_e->GetSprite().setScale(-fabsf(m_sprite_hand_e->GetSprite().getScale().x), m_sprite_hand_e->GetSprite().getScale().y);
+
 			}
 			if (fabsf(m_angle) <= 90)
 			{
 				Weapon->weaponSprite->m_sprite.setScale(Weapon->weaponSprite->m_sprite.getScale().x, fabsf(Weapon->weaponSprite->m_sprite.getScale().y));
+
+				m_sprite_body->GetSprite().setScale(fabsf(m_sprite_body->GetSprite().getScale().x), m_sprite_body->GetSprite().getScale().y);
+
+				m_sprite_body_lower->GetSprite().setScale(fabsf(m_sprite_body_lower->GetSprite().getScale().x), m_sprite_body_lower->GetSprite().getScale().y);
+
+				m_sprite_face->GetSprite().setScale(fabsf(m_sprite_body->GetSprite().getScale().x), m_sprite_face->GetSprite().getScale().y);
+
+				m_sprite_head->GetSprite().setScale(fabsf(m_sprite_head->GetSprite().getScale().x), m_sprite_head->GetSprite().getScale().y);
+
+				m_sprite_hand_s->GetSprite().setScale(fabsf(m_sprite_hand_s->GetSprite().getScale().x), m_sprite_hand_s->GetSprite().getScale().y);
+
+				m_sprite_hand_e->GetSprite().setScale(fabsf(m_sprite_hand_e->GetSprite().getScale().x), m_sprite_hand_e->GetSprite().getScale().y);
 			}
 		}
 		if (event.key.code == sf::Keyboard::A && event.type == sf::Event::EventType::KeyPressed)
