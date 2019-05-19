@@ -11,7 +11,22 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexS
 	Character(CollisionShape, Size, Location,WorldContext, path),
 	m_sprite_body(std::make_shared<Engine::Sprite>(sprite,texture_name))
 {
+	std::vector< Engine::Animation::Skeletal::BoneAnimation>boneAnims;
+
+	boneAnims.push_back(Engine::Animation::Skeletal::BoneAnimation("neck", { {0.f,0.f},{50.f,0.f},{0.f,-90.f},{-50.f,0.f} }, { { 0.f ,0.f,0.f ,0.f} }, { {5.f,9.f,5.f,9.f} }));
+
+	sk_anim0 = std::make_shared< Engine::Animation::Skeletal::CSkeletalMeshAnimation>(boneAnims, "anim0", 5.f);
+
+
+
+	std::vector<Engine::Animation::Skeletal::Bone> bones;
+	bones.push_back(Engine::Animation::Skeletal::Bone(sf::Vector2f(1.42f, -80.f), sf::Vector2f(1, 1), 0.f, "spine", "root"));
+	bones.push_back(Engine::Animation::Skeletal::Bone(sf::Vector2f(0.f, 25.25f), sf::Vector2f(1, 1), 0.f, "neck", "spine"));
+
+	Skeleton = std::make_shared<Engine::Animation::Skeletal::CSkeletalMesh>("Body", bones);
+
 	
+
 	m_sprite_body_lower = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("bodylower1")->GetTexture()), "bodylower1");
 
 	m_sprite_face = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("face")->GetTexture()), "face");
@@ -21,6 +36,8 @@ CTestPlayer::CTestPlayer(sf::Sprite sprite,std::string texture_name, sf::ConvexS
 	m_sprite_hand_s = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("hand_start")->GetTexture()), "hand_start");
 
 	m_sprite_hand_e = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("hand_end")->GetTexture()), "hand_end");
+
+	
 
 	sf::Vector2f scale;
 
@@ -40,6 +57,8 @@ void CTestPlayer::Init(std::string path)
 {
 	try
 	{
+		
+		sk_anim0->Start(Skeleton->Bones);
 		Weapon->weaponSprite = std::make_shared<Engine::Sprite>(sf::Sprite(WorldContext->TextureResources->GetTextureByName("sniperrifle")->GetTexture()), "sniperrifle");
 		
 		Weapon->Init(path);
@@ -57,6 +76,7 @@ void CTestPlayer::Init(std::string path)
 		{
 			std::cout << "success\n";
 		}*/
+
 	}
 	catch (std::exception e)
 	{
@@ -152,8 +172,9 @@ void CTestPlayer::Draw(sf::RenderWindow& window)
 
 void CTestPlayer::Update(sf::Time dt)
 {
-	Anim->Update(dt);
+	//Anim->Update(dt);
 
+	sk_anim0->Update(dt, Skeleton->Bones);
 	Weapon->weaponSprite->m_sprite.setPosition(this->Location);
 
 	Weapon->weaponSprite->m_sprite.setRotation(m_angle);
@@ -195,7 +216,14 @@ void CTestPlayer::Update(sf::Time dt)
 
 		m_sprite_body_lower->GetSprite().setPosition(this->GetActorLocation() + sf::Vector2f(0, 20.f));
 
-		m_sprite_head->GetSprite().setPosition(this->GetActorLocation() - sf::Vector2f(0, 53.f));
+		for (auto& bone : Skeleton->Bones)
+		{
+			if (bone.Name == "neck")
+			{
+				m_sprite_head->GetSprite().setPosition(this->GetActorLocation() + bone.Location);
+			}
+		}
+		//m_sprite_head->GetSprite().setPosition(this->GetActorLocation() - sf::Vector2f(0, 53.f));
 
 		m_sprite_face->GetSprite().setPosition(this->GetActorLocation() - sf::Vector2f(-5.f, 53.f));
 

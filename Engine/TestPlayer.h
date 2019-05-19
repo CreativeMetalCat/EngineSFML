@@ -17,7 +17,7 @@
 
 #include "Sprite.h"
 #define CLASS_CTESTPLAYER 4
-
+#include "SkeletalAnimation.h"
 
 
 //Example player that moves using physics and has one sprite 
@@ -50,6 +50,9 @@ class CTestPlayer : public Engine::Character
 
 	std::vector <sf::Vector3f> points = { {0,0,2.5f},{90,0,2.5f} };
 public:
+
+	/**/
+
 	std::shared_ptr<Engine::Animation::SpritesheetAnimation>Anim;
 
 	std::shared_ptr<Engine::Sprite> m_sprite_body;
@@ -63,6 +66,10 @@ public:
 	std::shared_ptr<Engine::Sprite> m_sprite_hand_s;
 
 	std::shared_ptr<Engine::Sprite> m_sprite_hand_e;
+
+	std::shared_ptr<Engine::Animation::Skeletal::CSkeletalMeshAnimation> sk_anim0;
+
+	std::shared_ptr<Engine::Animation::Skeletal::CSkeletalMesh>Skeleton;
 
 	bool ControlledByPlayer = false;
 	//ID of class for Casting

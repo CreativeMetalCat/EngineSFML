@@ -159,7 +159,7 @@
     <ClCompile Include="SpriteArrayAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SkeleatlAnimation.cpp">
+    <ClCompile Include="SkeletalAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,7 +260,7 @@
     <ClInclude Include="SpriteArrayAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SkeleatlAnimation.h">
+    <ClInclude Include="SkeletalAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
