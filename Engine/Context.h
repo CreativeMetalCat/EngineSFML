@@ -58,6 +58,8 @@ namespace Engine
 
 		};
 	}
+
+	//Empty creation of the class
 	class CActor;
 
 	//class that contains and hanldes all game resources

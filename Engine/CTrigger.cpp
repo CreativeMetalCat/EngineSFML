@@ -3,11 +3,11 @@
 namespace Engine
 {
 
-	CTrigger::CTrigger(std::string CollisionScriptFileName, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path):
+	CTrigger::CTrigger(std::string ScriptFileName, sf::Vector2f Size, sf::Vector2f Location, Context* WorldContext, std::string path):
 		CActor(Location,WorldContext,path),
 		Size(Size)
 	{
-		this->CollisionScriptFileName = CollisionScriptFileName;
+		this->ScriptFileName = ScriptFileName;
 	}
 
 	void CTrigger::Init(std::string path)
@@ -64,7 +64,7 @@ namespace Engine
 	{
 		using namespace luabridge;
 		lua_State* L = luaL_newstate();
-		std::string d = (path + CollisionScriptFileName);
+		std::string d = (path + ScriptFileName);
 		try
 		{
 

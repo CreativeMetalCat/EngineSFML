@@ -10,6 +10,7 @@ namespace Engine
 			//Register CActor in lua
 			getGlobalNamespace(L)
 				.beginClass<CObject>("CObject")
+				.addConstructor<void(*)(Context * WorldContext, std::string path)>()
 				.addFunction("GetClassID", &CObject::GetClassID)
 				.addFunction("Init", &CObject::Init)
 				.endClass();

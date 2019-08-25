@@ -7,7 +7,7 @@ namespace Engine
 	public:
 		
 		sf::Vector2f Size;
-		CTrigger(std::string CollisionScriptFileName,sf::Vector2f Size,sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
+		CTrigger(std::string ScriptFileName,sf::Vector2f Size,sf::Vector2f Location, Context* WorldContext, std::string path = "./../");
 
 		virtual void Init(std::string path)override;
 

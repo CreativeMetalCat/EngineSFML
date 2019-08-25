@@ -2,7 +2,10 @@
 #include "Object.h"
 #include "Sprite.h"
 
-
+namespace Engine::Component
+{
+	class CComponent;
+}
 
 #ifndef CHIPMUNK_H
 #include <chipmunk.h>
@@ -30,15 +33,19 @@ namespace Engine
 		int area_id = 0;
 
 		//LUA file that will be used
-		std::string CollisionScriptFileName;
+		std::string ScriptFileName= "scripts/actor.lua";
 
 		std::vector<cpShape*>shapes;
+
+		std::vector< std::shared_ptr<Component::CComponent>> ActorComponents = std::vector<std::shared_ptr<Component::CComponent>>();
 
 		float m_lifetime = 0.f;
 
 		float m_lived_time = 0.f;
 
 		bool m_pending_kill = false;
+
+		float m_rotation = 0;;
 	public:
 
 		//0.f for infinite
@@ -53,7 +60,14 @@ namespace Engine
 		//Use this to safely mark object for destruction
 		virtual void DestroyActor();
 
-		
+		virtual bool AddComponent(Component::CComponent* ac)
+		{
+			if (ac == nullptr) { return false; }
+			std::shared_ptr<Component::CComponent >ptr(ac);
+			this->ActorComponents.push_back(ptr);
+			
+			return true;
+		}
 
 		virtual bool GetIsValid()const;
 
@@ -75,10 +89,10 @@ namespace Engine
 		cpShape* GetShape(int i = 0);
 
 		//LUA file that will be used
-		void SetCollisionScriptFileName(std::string CollisionScriptFileName) { this->CollisionScriptFileName = CollisionScriptFileName; }
+		void SetScriptFileName(std::string ScriptFileName) { this->ScriptFileName = ScriptFileName; }
 
 		//LUA file that will be used
-		std::string GetCollisionScriptFileName()const { return CollisionScriptFileName; }
+		std::string GetScriptFileName()const { return ScriptFileName; }
 
 		void SetAreaId(int id) { area_id = id; }
 
@@ -132,6 +146,8 @@ namespace Engine
 		//Made primarly for the LUA
 		CActor* GetChild(unsigned int index);
 
+		float GetActorRotation()const { return m_rotation; }
+
 		//Get child by index
 		std::shared_ptr<CActor> GetChildAsSharedPtr(unsigned int index);
 
@@ -164,6 +180,8 @@ namespace Engine
 		//PATH - Path to main folder and usually used to access scripts
 		//Defined by window.lua
 		virtual void OnEndCollision(cpArbiter*& arb, CActor* otherActor);
+
+		virtual void HandleEvent(sf::Event event);
 
 		virtual void Release()override;
 

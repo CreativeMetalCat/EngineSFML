@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Engine::Component::CComponent" Collapsed="true">
+    <Position X="18" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAgEAAAAAAAAAAAQAAAAAAAAAAAAAAAgE=</HashCode>
+      <FileName>Component.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CActor" Collapsed="true">
+    <Position X="8" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AShAQBIAECABEgAAwBcVYZQmAEAASgAABQDAABUQJhA=</HashCode>
+      <FileName>Actor.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Character" Collapsed="true">
+    <Position X="6" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAQAAgYABiAAkAAAAAQAAQAQEAAAAAEAAEQCAAQQLAA=</HashCode>
+      <FileName>Character.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Context" Collapsed="true">
+    <Position X="1" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIABDgAIhAgAAAAQAACAAAAAAAAAQAADAQCIgACAgI=</HashCode>
+      <FileName>Context.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CPhysicsBox" Collapsed="true">
+    <Position X="12.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAAAAAAABkgAAAASAAAAgAAAAEAAAAAACAAAAAgA=</HashCode>
+      <FileName>CPhysicsBox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CTrigger" Collapsed="true">
+    <Position X="1.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAACAAgAAAAAQAAAAAAEAAAAAAAQACAAQAAAA=</HashCode>
+      <FileName>CTrigger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Game" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgRBAaAAACABAAgBAAACEAEAQAiBEAAIBhACAAQCAAI=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CObject" Collapsed="true">
+    <Position X="16.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADQAAAIAAAAAAAAACAASAAAgAAAAQAAAAEACABAAAgA=</HashCode>
+      <FileName>Object.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::PhysicalMaterial" Collapsed="true">
+    <Position X="16.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGAAQAMAAgAAIAEIAEAAAQQAAACEAAGAAIACQAAAlgA=</HashCode>
+      <FileName>PhysicalMaterial.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CPhysicalObject" Collapsed="true">
+    <Position X="1.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAIAAAEgAAAQCBAAQAAAAAABAEAACAQEAAAA=</HashCode>
+      <FileName>PhysicalObject.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CProjectile" Collapsed="true">
+    <Position X="8.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ADAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAAAgA=</HashCode>
+      <FileName>Projectile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Sprite" Collapsed="true">
+    <Position X="1" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABEAAIAIACAAAgAAAAAAAQAAAIAAAAAII=</HashCode>
+      <FileName>Sprite.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Animation::SpritesheetAnimationPattern" Collapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAAAAAAkAAAAAAAAAAgARAAAAACBAAAAAAABAAAAA=</HashCode>
+      <FileName>SpritesheetAnimation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Animation::SpritesheetAnimation" Collapsed="true">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAAAAAEAAAAAAACkAwAABAAAgAAAACABIAAgA=</HashCode>
+      <FileName>SpritesheetAnimation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Animation::SpriteAnimation" Collapsed="true">
+    <Position X="13.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAEAAAAAAAAAAAAIAAQAAAAAACABAAAIA=</HashCode>
+      <FileName>SpriteAnimation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Light::CLight" Collapsed="true">
+    <Position X="2.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgQ=</HashCode>
+      <FileName>CLight.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Light::CPointLight" Collapsed="true">
+    <Position X="1" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAACAAABAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>PointLight.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CElevatorTrigger" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <InheritanceLine Type="Engine::CTrigger">
+      <InheritanceModifierLabel ManuallyPlaced="true">
+        <Position X="-4.025" Y="0.591" />
+      </InheritanceModifierLabel>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAIAIAACAAAAAAAAQAAABAAAAAAAAAAAQCAAQAAAA=</HashCode>
+      <FileName>ElevatorTrigger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Test::FuncRotating" Collapsed="true">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgEIAAAAFogAAYQQgAAAgAAAAAQAAAAAKAIAIAAA=</HashCode>
+      <FileName>FuncRotating.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Test::FuncElevator" Collapsed="true">
+    <Position X="10.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAUAAAAABogAAIQQgEQBhAAAAAQAAAAACgAAIAgA=</HashCode>
+      <FileName>FuncElevator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Resources::Materials::CShaderContainer" Collapsed="true">
+    <Position X="4.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAIAAAAAADAAAAAAAAAAAAAAAKCAAAgAgA=</HashCode>
+      <FileName>ShaderResourceContainer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::CSolidBlock" Collapsed="true">
+    <Position X="6.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAIAAEAAABkgAAAAQAAAAgAAAAAAAAAAAKAAAAAgA=</HashCode>
+      <FileName>SolidBlock.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Animation::SpriteArrayAnimation" Collapsed="true">
+    <Position X="3.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQgAAAAABAAEAAAAAQAAARAAAAAgBAAAAQCABAAAAA=</HashCode>
+      <FileName>SpriteArrayAnimation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Component::CSpriteDislayComponent" Collapsed="true">
+    <Position X="18" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAgAAAAABEiAAAAEAAACgAAAAAAAAAAAIAAGAAgQ=</HashCode>
+      <FileName>SpriteDislayComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CTestPlayer" Collapsed="true">
+    <Position X="6" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGUgIEKAQCCAFgQAAARQAAIAAAAAIAwAAICKAAdAAhA=</HashCode>
+      <FileName>TestPlayer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Test::TestProjectile" Collapsed="true">
+    <Position X="8.75" Y="10.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKQAAAIAACABkgAAAAQAAAAgAAAAAAAQAQACABQAAgA=</HashCode>
+      <FileName>TestProjectile.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Animation::Skeletal::CSkeletalMeshAnimation" Collapsed="true">
+    <Position X="2.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACACAQAAAAAAAAQAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>SkeletalAnimation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Engine::Animation::Skeletal::CSkeletalMesh" Collapsed="true">
+    <Position X="0.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAQAAAACAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>SkeletalAnimation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Engine::MapLoading::MapActionData" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EACAAAgAAIAAAAABAEAAIAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Context.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::Animation::Skeletal::Bone" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAJAAAAIAAARAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SkeletalAnimation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Engine::Animation::Skeletal::BoneAnimation" Collapsed="true">
+    <Position X="11" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQAgQAABCACAAAQAAAAAAAAAAIAACAAAQAAQAAQAAA=</HashCode>
+      <FileName>SkeletalAnimation.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Engine::MapLoading::MapAction" Collapsed="true">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgACAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Context.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Engine::Light::ELightType" Collapsed="true">
+    <Position X="5.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAACAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>CLight.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -161,6 +161,7 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CLight.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="CPhysicsBox.cpp" />
     <ClCompile Include="CTrigger.cpp" />
@@ -182,7 +183,9 @@
     <ClCompile Include="SoundResource.cpp" />
     <ClCompile Include="SpriteAnimation.cpp" />
     <ClCompile Include="SpriteArrayAnimation.cpp" />
+    <ClCompile Include="SpriteDislayComponent.cpp" />
     <ClCompile Include="SpritesheetAnimation.cpp" />
+    <ClCompile Include="TestActor.cpp" />
     <ClCompile Include="TestPlayer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -199,6 +202,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="CLight.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="CPhysicsBox.h" />
     <ClInclude Include="CTrigger.h" />
@@ -216,7 +220,9 @@
     <ClInclude Include="SoundResource.h" />
     <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="SpriteArrayAnimation.h" />
+    <ClInclude Include="SpriteDislayComponent.h" />
     <ClInclude Include="SpritesheetAnimation.h" />
+    <ClInclude Include="TestActor.h" />
     <ClInclude Include="TestPlayer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="LUAClassRegisterFunctions.h" />
@@ -229,6 +235,10 @@
     <ClInclude Include="TextureContainer.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Weapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

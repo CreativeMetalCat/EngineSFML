@@ -7,10 +7,12 @@ namespace Engine
 	{
 		this->m_pending_kill = true;
 	}
+
 	bool CActor::GetIsValid() const
 	{
 		return m_pending_kill;
 	}
+
 	cpShape* CActor::GetShape(int i)
 	{
 		if (i >= shapes.size() || i < 0) { return nullptr; }
@@ -77,6 +79,7 @@ namespace Engine
 				.addFunction("GetBody", &CActor::GetBody)
 				.addFunction("ApplyLinearImpulse", &CActor::ApplyLinearImpulseToZero)
 				.addFunction("GetClassID", &CActor::GetClassID)
+				.addFunction("AddComponent",&CActor::AddComponent)
 				.endClass();
 		}
 		catch (LuaException e)
@@ -94,7 +97,7 @@ namespace Engine
 	{
 		using namespace luabridge;
 		lua_State* L = luaL_newstate();
-		std::string d = (path + "scripts/actor.lua");
+		std::string d = (path + ScriptFileName);
 		try
 		{
 
@@ -113,7 +116,7 @@ namespace Engine
 			//register other CActor's class
 			otherActor->RegisterClassLUA(L);
 
-		
+
 
 			//Register Vector2 in lua
 			getGlobalNamespace(L)
@@ -169,7 +172,7 @@ namespace Engine
 			//register other CActor's class
 			otherActor->RegisterClassLUA(L);
 
-		
+
 
 			//Register Vector2 in lua
 			getGlobalNamespace(L)
@@ -198,6 +201,64 @@ namespace Engine
 
 	}
 
+	void CActor::HandleEvent(sf::Event event)
+	{
+		using namespace luabridge;
+		lua_State* L = luaL_newstate();
+		std::string d = (path + "scripts/actor.lua");
+		try
+		{
+
+			int status = luaL_dofile(L, d.c_str());
+			if (status != 0)
+			{
+				fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+			}
+			luaL_openlibs(L);
+
+			lua_pcall(L, 0, 0, 0);
+
+			//Register this class in lua
+			this->RegisterClassLUA(L);
+
+			//register other CActor's class
+
+
+
+
+			//Register Vector2 in lua
+			getGlobalNamespace(L)
+				.beginClass<sf::Vector2f>("Vector2")
+				//add x,y and some functions possibly
+				.addData<float>("x", &sf::Vector2<float>::x)
+				.addData<float>("y", &sf::Vector2<float>::y)
+				.addConstructor<void(*) (void)>()
+				.endClass();
+
+			getGlobalNamespace(L)
+				.beginClass<cpArbiter>("cpArbiter")
+
+				.endClass();
+
+			getGlobalNamespace(L)
+				.beginClass<sf::Event>("SfEvent")
+
+				.endClass();
+
+			LuaRef LuaHandleEvent = getGlobal(L, "HandleEvent");
+			if (LuaHandleEvent.isFunction())
+			{
+				LuaHandleEvent(this, event);
+			}
+		}
+		catch (LuaException e)
+		{
+			std::cout << e.what() << std::endl;
+		}
+
+
+	}
+
 	void CActor::Release()
 	{
 		cpSpaceRemoveBody(WorldContext->space, this->Body);
@@ -212,10 +273,58 @@ namespace Engine
 		cpBodyFree(this->Body);
 	}
 
-	CActor::CActor(sf::Vector2f Location, Context* WorldContext, std::string path)
-		:CObject(WorldContext,path),
+	CActor::CActor(sf::Vector2f Location, Context * WorldContext, std::string path)
+		:CObject(WorldContext, path),
 		Location(Location)
 	{
+		using namespace luabridge;
+		lua_State* L = luaL_newstate();
+		std::string d = (path + ScriptFileName);
+		try
+		{
+
+			int status = luaL_dofile(L, d.c_str());
+			if (status != 0)
+			{
+				fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+			}
+			luaL_openlibs(L);
+
+			lua_pcall(L, 0, 0, 0);
+
+			//Register this class in lua
+			this->RegisterClassLUA(L);
+
+			//register other CActor's class
+
+
+
+
+			//Register Vector2 in lua
+			getGlobalNamespace(L)
+				.beginClass<sf::Vector2f>("Vector2")
+				//add x,y and some functions possibly
+				.addData<float>("x", &sf::Vector2<float>::x)
+				.addData<float>("y", &sf::Vector2<float>::y)
+				.addConstructor<void(*) (void)>()
+				.endClass();
+
+			getGlobalNamespace(L)
+				.beginClass<Engine::Context>("WorldContext")
+
+				.endClass();
+
+
+			LuaRef LuaConstruct = getGlobal(L, "Construct");
+			if (LuaConstruct.isFunction())
+			{
+				LuaConstruct(this, WorldContext, path);
+			}
+		}
+		catch (LuaException e)
+		{
+			std::cout << e.what() << std::endl;
+		}
 
 	}
 

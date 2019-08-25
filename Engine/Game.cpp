@@ -5,6 +5,7 @@
 #include "CLight.h"
 #include "PointLight.h"
 #include "ElevatorTrigger.h"
+#include "TestActor.h"
 using namespace std;
 
 #ifndef _RANDOM_
@@ -657,13 +658,13 @@ void Game::Init()
 			}
 		}
 
-		
-		std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("body1")->GetTexture()),"body1", s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
-		//player->Anim = GameContext->SpritesheetAnimations.at(0);
-		//player->Anim->CurrentAnimationName = "anim";
-		player->InitPhysBody(path, GameContext->space);
-		player->ControlledByPlayer = true;
-		GameContext->SceneActors.push_back(player);
+		//
+		//std::shared_ptr<CTestPlayer> player = std::make_shared<CTestPlayer>(sf::Sprite(GameContext->TextureResources->GetTextureByName("body1")->GetTexture()),"body1", s, sf::Vector2f(64, 64), sf::Vector2f(300, 0), &(*this->GameContext), path);
+		////player->Anim = GameContext->SpritesheetAnimations.at(0);
+		////player->Anim->CurrentAnimationName = "anim";
+		//player->InitPhysBody(path, GameContext->space);
+		//player->ControlledByPlayer = true;
+		//GameContext->SceneActors.push_back(player);
 
 		
 		std::shared_ptr<CElevatorTrigger> trigger = std::make_shared<CElevatorTrigger>("elev",sf::Vector2f(64.f, 64.f), sf::Vector2f(576.f, 320.f), &(*this->GameContext), path);
@@ -683,6 +684,9 @@ void Game::Init()
 			GameContext->SceneActors.push_back(sd);
 		}
 
+
+		std::shared_ptr<CTestActor> ta = std::make_shared<CTestActor>(sf::Vector2f(0, 0), &(*this->GameContext), this->path);
+		GameContext->SceneActors.push_back(ta);
 
 		if (!GameContext->SceneActors.empty())
 		{
@@ -715,7 +719,7 @@ void Game::Init()
 				}
 			}
 		}
-		GameContext->PlayBackgroundSoundByName("Industrial_Day_2Mid");
+		//GameContext->PlayBackgroundSoundByName("Industrial_Day_2Mid");
 		
 	}
 	catch (std::exception e)
